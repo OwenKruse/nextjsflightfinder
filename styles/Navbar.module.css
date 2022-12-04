@@ -1,0 +1,81 @@
+.container {
+  min-height: 100vh;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  border-radius: 10px;
+}
+
+
+
+.navbar__logo {
+  color: #ffffff;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0 1rem;
+
+}
+.navbar__about {
+  color: black;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+  font-weight: bold;
+  padding: 0 1rem;
+  text-decoration: none;
+
+
+}
+.navbar__about a {
+  color: black;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+  font-weight: bold;
+  padding: 0 1rem;
+  text-decoration: none;
+}
+.navbar__about a:hover {
+  color: #0070f3;
+  text-decoration: underline;
+}
+.navbar__contact {
+  color: black;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+  font-weight: bold;
+  padding: 0 1rem;
+  text-decoration: none;
+}
+.navbar__contact a {
+  color: black;
+  font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;
+  font-weight: bold;
+  padding: 0 1rem;
+  text-decoration: none;
+}
+.navbar__contact a:hover {
+  color: #0070f3;
+  text-decoration: underline;
+}
+.navbar__contact:hover {
+  color: #0070f3;
+  text-decoration: none;
+
+}
+.navbar__about:hover {
+  color: #0070f3;
+  text-decoration: none;
+
+
+}
