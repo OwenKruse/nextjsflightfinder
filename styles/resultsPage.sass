@@ -1,0 +1,50 @@
+// Define a variable for the primary color
+$primary-color: #333
+
+// Define a mixin for rounded rectangles
+@mixin rounded-rectangle
+  border-radius: 5px
+  background-color: $primary-color
+// Other styles for rounded rectangles
+
+
+// Define a mixin for the departure and arrival boxes
+@mixin departure-box
+  @include rounded-rectangle
+  // Other styles for the departure box
+// Styles for the departure and arrival boxes
+
+
+// Define a mixin for the price box
+@mixin price-box
+// Styles for the price box
+
+
+// Define the styles for the plane ticket
+.plane-ticket {
+  // Apply the rounded-rectangle mixin to the outer container
+  @include rounded-rectangle;
+
+  // Styles for the times container and other elements
+  .times {
+    // Apply the departure-box mixin to the departure and arrival boxes
+    .departure-box, .arrival-box {
+      @include departure-box;
+  }
+
+    // Styles for the plane image and other elements
+    .image-box {
+    // Styles for the plane image
+  }
+}
+
+  // Apply the price-box mixin to the price box
+  .price-box {
+    @include price-box;
+
+    // Styles for the price and duration elements
+    .price {
+    // Styles for the price and duration elements
+  }
+}
+}

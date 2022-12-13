@@ -3,9 +3,11 @@ import styles from "../styles/Home.module.css";
 import background from "../asset/BackGround.png";
 import Navbar from "../../nextjsflightfinder/pages/navbar";
 import { Autocomplete, TextField } from "@mui/material";
-import Index from "./OnClick";
 import * as React from "react";
+
 import Script from 'next/script'
+import {useState} from "react";
+import quickSearch from "./quickSearch";
 
 const items = [
   "ATLANTA GA, US (ATL) Airport",
@@ -112,8 +114,8 @@ const items = [
 
 export default function Home() {
 
+  const importedElement = React.createElement(quickSearch, {}, null);
   return (
-
       <div className={styles.container}>
         <Head>
           <title>Flight Cheaply</title>
@@ -124,102 +126,8 @@ export default function Home() {
           <h1 className={styles.title}>
             Welcome to <a href="https://nextjs.org">Flight Cheaply!</a>
           </h1>
-          <div className={styles.quicksearchwrapper} >
-            <div className={styles.quicksearch} style={{
-              backgroundImage: `url(${background.src})`,
-              width: '100%',
-              height: '100%',
-            }}>
-              <div className={styles.quicksearch__title}>
-                <h1 className={styles.quicksearch__title}>
-                  Find your next adventure
-                </h1>
-                <form
-                    autoComplete="off"
-                    action="/action_page.php"
-                    className={styles.quicksearch__form}
-                >
-                  <div className={styles.quicksearch__box}>
-                    <Autocomplete
-                        className={styles.quicksearch__input}
-                        disablePortal
-                        options={items}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Departing from..."
-                                sx={{ input: { color: "white" }, whiteSpace: "nowrap"}}
-                                InputLabelProps={{
-                                  style: {
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    color: "white",
-                                  },
-                                }}
-                            />
-                        )}
-                    />
-                  </div>
-                  <div className={styles.quicksearch__box}>
-                    <Autocomplete
-                        className={styles.quicksearch__input}
-                        disablePortal
-                        options={items}
-                        sx={{ width: 300 }}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Going to... (optional)"
-                                sx={{ input: { color: "white" } }}
-                                InputLabelProps={{
-                                  style: {
-                                    textOverflow: "ellipsis",
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    color: "white",
-                                  },
-                                }}
-                            />
-                        )}
-                    />
-                  </div>
-                  <div className={styles.quicksearch__button__box}>
-                    <button className={styles.quicksearch__button} type="submit">
-                      Search
-                    </button>
 
-                  </div>
-
-                </form>
-
-                <div className={styles.quicksearch__date__dropdown} id={"banner"}>
-                  <div className={styles.quicksearch__date__box}>
-                    <div className={styles.quicksearch__date__title}>
-                      Departure-Return Window (optional)
-                    </div>
-                    <div className={styles.quicksearch__date__input}>
-                      <input type="date" name="trip-start"
-                             placeholder="2021-08-01"
-                             min="2021-08-01" max="2022-12-31"></input>
-
-                      <input type="date" name="trip-start"
-                             placeholder="2021-08-01"
-                             min="2021-08-01" max="2022-12-31"></input>
-                    </div>
-
-                  </div>
-                </div>
-                <button className={styles.quicksearch__dropdown_button} >
-                  <div className={styles.quicksearch__button__inside}>
-                    <p className={styles.quicksearch__button__inside}>Date Window \/</p>
-                  </div>
-                </button>
-              </div>
-
-            </div>
-          </div>
+          {importedElement}
         </main>
 
         <footer>

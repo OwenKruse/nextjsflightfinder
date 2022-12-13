@@ -1,6 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
 
 .container {
   min-height: 100vh;
@@ -170,19 +168,12 @@
 
 }
 
-.quicksearch__input:focus {
-  border-color: #0070f3;
-
-
-}
-
 .quicksearch__button {
     font-family: inherit;
     font-size: 1.3rem;
     color: white;
     background-color: #0070f3;
     border: 0;
-    margin: 10px;
     cursor: pointer;
     -webkit-appearance: none;
     border-radius: 10px;
@@ -197,7 +188,6 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin: 10px;
   padding: 10px;
 }
 
@@ -241,13 +231,10 @@
 .quicksearch__date__dropdown {
   font-family: inherit;
   width: available;
-  border-radius: 10px;
   outline: 0;
   font-size: 1.3rem;
   color: white;
   font-weight: bold;
-  padding: 7px 0;
-  margin-left: 10px;
   background: transparent;
   -webkit-appearance: none;
   text-align: center;
@@ -257,7 +244,7 @@
   font-family: Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   font-size: 1rem;
   color: #ffffff;
-  background-color: #63656c;
+  background-color: rgba(24, 125, 193, 0.56);
   border: 0;
   cursor: pointer;
   -webkit-appearance: none;
@@ -281,4 +268,93 @@
   justify-content: center;
   align-items: center;
   margin: 3px;
+}
+.quicksearch__date__button__box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+
+}
+
+.date__select {
+  justify-content: center;
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  opacity: 0.5;
+  border: 0;
+  text-underline: black;
+  border-radius: 10px;
+  color : black;
+
+}
+.disabled {
+  justify-content: center;
+  margin: 10px;
+  padding: 10px;
+  background: white;
+  opacity: 0.5;
+  border: 0;
+  text-underline: black;
+  border-radius: 10px;
+  color : gray;
+}
+
+
+.is__one__way {
+  justify-content: center;
+  margin-left: 1%;
+  background: white;
+  opacity: 0.5;
+  border: 0;
+  text-underline: black;
+  border-radius: 10px;
+  color : black;
+  width: 12%;
+
+}
+.is__one__way__box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+
+
+}
+.is__one__way__title {
+  font-size: 1rem;
+  font-weight: bold;
+  color: black;
+  margin-left: 10px;
+  line-height: 100%;
+  width: 50%;
+  padding: 10px;
+  margin-right: 10px;
+
+}
+.is__one__way__input {
+  color: white;
+  -webkit-appearance: none;
+  border-radius: 10px;
+
+}
+
+
+.is__one__way__input__select {
+    font-family: inherit;
+    font-size: 1.3rem;
+    color: white;
+    background-color: #0070f3;
+    border: 0;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 10px;
+    margin-right: 10px;
+    height: 20px;
+
+
 }
