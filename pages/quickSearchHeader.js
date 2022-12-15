@@ -2,6 +2,8 @@ import { Autocomplete, TextField } from "@mui/material";
 import * as React from "react";
 import styles from "../styles/resultNavBar.module.css";
 import background from "../asset/BackGround.png";
+import {useRouter} from "next/router";
+import {useRef} from "react";
 
 const items = [
     "ATLANTA GA, US (ATL) Airport",
@@ -110,20 +112,84 @@ export default function quickSearch(props) {
     if (props!=null){
         console.log(props.to);
     }
+    function todayDate() {
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, "0");
+        const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+        const yyyy = today.getFullYear();
+
+        return yyyy + "-" + mm + "-" + dd;
+    }
+    const router = useRouter();
+    const oneWay = useRef(null);
+    const date = useRef(null);
+
+    function maxDate(){
+        const formData = new FormData(form2.current);
+
+        let tripStart = formData.get("trip-start");
+        if (tripStart !== ""){
+            let date1 = new Date(tripStart);
+            date1.setDate(date1.getDate() + 1);
+            console.log(date);
+            date1 = date1.toISOString()
+            date1 = date1.split("T")[0];
+            console.log(date1);
+            date.current.style.backgroundColor = "white";
+            date.current.min = date1;
+        }
+
+    }
+    function isChecked() {
+        let checked = oneWay.current.checked;
+        if (checked) {
+            date.current.disabled = true;
+            // add a style to the date input
+            date.current.style.backgroundColor = "grey";
+
+        }
+        else {
+            date.current.disabled = false;
+            date.current.style.backgroundColor = "white";
+        }
+    }
+
+    const handleSubmit = event => {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+        //get by ref
+        const from = formData.get('from');
+        const to = formData.get('to');
+        const departure = formData.get('trip-start');
+        let returnDate = FormData.get('trip-end');
+        const checkbox = FormData.get('trip-one-way');
+        let oneWay = false;
+        if (checkbox) {
+            oneWay = true;
+            returnDate = null;
+        }
+    }
+
+
+        const form2 = useRef(null);
     // get the props from the parent component
     return (
         <div className={styles.quicksearchwrapper}>
             <div className={styles.quicksearch} style={{
                 backgroundImage: `url(${background.src})`,
+                // Make the image more transparent
+                backgroundBlendMode: 'multiply',
                 width: '100%',
                 height: '100%',
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 backgroundRepeat: 'no-repeat'
+
             }}>
                     <form
+                        ref={form2}
                         autoComplete="off"
-                        action="/nextjsflightfinder/backend/action_page.php"
+                        onSubmit={handleSubmit}
                         className={styles.quicksearch__form}
                     >
                         <div className={styles.quicksearch__box}>
@@ -138,13 +204,14 @@ export default function quickSearch(props) {
                                         name={"from"}
                                         label= {props.from}
                                         id={"from"}
-                                        sx={{ input: { color: "white" }, whiteSpace: "nowrap"}}
+                                        sx={{ input: { color: "white" }, whiteSpace: "nowrap", border : "1px solid",borderColor: "rgba(255,255,255,0.57)", borderRadius: "5px", backgroundColor: "rgba(0,0,0,)" }}
                                         InputLabelProps={{
                                             style: {
                                                 textOverflow: "ellipsis",
                                                 whiteSpace: "nowrap",
                                                 overflow: "hidden",
                                                 color: "white",
+
                                             },
                                         }}
                                     />
@@ -162,7 +229,7 @@ export default function quickSearch(props) {
                                         {...params}
                                         name={"to"}
                                         label={props.to}
-                                        sx={{ input: { color: "white" } }}
+                                        sx={{ input: { color: "white" }, whiteSpace: "nowrap", border : "1px solid",borderColor: "rgba(255,255,255,0.57)", borderRadius: "5px", backgroundColor: "rgba(0,0,0,)" }}
                                         InputLabelProps={{
                                             style: {
                                                 textOverflow: "ellipsis",
@@ -183,11 +250,19 @@ export default function quickSearch(props) {
                                 <div className={styles.quicksearch__date__input}>
                                     <input className={styles.date__select} type="date" name="trip-start"
                                            placeholder="2021-08-01"
-                                           min="2021-08-01" max="2022-12-31"></input>
+                                           required
+                                           min={todayDate()} max="2025-12-31"></input>
 
-                                    <input className={styles.date__select} type="date" name="trip-start"
+                                    <input className={styles.date__select} ref={date} type="date" name="trip-end"
                                            placeholder="2021-08-01"
-                                           min="2021-08-01" max="2022-12-31"></input>
+                                           min={todayDate()} max="2025-12-31"
+                                           disabled={false}
+                                           onClick={maxDate}
+                                           required
+
+
+
+                                    ></input>
                                 </div>
 
                             </div>

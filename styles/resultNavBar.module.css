@@ -131,12 +131,15 @@
     margin: 10px;
     border-radius: 10px;
     border: 1px solid #eaeaea;
+    padding: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     -webkit-appearance: none;
-
+    background: rgba(0, 0, 0, 0.3);
 }
 .quicksearch__box {
     justify-content: center;
+
+
 }
 .quicksearch__form {
     display: flex;
@@ -304,11 +307,9 @@
 
 }
 .date__select:active {
-    background: transparent;
     border: 0;
     text-underline: black;
     color: black;
-    opacity: 1;
 
 }
 

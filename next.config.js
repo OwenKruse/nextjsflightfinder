@@ -3,6 +3,15 @@
 
 
 const nextConfig = {
+
+    images: {
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'assets.duffel.com',
+        },
+      ],
+    },
   reactStrictMode: true,
   async rewrites() {
     return [

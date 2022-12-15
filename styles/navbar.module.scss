@@ -1,0 +1,43 @@
+// navbar.scss
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #ffffff;
+  width: 100%;
+
+  .logo {
+    img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      background-color: black;
+    }
+
+  }
+
+  .navbarLinks {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    a {
+      color: black;
+      height: 2rem;
+      text-decoration: none;
+      margin: 0 10px;
+      background-color: rgba(0, 0, 0, 0.1);
+      width: 5rem;
+      border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+
+    }
+  }
+}

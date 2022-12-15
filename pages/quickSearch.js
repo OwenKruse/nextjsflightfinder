@@ -4,111 +4,8 @@ import styles from "../styles/Home.module.css";
 import background from "../asset/BackGround.png";
 import { useRouter } from "next/router";
 // import ref from "react";
-import { useState } from "react";
 import { useRef } from "react";
-const items = [
-    "ATLANTA GA, US (ATL) Airport",
-    "BEIJING, CN (PEK) Airport",
-    "LONDON, GB (LHR) Airport",
-    "CHICAGO IL, US (ORD) Airport",
-    "TOKYO, JP (HND) Airport",
-    "LOS ANGELES CA, US (LAX) Airport",
-    "PARIS, FR (CDG) Airport",
-    "DALLAS/FORT WORTH TX, US (DFW) Airport",
-    "FRANKFURT, DE (FRA) Airport",
-    "HONG KONG, HK (HKG) Airport",
-    "DENVER CO, US (DEN) Airport",
-    "DUBAI, AE (DXB) Airport",
-    "JAKARTA, ID (CGK) Airport",
-    "AMSTERDAM, NL (AMS) Airport",
-    "MADRID, ES (MAD) Airport",
-    "BANGKOK, TH (BKK) Airport",
-    "NEW YORK NY, US (JFK) Airport",
-    "SINGAPORE, SG (SIN) Airport",
-    "GUANGZHOU, CN (CAN) Airport",
-    "LAS VEGAS NV, US (LAS) Airport",
-    "SHANGHAI, CN (PVG) Airport",
-    "SAN FRANCISCO CA, US (SFO) Airport",
-    "PHOENIX AZ, US (PHX) Airport",
-    "HOUSTON TX, US (IAH) Airport",
-    "CHARLOTTE NC, US (CLT) Airport",
-    "MIAMI FL, US (MIA) Airport",
-    "MUNICH, DE (MUC) Airport",
-    "KUALA LUMPUR, MY (KUL) Airport",
-    "ROME, IT (FCO) Airport",
-    "ISTANBUL, TR (IST) Airport",
-    "SYDNEY, AU (SYD) Airport",
-    "ORLANDO FL, US (MCO) Airport",
-    "INCHEON, KR (ICN) Airport",
-    "NEW DELHI, IN (DEL) Airport",
-    "BARCELONA, ES (BCN) Airport",
-    "LONDON, GB (LGW) Airport",
-    "NEWARK NJ, US (EWR) Airport",
-    "TORONTO ON, CA (YYZ) Airport",
-    "SHANGHAI, CN (SHA) Airport",
-    "MINNEAPOLIS MN, US (MSP) Airport",
-    "SEATTLE WA, US (SEA) Airport",
-    "DETROIT MI, US (DTW) Airport",
-    "PHILADELPHIA PA, US (PHL) Airport",
-    "MUMBAI, IN (BOM) Airport",
-    "SÃO PAULO, BR (GRU) Airport",
-    "MANILA, PH (MNL) Airport",
-    "CHENGDU, CN (CTU) Airport",
-    "BOSTON MA, US (BOS) Airport",
-    "SHENZHEN, CN (SZX) Airport",
-    "MELBOURNE, AU (MEL) Airport",
-    "TOKYO, JP (NRT) Airport",
-    "PARIS, FR (ORY) Airport",
-    "MEXICO CITY, MX (MEX) Airport",
-    "MOSCOW, RU (DME) Airport",
-    "ANTALYA, TR (AYT) Airport",
-    "TAIPEI, TW (TPE) Airport",
-    "ZURICH, CH (ZRH) Airport",
-    "NEW YORK NY, US (LGA) Airport",
-    "FORT LAUDERDALE, FL, US (FLL) Airport",
-    "WASHINGTON, DC, US (IAD) Airport",
-    "PALMA DE MALLORCA, ES (PMI) Airport",
-    "COPENHAGEN, DK (CPH) Airport",
-    "MOSCOW, RU (SVO) Airport",
-    "BALTIMORE MD, US (BWI) Airport",
-    "KUNMING, CN (KMG) Airport",
-    "VIENNA, AT (VIE) Airport",
-    "OSLO, NO (OSL) Airport",
-    "JEDDAH, SA (JED) Airport",
-    "BRISBANE, AU (BNE) Airport",
-    "SALT LAKE CITY UT, US (SLC) Airport",
-    "DÜSSELDORF, DE (DUS) Airport",
-    "BOGOTA, CO (BOG) Airport",
-    "MILAN, IT (MXP) Airport",
-    "JOHANNESBURG, ZA (JNB) Airport",
-    "STOCKHOLM, SE (ARN) Airport",
-    "MANCHESTER, GB (MAN) Airport",
-    "CHICAGO IL, US (MDW) Airport",
-    "WASHINGTON DC, US (DCA) Airport",
-    "BRUSSELS, BE (BRU) Airport",
-    "DUBLIN, IE (DUB) Airport",
-    "SEOUL, KR (GMP) Airport",
-    "DOHA, QA (DOH) Airport",
-    "LONDON, GB (STN) Airport",
-    "HANGZHOU, CN (HGH) Airport",
-    "JEJU, KR (CJU) Airport",
-    "VANCOUVER BC, CA (YVR) Airport",
-    "BERLIN, DE (TXL) Airport",
-    "SAN DIEGO CA, US (SAN) Airport",
-    "TAMPA FL, US (TPA) Airport",
-    "SÃO PAULO, BR (CGH) Airport",
-    "BRASILIA, BR (BSB) Airport",
-    "SAPPORO, JP (CTS) Airport",
-    "XIAMEN, CN (XMN) Airport",
-    "RIYADH, SA (RUH) Airport",
-    "FUKUOKA, JP (FUK) Airport",
-    "RIO DE JANEIRO, BR (GIG) Airport",
-    "HELSINKI, FI (HEL) Airport",
-    "LISBON, PT (LIS) Airport",
-    "ATHENS, GR (ATH) Airport",
-    "AUCKLAND, NZ (AKL) Airport",
-];
-
+import {items} from "../public/airports.js";
 export default function quickSearch() {
     function todayDate() {
         const today = new Date();
@@ -116,26 +13,39 @@ export default function quickSearch() {
         const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
         const yyyy = today.getFullYear();
 
-        return mm + "/" + dd + "/" + yyyy;
+        return yyyy + "-" + mm + "-" + dd;
     }
-
     const router = useRouter();
     const oneWay = useRef(null);
     const date = useRef(null);
+
+    function maxDate(){
+        const formData2 = new FormData(form2.current);
+
+        let tripStart = formData2.get("trip-start");
+        console.log(tripStart);
+        if (tripStart !== ""){
+            let date1 = new Date(tripStart);
+            date1.setDate(date1.getDate() + 1);
+            console.log(date);
+            date1 = date1.toISOString()
+            date1 = date1.split("T")[0];
+            console.log(date1);
+            date.current.style.backgroundColor = "white";
+            date.current.min = date1;
+        }
+
+    }
     function isChecked() {
-        console.log("checked");
         let checked = oneWay.current.checked;
         if (checked) {
-            console.log("checked");
             date.current.disabled = true;
             // add a style to the date input
             date.current.style.backgroundColor = "grey";
 
         }
         else {
-            console.log("not checked");
             date.current.disabled = false;
-            // remove the style from the date input
             date.current.style.backgroundColor = "white";
         }
     }
@@ -157,8 +67,6 @@ export default function quickSearch() {
             returnDate = null;
         }
 
-        console.log(oneWay);
-
 
 
 
@@ -172,20 +80,15 @@ export default function quickSearch() {
                 returnDate,
                 oneWay
             }
-        });
+        }).then(r => console.log(r));
     };
 
 
     return (
         <div className={styles.quicksearchwrapper}>
-            <div className={styles.quicksearch} style={{
-                backgroundImage: `url(${background.src})`,
-                width: '100%',
-                height: '100%',
-            }}>
+            <div className={styles.quicksearch}>
                 <div className={styles.quicksearch__title}>
                     <h1 className={styles.quicksearch__title}>
-                        Find your next adventure
                     </h1>
                     <form
                         autoComplete="off"
@@ -202,6 +105,7 @@ export default function quickSearch() {
                                 renderInput={(params) => (
                                     <TextField
                                         {...params}
+                                        required
                                         name={"from"}
                                         label="Departing from..."
                                         sx={{ input: { color: "white" }, whiteSpace: "nowrap"}}
@@ -211,6 +115,7 @@ export default function quickSearch() {
                                                 whiteSpace: "nowrap",
                                                 overflow: "hidden",
                                                 color: "white",
+
                                             },
                                         }}
                                     />
@@ -225,6 +130,7 @@ export default function quickSearch() {
                                 sx={{ width: 300 }}
                                 renderInput={(params) => (
                                     <TextField
+                                        required
                                         {...params}
                                         name={"to"}
                                         label="Going to..."
@@ -257,12 +163,15 @@ export default function quickSearch() {
                             <div className={styles.quicksearch__date__input}>
                                 <input className={styles.date__select} type="date" name="trip-start"
                                        placeholder="2021-08-01"
+                                       required
                                        min={todayDate()} max="2025-12-31"></input>
 
                                 <input className={styles.date__select} ref={date} type="date" name="trip-end"
                                        placeholder="2021-08-01"
                                        min={todayDate()} max="2025-12-31"
                                        disabled={false}
+                                       onClick={maxDate}
+                                       required
 
 
 

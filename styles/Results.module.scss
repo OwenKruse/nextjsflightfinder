@@ -1,0 +1,186 @@
+.roundedRectangle {
+  /* Add grid layout styles to the roundedRectangle element */
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  grid-gap: 10px;
+  grid-template-areas:
+    "price price"
+    "times times";
+
+  /* Other styles for the roundedRectangle element */
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  -webkit-appearance: none;
+  background-color: #ffffff;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 10px;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  opacity: .9;
+
+  &:hover {
+    /* Add styles for the roundedRectangle element when it is hovered */
+    opacity: 1;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+    /* make the pointer cursor appear when hovering over the element */
+    cursor: pointer;
+  }
+}
+
+.price {
+  color: #10b210;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  margin: 10px;
+  width: 100%;
+}
+
+.times {
+  justify-content: center;
+  display: flex;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  font-size: 1.2rem;
+}
+
+.timeLabel {
+  color: #000000;
+  text-align: center;
+  font-size: 1rem;
+  height: 25%;
+  margin: 3%;
+}
+
+.plane {
+
+}
+
+.imageBox {
+  display: inline-flex;
+  align-items: center;
+  padding-bottom: 5%;
+}
+
+.timeBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-area: times;
+}
+
+.city {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  grid-area: price;
+  opacity: .5;
+}
+
+.departureBox {
+  display: grid;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 5%;
+  position: relative;
+  width: 10vw;
+}
+
+.priceBox {
+  display: flex;
+  width: 20vh;
+  justify-content: center;
+  white-space: nowrap;
+  position: relative;
+}
+
+.verticalLine {
+  border-left: 1px solid #000000;
+  height: 100%;
+  margin-left: 5%;
+}
+
+.verticalLineBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+  .durationBox
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  width: 100%;
+  grid-area: times;
+  color: #000000;
+  opacity: 50%;
+}
+.right {
+  position: absolute;
+  left: 0;
+  top: 0;
+  clip-path: polygon(60% 0, 100% 0%, 100% 100%, 40% 100%);
+}
+
+.left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  clip-path: polygon(0 0, 60% 0, 40% 100%, 0 100%);
+}
+
+.multiBackground {
+  background-size: 200% 100%;
+  background: linear-gradient(to right, #10b210 50%, #ffffff 50%) right bottom;
+  transition: background-position 0.5s ease-in-out;
+}
+.backgroundImage {
+  object-fit: cover;
+}
+.airline {
+  display: flex;
+  height: 10%;
+  grid-area: price;
+  opacity: .5;
+  font-size: 1rem;
+  color : #000000;
+  justify-content: center;
+}
+.airlineName {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  font-size: 1rem;
+  color : #000000;
+  margin-bottom: 12%;
+  text-align-all: center;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+
+
+}
+/* Make the image a small circle */
+.image {
+
+}
+.airlineLogo {
+  display: flex;
+  font-size: 1rem;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border: black solid 1px;
+  justify-content: center;
+  align-items: center;
+  opacity: 1;
+}

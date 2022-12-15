@@ -1,35 +1,88 @@
-import React from 'react';
-import resultStyles from "../../styles/Results.module.css";
+import React, {useEffect, useRef, useState} from 'react';
+import resultStyles from "../../styles/Results.module.scss";
 import styles from "../../styles/Home.module.css";
 import Navbar from "./resultNavbar";
 import Head from "next/head";
 import {Duffel} from '@duffel/api'
 import * as fs from "fs";
 import Image from "next/image";
-import plane from "../../asset/Asset 9Line.png";
+import plane from "../../asset/Asset 11Line.png";
+import {Parallax, ParallaxProvider, useParallax} from "react-scroll-parallax";
+import background from "../../public/backgroundMain.png";
+import {SearchParamsContext} from "next/dist/shared/lib/hooks-client-context";
+import movingBG from "../../public/MovingBG.png";
 
 export default function List({ query, data}) {
     let to = query.to;
     let from = query.from;
     let departure = query.departure;
     let returnDate = query.returnDate;
+    const target = useRef(null);
 
 
 
 
-    return (
-        <div className={styles.container}>
-            <Head>
-                <title>Flight Finder</title>
-                <link rel="icon" href="/favicon.ico"/>
-            </Head>
-            <Navbar from={from} to={to} departure={departure}/>
-            <main>
-                <Search data={data} query={query} />
+
+        return (
+            <main className={styles.main}>
+                <Head>
+                    <title>Flight Finder</title>
+                    <link rel="icon" href="/favicon.ico" />
+                </Head>
+                <div className={styles.parallax}>
+                    {/* The Parallax component takes a prop called "className" that you can use to specify the class of the element to apply the parallax effect to */}
+                        <div className={styles.containerSearch}>
+                            <Navbar from={from} to={to} departure={departure} />
+                            <Search data={data} query={query} />
+                        </div>
+                </div>
             </main>
-        </div>
-    );
+        );
 }
+
+export function ImageComponent({src, leftRight}) {
+    const right  = {
+        width: '100%',
+        height: '100%',
+        position: "absolute",
+        left: 0,
+        top: 0,
+        clipPath: "polygon(60% 0, 100% 0%, 100% 100%, 40% 100%)",
+        objectFit: "cover",
+        zIndex: -1,
+        // Round the corners
+        borderRadius: "10px",
+        opacity: 0.5,
+
+
+    }
+
+    const left  ={
+        width: "100%",
+        height: "100%",
+        position: "absolute",
+        left: 0,
+        top: 0,
+        clipPath: "polygon(0 0, 60% 0, 40% 100%, 0 100%)",
+        objectFit: "cover",
+        zIndex: -1,
+        borderRadius: "10px",
+        opacity: 0.5,
+
+
+}
+    if (leftRight === "left") {
+        return(
+                <Image alt={"image"} src={imageUrl} style={left} />
+        )}
+    else {
+        return(
+                <Image alt={"image"} src={imageUrl} style={right} />
+
+        )}
+    }
+
+
 
 export function Show(jsonData , query) {
     let price = jsonData.jsonData.total_amount
@@ -47,7 +100,10 @@ export function Show(jsonData , query) {
 
     let departCity = jsonData.jsonData.slices[0].segments[0].origin.city_name
     let airport = jsonData.jsonData.slices[0].segments[0].origin.iata_code
+    let airport2 = jsonData.jsonData.slices[0].segments[0].destination.iata_code
     let arriveCity = jsonData.jsonData.slices[0].segments[0].destination.city_name
+    let airlineName = jsonData.jsonData.slices[0].segments[0].operating_carrier.name
+    let airlineLogo = jsonData.jsonData.slices[0].segments[0].operating_carrier.logo_symbol_url
 
 
 
@@ -64,13 +120,24 @@ export function Show(jsonData , query) {
 
 
 
+    const gradientStyles = {
+        background: `linear-gradient(to right, ${departCityCapitalized}, ${arriveCityCapitalized})`,
+    }
+    console.log(gradientStyles)
+
 
     return (
-        <div className={resultStyles.roundedRectangle} >
+        <div className={resultStyles.roundedRectangle}>
+
             <div className={resultStyles.times}>
+
                 <div className={resultStyles.departureBox}>
+                        <div className={resultStyles.airlineName}>{airlineName}
+                            <Image src={airlineLogo}  alt={"airline"} width={100} height={100} className={resultStyles.airlineLogo}/>
+                        </div>
+
                     <div className={resultStyles.timeLabel}>{departure}
-                        <div className={resultStyles.city}>{departCity}</div>
+                        <div className={resultStyles.city}>{airport}</div>
                     </div>
                 </div>
 
@@ -81,14 +148,16 @@ export function Show(jsonData , query) {
                 </div>
                     <div className={resultStyles.departureBox}>
                         <div className={resultStyles.timeLabel}>{arrival}
-                            <div className={resultStyles.city}>{arriveCity}</div>
+                            <div className={resultStyles.city}>{airport2}</div>
                         </div>
                     </div>
                 <div className={resultStyles.verticalLine}></div>
+
             </div>
 
             <div className={resultStyles.priceBox}>
-            <div className={resultStyles.price}>
+
+                <div className={resultStyles.price}>
                 <div className={resultStyles.durationBox}>
                     {duration}
                 </div>
@@ -117,7 +186,7 @@ export function Search(data, query) {
         <Show jsonData={d} query={query}/>
     );
     return (
-        <div className={styles.container}>
+        <div className={styles.containerSearch}>
                 {listItems}
         </div>
 
