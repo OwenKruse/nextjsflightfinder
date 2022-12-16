@@ -117,6 +117,71 @@ export function Show(jsonData , query) {
 
     let departCityCapitalized = departCity.toUpperCase()
     let arriveCityCapitalized = arriveCity.toUpperCase();
+    console.log(jsonData.jsonData.slices[0].segments.length)
+
+    if (jsonData.jsonData.slices[0].segments.length === 2) {
+        console.log("Has connection")
+        let connectionDestination = airport2
+        let destinationAirport = jsonData.jsonData.slices[0].segments[1].destination.iata_code
+        let connectionArrival = arrival
+        let destinationArrival = jsonData.jsonData.slices[0].segments[1].arriving_at
+        destinationArrival = new Date(destinationArrival).toLocaleString();
+        destinationArrival = destinationArrival.split(":")[0] + ":" + destinationArrival.split(":")[1] + " " + destinationArrival.split(" ")[2];
+        destinationArrival = destinationArrival.split(",")[1];
+        return ( <div className={resultStyles.roundedRectangle}>
+
+                <div className={resultStyles.times}>
+
+                    <div className={resultStyles.arrivalBoxConnection}>
+                        <div className={resultStyles.airlineName}>{airlineName}
+                            <Image src={airlineLogo}  alt={"airline"} width={100} height={100} className={resultStyles.airlineLogo}/>
+                        </div>
+
+                        <div className={resultStyles.timeLabel}>{departure}
+                            <div className={resultStyles.city}>{airport}</div>
+                        </div>
+                    </div>
+                    <div className={resultStyles.imageBox}>
+                        <Image className={resultStyles.plane} src={plane} alt={"plane"} width={400} />
+                    </div>
+                    <div className={resultStyles.arrivalBox}>
+                        <div className={resultStyles.airlineName}>{airlineName}
+                            <Image src={airlineLogo}  alt={"airline"} width={100} height={100} className={resultStyles.airlineLogo}/>
+                        </div>
+                        <div className={resultStyles.timeLabel}>{connectionArrival}
+                            <div className={resultStyles.city}>{connectionDestination}
+                                <span className={resultStyles.fullName}>{arriveCity}</span>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div className={resultStyles.imageBox}>
+
+                        <Image className={resultStyles.plane} src={plane} alt={"plane"} width={400} />
+                    </div>
+                    <div className={resultStyles.departureBoxConnection}>
+                        <div className={resultStyles.timeLabel}>{destinationArrival}
+                            <div className={resultStyles.city}>{destinationAirport}</div>
+                        </div>
+                    </div>
+                    <div className={resultStyles.verticalLineConnection}></div>
+
+                </div>
+
+                <div className={resultStyles.priceBox}>
+
+                    <div className={resultStyles.price}>
+                        <div className={resultStyles.durationBox}>
+                            {duration}
+                        </div>
+                        {price} $
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
 
 
@@ -131,7 +196,7 @@ export function Show(jsonData , query) {
 
             <div className={resultStyles.times}>
 
-                <div className={resultStyles.departureBox}>
+                <div className={resultStyles.arrivalBox}>
                         <div className={resultStyles.airlineName}>{airlineName}
                             <Image src={airlineLogo}  alt={"airline"} width={100} height={100} className={resultStyles.airlineLogo}/>
                         </div>
@@ -232,7 +297,7 @@ export async function getServerSideProps({query}) {
                 }
             ],
             currency: 'USD',
-            max_connections: 0,
+            max_connections: 2,
 
     }).then((response) => {
         // Write the response data to the file named `response.json`

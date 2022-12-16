@@ -49,6 +49,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   font-size: 1.2rem;
+  width: 45rem;
 }
 
 .timeLabel {
@@ -83,9 +84,42 @@
   width: 100%;
   grid-area: price;
   opacity: .5;
+  &:hover {
+    .fullName {
+      display: block;
+    }
+  }
+}
+.fullName {
+  display: none; /* Hide the label by default */
+  position: absolute; /* Position the label absolutely within the container */
+  top: 0;
+  left: 1rem;
+  color : black;
+  background: white;
+  border: 1px solid black;
+  margin-top: 8rem;
+    border-radius: 5px;
 }
 
 .departureBox {
+  display: grid;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  margin-bottom: 1%;
+  width: 10vw;
+}
+.departureBoxConnection {
+  display: grid;
+  justify-content: center;
+  align-items: flex-end;
+  position: relative;
+  margin-bottom: 1%;
+  width: 10vw;
+  margin-right: 1%;
+}
+.arrivalBox {
   display: grid;
   justify-content: center;
   align-items: flex-end;
@@ -93,7 +127,23 @@
   position: relative;
   width: 10vw;
 }
-
+.arrivalBoxConnection {
+  display: grid;
+  justify-content: center;
+  align-items: flex-end;
+  margin-bottom: 5%;
+  position: relative;
+  width: 10vw;
+  margin-left: 3%;
+}
+.connectionBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-bottom: 5%;
+  width: 10vw;
+}
 .priceBox {
   display: flex;
   width: 20vh;
@@ -105,9 +155,13 @@
 .verticalLine {
   border-left: 1px solid #000000;
   height: 100%;
-  margin-left: 5%;
 }
-
+.verticalLineConnection {
+  border-left: 1px solid #000000;
+  height: 100%;
+  margin-left: 3%;
+  padding-right: 2%;
+}
 .verticalLineBox {
   display: flex;
   justify-content: center;
@@ -184,3 +238,4 @@
   align-items: center;
   opacity: 1;
 }
+
