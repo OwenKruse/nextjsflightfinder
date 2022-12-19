@@ -6,6 +6,7 @@ import * as React from "react";
 
 
 export default function Navbar({to, from, departure, returnDate, passengers, oneWay}) {
+
     const importedElement = React.createElement(quickSearch, {to,from,departure,returnDate,passengers, oneWay}, null);
 
     return (

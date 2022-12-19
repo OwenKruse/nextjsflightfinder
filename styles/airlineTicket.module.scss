@@ -1,0 +1,47 @@
+.avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+    margin: 1rem;
+  border: 1px solid #000000;
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.connectionContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 1rem;
+}
+
+.connections {
+    position: relative;
+    padding-right: 10%;
+
+
+}
+
+@media only screen and (max-width: 900px) {
+  .connections {
+    scale: .8;
+  }
+}
+
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row;
+}
+.titleLogoContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}

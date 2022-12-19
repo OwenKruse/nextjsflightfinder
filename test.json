@@ -1,0 +1,468 @@
+{
+  "data": {
+    "slices": [
+      {
+        "origin_type": "city",
+        "origin": {
+          "type": "city",
+          "time_zone": null,
+          "name": "Atlanta",
+          "longitude": null,
+          "latitude": null,
+          "id": "cit_atl_us",
+          "icao_code": null,
+          "iata_country_code": "US",
+          "iata_code": "ATL",
+          "iata_city_code": "ATL",
+          "city_name": null,
+          "city": null,
+          "airports": [
+            {
+              "type": "airport",
+              "time_zone": "America/New_York",
+              "name": "Dekalb Peachtree Airport",
+              "longitude": -84.303619,
+              "latitude": 33.875583,
+              "id": "arp_pdk_us",
+              "icao_code": "KPDK",
+              "iata_country_code": "US",
+              "iata_code": "PDK",
+              "iata_city_code": "ATL",
+              "city_name": "Atlanta"
+            },
+            {
+              "type": "airport",
+              "time_zone": "America/New_York",
+              "name": "Hartsfield-Jackson Atlanta International Airport",
+              "longitude": -84.4279,
+              "latitude": 33.638714,
+              "id": "arp_atl_us",
+              "icao_code": "KATL",
+              "iata_country_code": "US",
+              "iata_code": "ATL",
+              "iata_city_code": "ATL",
+              "city_name": "Atlanta"
+            },
+            {
+              "type": "airport",
+              "time_zone": "America/New_York",
+              "name": "Fulton County Airport",
+              "longitude": -84.521638,
+              "latitude": 33.777896,
+              "id": "arp_fty_us",
+              "icao_code": "KFTY",
+              "iata_country_code": "US",
+              "iata_code": "FTY",
+              "iata_city_code": "ATL",
+              "city_name": "Atlanta"
+            }
+          ]
+        },
+        "destination_type": "city",
+        "destination": {
+          "type": "city",
+          "time_zone": null,
+          "name": "Los Angeles",
+          "longitude": null,
+          "latitude": null,
+          "id": "cit_lax_us",
+          "icao_code": null,
+          "iata_country_code": "US",
+          "iata_code": "LAX",
+          "iata_city_code": "LAX",
+          "city_name": null,
+          "city": null,
+          "airports": [
+            {
+              "type": "airport",
+              "time_zone": "America/Los_Angeles",
+              "name": "Whiteman Airport",
+              "longitude": -118.412713,
+              "latitude": 34.25989,
+              "id": "arp_whp_us",
+              "icao_code": "KWHP",
+              "iata_country_code": "US",
+              "iata_code": "WHP",
+              "iata_city_code": "LAX",
+              "city_name": "Los Angeles"
+            },
+            {
+              "type": "airport",
+              "time_zone": "America/Los_Angeles",
+              "name": "Ontario International Airport",
+              "longitude": -117.599527,
+              "latitude": 34.055988,
+              "id": "arp_ont_us",
+              "icao_code": "KONT",
+              "iata_country_code": "US",
+              "iata_code": "ONT",
+              "iata_city_code": "LAX",
+              "city_name": "Ontario"
+            },
+            {
+              "type": "airport",
+              "time_zone": "America/Los_Angeles",
+              "name": "Van Nuys Airport",
+              "longitude": -118.489719,
+              "latitude": 34.208582,
+              "id": "arp_vny_us",
+              "icao_code": "KVNY",
+              "iata_country_code": "US",
+              "iata_code": "VNY",
+              "iata_city_code": "LAX",
+              "city_name": "Los Angeles"
+            },
+            {
+              "type": "airport",
+              "time_zone": "America/Los_Angeles",
+              "name": "Los Angeles International Airport",
+              "longitude": -118.408263,
+              "latitude": 33.942045,
+              "id": "arp_lax_us",
+              "icao_code": "KLAX",
+              "iata_country_code": "US",
+              "iata_code": "LAX",
+              "iata_city_code": "LAX",
+              "city_name": "Los Angeles"
+            }
+          ]
+        },
+        "departure_date": "2022-12-28",
+        "created_at": "2022-12-18T07:33:09.423887Z"
+      }
+    ],
+    "passengers": [
+      {
+        "type": null,
+        "loyalty_programme_accounts": [],
+        "id": "pas_0000AQixehlO7Inw7RwtD2",
+        "given_name": null,
+        "fare_type": "frequent_flyer",
+        "family_name": null,
+        "age": null
+      }
+    ],
+    "offers": [
+      {
+        "updated_at": "2022-12-18T07:33:13.060869Z",
+        "total_emissions_kg": "271",
+        "total_currency": "USD",
+        "total_amount": "941.60",
+        "tax_currency": "USD",
+        "tax_amount": "87.65",
+        "slices": [
+          {
+            "segments": [
+              {
+                "stops": [],
+                "passengers": [
+                  {
+                    "passenger_id": "pas_0000AQixehlO7Inw7RwtD2",
+                    "fare_basis_code": "QI0ABEL1",
+                    "cabin_class_marketing_name": "Economy",
+                    "cabin_class": "economy",
+                    "baggages": [
+                      {
+                        "type": "checked",
+                        "quantity": 0
+                      }
+                    ]
+                  }
+                ],
+                "origin_terminal": null,
+                "origin": {
+                  "type": "airport",
+                  "time_zone": "America/New_York",
+                  "name": "Hartsfield-Jackson Atlanta International Airport",
+                  "longitude": -84.4279,
+                  "latitude": 33.638714,
+                  "id": "arp_atl_us",
+                  "icao_code": "KATL",
+                  "iata_country_code": "US",
+                  "iata_code": "ATL",
+                  "iata_city_code": "ATL",
+                  "city_name": "Atlanta",
+                  "city": {
+                    "type": "city",
+                    "time_zone": null,
+                    "name": "Atlanta",
+                    "longitude": null,
+                    "latitude": null,
+                    "id": "cit_atl_us",
+                    "icao_code": null,
+                    "iata_country_code": "US",
+                    "iata_code": "ATL",
+                    "iata_city_code": "ATL",
+                    "city_name": null
+                  },
+                  "airports": null
+                },
+                "operating_carrier_flight_number": "520",
+                "operating_carrier": {
+                  "name": "JetBlue Airways",
+                  "logo_symbol_url": "https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/B6.svg",
+                  "logo_lockup_url": "https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/B6.svg",
+                  "id": "arl_00009VME7DCOaPRQvNhcNY",
+                  "iata_code": "B6",
+                  "conditions_of_carriage_url": "https://www.jetblue.com/magnoliapublic/dam/ui-assets/p/contract_of_carriage.pdf"
+                },
+                "marketing_carrier_flight_number": "520",
+                "marketing_carrier": {
+                  "name": "JetBlue Airways",
+                  "logo_symbol_url": "https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/B6.svg",
+                  "logo_lockup_url": "https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/B6.svg",
+                  "id": "arl_00009VME7DCOaPRQvNhcNY",
+                  "iata_code": "B6",
+                  "conditions_of_carriage_url": "https://www.jetblue.com/magnoliapublic/dam/ui-assets/p/contract_of_carriage.pdf"
+                },
+                "id": "seg_0000AQixf2Dm3TOVZHNqER",
+                "duration": "PT2H11M",
+                "distance": null,
+                "destination_terminal": null,
+                "destination": {
+                  "type": "airport",
+                  "time_zone": "America/New_York",
+                  "name": "John F. Kennedy International Airport",
+                  "longitude": -73.778519,
+                  "latitude": 40.640556,
+                  "id": "arp_jfk_us",
+                  "icao_code": "KJFK",
+                  "iata_country_code": "US",
+                  "iata_code": "JFK",
+                  "iata_city_code": "NYC",
+                  "city_name": "New York",
+                  "city": {
+                    "type": "city",
+                    "time_zone": null,
+                    "name": "New York",
+                    "longitude": null,
+                    "latitude": null,
+                    "id": "cit_nyc_us",
+                    "icao_code": null,
+                    "iata_country_code": "US",
+                    "iata_code": "NYC",
+                    "iata_city_code": "NYC",
+                    "city_name": null
+                  },
+                  "airports": null
+                },
+                "departing_at": "2022-12-28T11:30:00",
+                "arriving_at": "2022-12-28T13:41:00",
+                "aircraft": {
+                  "name": "Airbus A320",
+                  "id": "arc_00009VMF8AgpV5sdO0xXAr",
+                  "iata_code": "320"
+                }
+              },
+              {
+                "stops": [],
+                "passengers": [
+                  {
+                    "passenger_id": "pas_0000AQixehlO7Inw7RwtD2",
+                    "fare_basis_code": "KI0JUEL1",
+                    "cabin_class_marketing_name": "Economy",
+                    "cabin_class": "economy",
+                    "baggages": [
+                      {
+                        "type": "checked",
+                        "quantity": 0
+                      }
+                    ]
+                  }
+                ],
+                "origin_terminal": null,
+                "origin": {
+                  "type": "airport",
+                  "time_zone": "America/New_York",
+                  "name": "John F. Kennedy International Airport",
+                  "longitude": -73.778519,
+                  "latitude": 40.640556,
+                  "id": "arp_jfk_us",
+                  "icao_code": "KJFK",
+                  "iata_country_code": "US",
+                  "iata_code": "JFK",
+                  "iata_city_code": "NYC",
+                  "city_name": "New York",
+                  "city": {
+                    "type": "city",
+                    "time_zone": null,
+                    "name": "New York",
+                    "longitude": null,
+                    "latitude": null,
+                    "id": "cit_nyc_us",
+                    "icao_code": null,
+                    "iata_country_code": "US",
+                    "iata_code": "NYC",
+                    "iata_city_code": "NYC",
+                    "city_name": null
+                  },
+                  "airports": null
+                },
+                "operating_carrier_flight_number": "623",
+                "operating_carrier": {
+                  "name": "JetBlue Airways",
+                  "logo_symbol_url": "https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/B6.svg",
+                  "logo_lockup_url": "https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/B6.svg",
+                  "id": "arl_00009VME7DCOaPRQvNhcNY",
+                  "iata_code": "B6",
+                  "conditions_of_carriage_url": "https://www.jetblue.com/magnoliapublic/dam/ui-assets/p/contract_of_carriage.pdf"
+                },
+                "marketing_carrier_flight_number": "623",
+                "marketing_carrier": {
+                  "name": "JetBlue Airways",
+                  "logo_symbol_url": "https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/B6.svg",
+                  "logo_lockup_url": "https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/B6.svg",
+                  "id": "arl_00009VME7DCOaPRQvNhcNY",
+                  "iata_code": "B6",
+                  "conditions_of_carriage_url": "https://www.jetblue.com/magnoliapublic/dam/ui-assets/p/contract_of_carriage.pdf"
+                },
+                "id": "seg_0000AQixf2Dm3TOVZHNqES",
+                "duration": "PT6H30M",
+                "distance": null,
+                "destination_terminal": null,
+                "destination": {
+                  "type": "airport",
+                  "time_zone": "America/Los_Angeles",
+                  "name": "Los Angeles International Airport",
+                  "longitude": -118.408263,
+                  "latitude": 33.942045,
+                  "id": "arp_lax_us",
+                  "icao_code": "KLAX",
+                  "iata_country_code": "US",
+                  "iata_code": "LAX",
+                  "iata_city_code": "LAX",
+                  "city_name": "Los Angeles",
+                  "city": {
+                    "type": "city",
+                    "time_zone": null,
+                    "name": "Los Angeles",
+                    "longitude": null,
+                    "latitude": null,
+                    "id": "cit_lax_us",
+                    "icao_code": null,
+                    "iata_country_code": "US",
+                    "iata_code": "LAX",
+                    "iata_city_code": "LAX",
+                    "city_name": null
+                  },
+                  "airports": null
+                },
+                "departing_at": "2022-12-28T17:00:00",
+                "arriving_at": "2022-12-28T20:30:00",
+                "aircraft": {
+                  "name": "Airbus A138/A319/A320/A321",
+                  "id": "arc_00009VMF8AgpV5sdO0xXAt",
+                  "iata_code": "32S"
+                }
+              }
+            ],
+            "origin_type": "airport",
+            "origin": {
+              "type": "airport",
+              "time_zone": "America/New_York",
+              "name": "Hartsfield-Jackson Atlanta International Airport",
+              "longitude": -84.4279,
+              "latitude": 33.638714,
+              "id": "arp_atl_us",
+              "icao_code": "KATL",
+              "iata_country_code": "US",
+              "iata_code": "ATL",
+              "iata_city_code": "ATL",
+              "city_name": "Atlanta",
+              "city": {
+                "type": "city",
+                "time_zone": null,
+                "name": "Atlanta",
+                "longitude": null,
+                "latitude": null,
+                "id": "cit_atl_us",
+                "icao_code": null,
+                "iata_country_code": "US",
+                "iata_code": "ATL",
+                "iata_city_code": "ATL",
+                "city_name": null
+              },
+              "airports": null
+            },
+            "id": "sli_0000AQixf2Dm3TOVZHNqEQ",
+            "fare_brand_name": "Blue Basic",
+            "duration": "PT12H",
+            "destination_type": "airport",
+            "destination": {
+              "type": "airport",
+              "time_zone": "America/Los_Angeles",
+              "name": "Los Angeles International Airport",
+              "longitude": -118.408263,
+              "latitude": 33.942045,
+              "id": "arp_lax_us",
+              "icao_code": "KLAX",
+              "iata_country_code": "US",
+              "iata_code": "LAX",
+              "iata_city_code": "LAX",
+              "city_name": "Los Angeles",
+              "city": {
+                "type": "city",
+                "time_zone": null,
+                "name": "Los Angeles",
+                "longitude": null,
+                "latitude": null,
+                "id": "cit_lax_us",
+                "icao_code": null,
+                "iata_country_code": "US",
+                "iata_code": "LAX",
+                "iata_city_code": "LAX",
+                "city_name": null
+              },
+              "airports": null
+            },
+            "conditions": {
+              "change_before_departure": null
+            }
+          }
+        ],
+        "private_fares": [],
+        "payment_requirements": {
+          "requires_instant_payment": true,
+          "price_guarantee_expires_at": null,
+          "payment_required_by": null
+        },
+        "passengers": [
+          {
+            "type": "adult",
+            "loyalty_programme_accounts": [],
+            "id": "pas_0000AQixehlO7Inw7RwtD2",
+            "given_name": null,
+            "fare_type": null,
+            "family_name": null,
+            "age": null
+          }
+        ],
+        "passenger_identity_documents_required": false,
+        "partial": true,
+        "owner": {
+          "name": "JetBlue Airways",
+          "logo_symbol_url": "https://assets.duffel.com/img/airlines/for-light-background/full-color-logo/B6.svg",
+          "logo_lockup_url": "https://assets.duffel.com/img/airlines/for-light-background/full-color-lockup/B6.svg",
+          "id": "arl_00009VME7DCOaPRQvNhcNY",
+          "iata_code": "B6",
+          "conditions_of_carriage_url": "https://www.jetblue.com/magnoliapublic/dam/ui-assets/p/contract_of_carriage.pdf"
+        },
+        "live_mode": false,
+        "id": "off_0000AQixf2Dm3TOVZHNqEP_0",
+        "expires_at": "2022-12-18T08:33:12.701716Z",
+        "created_at": "2022-12-18T07:33:13.060869Z",
+        "conditions": {
+          "refund_before_departure": null,
+          "change_before_departure": null
+        },
+        "base_currency": "USD",
+        "base_amount": "853.95",
+        "allowed_passenger_identity_document_types": []
+        }
+        ]}
+}
+
+
+
+
+

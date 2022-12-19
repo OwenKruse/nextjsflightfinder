@@ -3,7 +3,8 @@ import * as React from "react";
 import styles from "../styles/resultNavBar.module.css";
 import background from "../asset/BackGround.png";
 import {useRouter} from "next/router";
-import {useRef} from "react";
+import {useRef, useState} from "react";
+import SearchExtended from "./search/searchExtended";
 
 const items = [
     "ATLANTA GA, US (ATL) Airport",
@@ -125,7 +126,7 @@ export default function quickSearch(props) {
     const date = useRef(null);
 
     function maxDate(){
-        const formData = new FormData(form2.current);
+        const formData = new FormData(form.current);
 
         let tripStart = formData.get("trip-start");
         if (tripStart !== ""){
@@ -154,25 +155,17 @@ export default function quickSearch(props) {
         }
     }
 
+    const [formData, setFormData] = useState({});
     const handleSubmit = event => {
-        event.preventDefault();
-        const formData = new FormData(event.target);
-        //get by ref
-        const from = formData.get('from');
-        const to = formData.get('to');
-        const departure = formData.get('trip-start');
-        let returnDate = FormData.get('trip-end');
-        const checkbox = FormData.get('trip-one-way');
-        let oneWay = false;
-        if (checkbox) {
-            oneWay = true;
-            returnDate = null;
-        }
-    }
+        const formData = new FormData(form.current);
+        const data = Object.fromEntries(formData);
+        setFormData(data);
+    };
 
 
-        const form2 = useRef(null);
-    // get the props from the parent component
+    const form = useRef(null);
+
+
     return (
         <div className={styles.quicksearchwrapper}>
             <div className={styles.quicksearch} style={{
@@ -187,11 +180,11 @@ export default function quickSearch(props) {
 
             }}>
                     <form
-                        ref={form2}
+                        ref={form}
                         autoComplete="off"
-                        onSubmit={handleSubmit}
                         className={styles.quicksearch__form}
                     >
+                        <div className={styles.quicksearch__aiport_box}>
                         <div className={styles.quicksearch__box}>
                             <Autocomplete
                                 className={styles.quicksearch__input}
@@ -202,9 +195,10 @@ export default function quickSearch(props) {
                                     <TextField
                                         {...params}
                                         name={"from"}
-                                        label= {props.from}
+                                        defaultValue={props.from}
                                         id={"from"}
-                                        sx={{ input: { color: "white" }, whiteSpace: "nowrap", border : "1px solid",borderColor: "rgba(255,255,255,0.57)", borderRadius: "5px", backgroundColor: "rgba(0,0,0,)" }}
+                                        label={props.from}
+                                        sx={{ input: { color: "white" }, whiteSpace: "nowrap", }}
                                         InputLabelProps={{
                                             style: {
                                                 textOverflow: "ellipsis",
@@ -228,8 +222,10 @@ export default function quickSearch(props) {
                                     <TextField
                                         {...params}
                                         name={"to"}
+                                        defaultValue={props.to}
                                         label={props.to}
-                                        sx={{ input: { color: "white" }, whiteSpace: "nowrap", border : "1px solid",borderColor: "rgba(255,255,255,0.57)", borderRadius: "5px", backgroundColor: "rgba(0,0,0,)" }}
+
+                                        sx={{ input: { color: "white" }, whiteSpace: "nowrap", }}
                                         InputLabelProps={{
                                             style: {
                                                 textOverflow: "ellipsis",
@@ -243,6 +239,8 @@ export default function quickSearch(props) {
                             />
 
                         </div>
+                        </div>
+
                         <div className={styles.quicksearch__date__dropdown__show} id={"banner"}>
                             <div className={styles.quicksearch__date__box}>
                                 <div className={styles.quicksearch__date__title}>
@@ -267,17 +265,11 @@ export default function quickSearch(props) {
 
                             </div>
                         </div>
-
-                        <div className={styles.quicksearch__button__box}>
-                            <button className={styles.quicksearch__button} type="submit">
-                                Search
-                            </button>
-
-                        </div>
-
                     </form>
+                <SearchExtended props={formData} onSubmit={handleSubmit}/>
 
                 </div>
+
         </div>
 
 

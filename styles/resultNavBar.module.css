@@ -125,7 +125,7 @@
 }
 .quicksearch {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 10px;
@@ -138,6 +138,9 @@
 }
 .quicksearch__box {
     justify-content: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 
 
 }
@@ -163,7 +166,6 @@
 }
 .quicksearch__input {
     font-family: inherit;
-    width: available;
     border-radius: 10px;
     outline: 0;
     font-size: 1.3rem;
@@ -187,10 +189,11 @@
 .quicksearch__button {
     font-family: inherit;
     font-size: 1.3rem;
+    font-weight: 600;
+    width: 27%;
     color: white;
     background-color: #0070f3;
     border: 0;
-    margin: 10px;
     cursor: pointer;
     -webkit-appearance: none;
     border-radius: 10px;
@@ -205,8 +208,8 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    margin: 10px;
     padding: 10px;
+    width: 100%;
 }
 
 .quicksearch__date__window {
@@ -313,4 +316,36 @@
 
 }
 
+.quicksearch__aiport_box {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+}
+
+@media only screen and (max-width: 900px) {
+    /* styles for screens with width less than or equal to 600px */
+    .quicksearch__aiport_box {
+           display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            padding: 10px;
+
+    }
+    .quicksearch__form {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        margin: 0;
+
+    }
+
+
+}
 

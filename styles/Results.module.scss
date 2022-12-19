@@ -216,6 +216,7 @@
   font-size: 1rem;
   color : #000000;
   margin-bottom: 12%;
+
   text-align-all: center;
   text-align: center;
   justify-content: center;
@@ -238,4 +239,12 @@
   align-items: center;
   opacity: 1;
 }
+.logoBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 10%;
+}
+
 

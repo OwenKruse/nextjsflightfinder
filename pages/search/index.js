@@ -1,31 +1,24 @@
 import React, {useEffect, useRef, useState} from 'react';
-import resultStyles from "../../styles/Results.module.scss";
 import styles from "../../styles/Home.module.css";
 import Navbar from "./resultNavbar";
 import Head from "next/head";
 import {Duffel} from '@duffel/api'
 import * as fs from "fs";
-import Image from "next/image";
-import plane from "../../asset/Asset 11Line.png";
-import {Parallax, ParallaxProvider, useParallax} from "react-scroll-parallax";
-import background from "../../public/backgroundMain.png";
-import {SearchParamsContext} from "next/dist/shared/lib/hooks-client-context";
-import movingBG from "../../public/MovingBG.png";
+import Ticket from "./airlineTicket";
+import {Pagination} from "@mui/material";
+
 
 export default function List({ query, data}) {
     let to = query.to;
     let from = query.from;
     let departure = query.departure;
-    let returnDate = query.returnDate;
-    const target = useRef(null);
 
-
-
-
-
-        return (
-            <main className={styles.main}>
-                <Head>
+    useRef(null);
+    return (
+        <main className={styles.main}>
+                <Head className={
+                    styles.head
+                }>
                     <title>Flight Finder</title>
                     <link rel="icon" href="/favicon.ico" />
                 </Head>
@@ -39,248 +32,255 @@ export default function List({ query, data}) {
             </main>
         );
 }
+export function Show(jsonData, query, index) {
+    function flightInfo(flight) {
+        let info = [];
+        let departure = flight.departing_at
+        let arrival = flight.arriving_at
+        let duration = flight.duration
+        let departureTime = new Date(departure)
+        let distance = flight.distance
+        let arrivalTime = new Date(arrival)
+        let origin = flight.origin.city_name
+        let destination = flight.destination.city_name
+        let originAirport = origin.iata_code
+        let destinationAirport = destination.iata_code
+        let airline = flight.operating_carrier.name
+        let airlineCode = flight.operating_carrier.iata_code
+        let airlineLogo = flight.operating_carrier.logo_symbol_url
+        let flightNumber = flight.operating_carrier_flight_number
+        let price = jsonData.jsonData.total_amount
 
-export function ImageComponent({src, leftRight}) {
-    const right  = {
-        width: '100%',
-        height: '100%',
-        position: "absolute",
-        left: 0,
-        top: 0,
-        clipPath: "polygon(60% 0, 100% 0%, 100% 100%, 40% 100%)",
-        objectFit: "cover",
-        zIndex: -1,
-        // Round the corners
-        borderRadius: "10px",
-        opacity: 0.5,
+        // Order the list to fit the order of the ticket
+        // interface Props {
+        //     price: number;
+        //     arrival: Date;
+        //     departure: Date;
+        //     airline: string;
+        //     flightNumber: string;
+        //     origin: string;
+        //     destination: string;
+        //     cabinClass: string;
+        //     logoUrl: string;
+        //     connection: Connection[];
+        // }
+        info.push(price, arrivalTime, departureTime, airline, origin, destination, airlineLogo)
 
-
+        return (
+            info
+        )
     }
-
-    const left  ={
-        width: "100%",
-        height: "100%",
-        position: "absolute",
-        left: 0,
-        top: 0,
-        clipPath: "polygon(0 0, 60% 0, 40% 100%, 0 100%)",
-        objectFit: "cover",
-        zIndex: -1,
-        borderRadius: "10px",
-        opacity: 0.5,
-
-
-}
-    if (leftRight === "left") {
-        return(
-                <Image alt={"image"} src={imageUrl} style={left} />
-        )}
-    else {
-        return(
-                <Image alt={"image"} src={imageUrl} style={right} />
-
-        )}
-    }
-
-
-
-export function Show(jsonData , query) {
-    let price = jsonData.jsonData.total_amount
-    let airline = jsonData.jsonData
-    let departure = jsonData.jsonData.slices[0].segments[0].departing_at
-    let arrival = jsonData.jsonData.slices[0].segments[0].arriving_at
-    // Convert the departure and arrival times to a more readable format
-    departure = new Date(departure).toLocaleString();
-    //Split the string so that it doesn't include the date
-    departure = departure.split(",")[1];
-    arrival = new Date(arrival).toLocaleString();
-    // Remove the seconds from the time but keep the AM/PM
-    arrival = arrival.split(":")[0] + ":" + arrival.split(":")[1] + " " + arrival.split(" ")[2];
-    departure = departure.split(":")[0] + ":" + departure.split(":")[1] + " " + departure.split(" ")[2];
-
-    let departCity = jsonData.jsonData.slices[0].segments[0].origin.city_name
     let airport = jsonData.jsonData.slices[0].segments[0].origin.iata_code
     let airport2 = jsonData.jsonData.slices[0].segments[0].destination.iata_code
-    let arriveCity = jsonData.jsonData.slices[0].segments[0].destination.city_name
+
+
+    let specialList = []
+    if (index === 0) {
+        specialList.push("cheapest")
+    }
+    if (jsonData.jsonData.slices[0].segments.length > 1) {
+        specialList.push("indirect")
+        let connection = jsonData.jsonData.slices[0].segments[0]
+        connection = flightInfo(connection)
+        let flight = jsonData.jsonData.slices[0].segments[1]
+        flight = flightInfo(flight)
+        connection = {
+            origin : connection[4],
+            destination : connection[5],
+            departureTime : connection[2],
+            arrivalTime : connection[1],
+        }
+        let airport2 = jsonData.jsonData.slices[0].segments[1].destination.iata_code
+        let airport3 = jsonData.jsonData.slices[0].segments[0].destination.iata_code
+        let fullOrigin = jsonData.jsonData.slices[0].segments[0].origin.name + " (" + airport + ")"
+        let fullDestination = jsonData.jsonData.slices[0].segments[1].destination.name + " (" + airport2 + ")"
+        let fullConnection =  jsonData.jsonData.slices[0].segments[0].destination.name + " (" + airport3 + ")"
+        let totalDistance = parseFloat(jsonData.jsonData.slices[0].segments[0].distance) + parseFloat(jsonData.jsonData.slices[0].segments[1].distance)
+        let price = jsonData.jsonData.total_amount
+        let milesValue = (totalDistance * 1.3 / 100);
+        let truePrice =  (price - (milesValue / 2) / (1- .029))
+        let truePriceRounded = Math.round(truePrice * 100) / 100
+        // Convert the strings to dates and then subtract them to get the duration
+        let departureTime = new Date(jsonData.jsonData.slices[0].segments[0].departing_at)
+        let arrivalTime = new Date(jsonData.jsonData.slices[0].segments[1].arriving_at)
+        let duration = arrivalTime - departureTime
+        let durationHours = Math.floor(duration / 3600000)
+        let durationMinutes = Math.floor((duration % 3600000) / 60000)
+        let layoverDuration = durationHours + "h " + durationMinutes + "m"
+        if (durationHours > 24) {
+            specialList.push("long")
+        }
+        let fullTime = jsonData.jsonData.slices[0].duration
+
+
+
+        return (
+            Ticket( {
+                price: flight[0],
+                arrival: flight[1],
+                departure: connection.departureTime,
+                airline: flight[3],
+                origin: connection.origin,
+                destination: flight[5],
+                cabinClass: jsonData.jsonData.cabin_class,
+                logoUrl: flight[6],
+                connection: [connection],
+                totalDistance: totalDistance,
+                fullOrigin : fullOrigin,
+                fullDestination : fullDestination,
+                fullConnection : fullConnection,
+                layoverDuration : layoverDuration,
+                specialList : specialList,
+                fullTime : fullTime,
+            })
+        )
+
+    }
+    specialList.push("direct")
+    let price = jsonData.jsonData.total_amount
+    let airline = jsonData.jsonData
+    let flight = jsonData.jsonData.slices[0].segments[0]
+    let departure = flight.departing_at
+    let departureTime = new Date(departure)
+    let arrival = flight.arriving_at
+    let arrivalTime = new Date(arrival)
+    let origin = jsonData.jsonData.slices[0].segments[0].origin.city_name
+
+    let destination = jsonData.jsonData.slices[0].segments[0].destination.city_name
     let airlineName = jsonData.jsonData.slices[0].segments[0].operating_carrier.name
     let airlineLogo = jsonData.jsonData.slices[0].segments[0].operating_carrier.logo_symbol_url
+    let flightNumber = jsonData.jsonData.slices[0].segments[0].operating_carrier_flight_number
+    let distance = jsonData.jsonData.slices[0].distance
+    let duration = jsonData.jsonData.slices[0].duration
+    let cabin = jsonData.jsonData.slices[0].segments[0].cabin_class
+    let fullOrigin = jsonData.jsonData.slices[0].segments[0].origin.name + " (" + airport + ")"
+    let fullDestination = jsonData.jsonData.slices[0].segments[0].destination.name + " (" + airport2 + ")"
+    let fullTime = jsonData.jsonData.slices[0].duration
 
 
 
     //Split the string so that it doesn't include the date
     arrival = arrival.split(",")[1];
-    let duration = jsonData.jsonData.slices[0].duration
-    // Format the duration to be more readable it is in PT format
-    let hours = duration.split("H")[0].split("T")[1];
-    let minutes = duration.split("H")[1].split("M")[0];
-    duration = hours + "h " + minutes + "m";
-
-    let departCityCapitalized = departCity.toUpperCase()
-    let arriveCityCapitalized = arriveCity.toUpperCase();
-    console.log(jsonData.jsonData.slices[0].segments.length)
-
-    if (jsonData.jsonData.slices[0].segments.length === 2) {
-        console.log("Has connection")
-        let connectionDestination = airport2
-        let destinationAirport = jsonData.jsonData.slices[0].segments[1].destination.iata_code
-        let connectionArrival = arrival
-        let destinationArrival = jsonData.jsonData.slices[0].segments[1].arriving_at
-        destinationArrival = new Date(destinationArrival).toLocaleString();
-        destinationArrival = destinationArrival.split(":")[0] + ":" + destinationArrival.split(":")[1] + " " + destinationArrival.split(" ")[2];
-        destinationArrival = destinationArrival.split(",")[1];
-        return ( <div className={resultStyles.roundedRectangle}>
-
-                <div className={resultStyles.times}>
-
-                    <div className={resultStyles.arrivalBoxConnection}>
-                        <div className={resultStyles.airlineName}>{airlineName}
-                            <Image src={airlineLogo}  alt={"airline"} width={100} height={100} className={resultStyles.airlineLogo}/>
-                        </div>
-
-                        <div className={resultStyles.timeLabel}>{departure}
-                            <div className={resultStyles.city}>{airport}</div>
-                        </div>
-                    </div>
-                    <div className={resultStyles.imageBox}>
-                        <Image className={resultStyles.plane} src={plane} alt={"plane"} width={400} />
-                    </div>
-                    <div className={resultStyles.arrivalBox}>
-                        <div className={resultStyles.airlineName}>{airlineName}
-                            <Image src={airlineLogo}  alt={"airline"} width={100} height={100} className={resultStyles.airlineLogo}/>
-                        </div>
-                        <div className={resultStyles.timeLabel}>{connectionArrival}
-                            <div className={resultStyles.city}>{connectionDestination}
-                                <span className={resultStyles.fullName}>{arriveCity}</span>
-                            </div>
-
-                        </div>
-                    </div>
-
-
-                    <div className={resultStyles.imageBox}>
-
-                        <Image className={resultStyles.plane} src={plane} alt={"plane"} width={400} />
-                    </div>
-                    <div className={resultStyles.departureBoxConnection}>
-                        <div className={resultStyles.timeLabel}>{destinationArrival}
-                            <div className={resultStyles.city}>{destinationAirport}</div>
-                        </div>
-                    </div>
-                    <div className={resultStyles.verticalLineConnection}></div>
-
-                </div>
-
-                <div className={resultStyles.priceBox}>
-
-                    <div className={resultStyles.price}>
-                        <div className={resultStyles.durationBox}>
-                            {duration}
-                        </div>
-                        {price} $
-                    </div>
-                </div>
-            </div>
-        );
-    }
-
-
-
-    const gradientStyles = {
-        background: `linear-gradient(to right, ${departCityCapitalized}, ${arriveCityCapitalized})`,
-    }
-    console.log(gradientStyles)
-
-
+    let connectionList = []
     return (
-        <div className={resultStyles.roundedRectangle}>
-
-            <div className={resultStyles.times}>
-
-                <div className={resultStyles.arrivalBox}>
-                        <div className={resultStyles.airlineName}>{airlineName}
-                            <Image src={airlineLogo}  alt={"airline"} width={100} height={100} className={resultStyles.airlineLogo}/>
-                        </div>
-
-                    <div className={resultStyles.timeLabel}>{departure}
-                        <div className={resultStyles.city}>{airport}</div>
-                    </div>
-                </div>
-
-
-                <div className={resultStyles.imageBox}>
-
-                    <Image className={resultStyles.plane} src={plane} alt={"plane"} width={400} />
-                </div>
-                    <div className={resultStyles.departureBox}>
-                        <div className={resultStyles.timeLabel}>{arrival}
-                            <div className={resultStyles.city}>{airport2}</div>
-                        </div>
-                    </div>
-                <div className={resultStyles.verticalLine}></div>
-
-            </div>
-
-            <div className={resultStyles.priceBox}>
-
-                <div className={resultStyles.price}>
-                <div className={resultStyles.durationBox}>
-                    {duration}
-                </div>
-                {price} $
-            </div>
-            </div>
-        </div>
-    );
-
+        Ticket({price: price, arrival: arrivalTime, departure: departureTime, connections: connectionList,airline: airlineName, flightNumber: flightNumber, origin: origin, destination: destination, cabinClass: cabin, logoUrl: airlineLogo, totalDistance: distance, fullOrigin: fullOrigin, fullDestination: fullDestination, specialList: specialList, fullTime: fullTime})
+    )
 }
 
-export function Search(data, query) {
+function Search(data, query) {
     // Check if jsonData is undefined or null
     if (data === undefined || data === null) {
-        return <p>jsonData is undefined or null</p>;
+        return <p>Its time for your adventure!</p>;
     }
     //parse the data
     const jsonData = JSON.parse(data.data);
     let toConvert;
     toConvert = jsonData.data.offers;
-
     // Convert toConvert to an array
     const array = Object.keys(toConvert).map((key) => toConvert[key]);
-    // Map the data to the Show function and print every element
-    const listItems = array.map((d) =>
-        <Show jsonData={d} query={query}/>
+    // Check if the airline is one of the airlines we want
+    // Map the data to the Show function
+    const listItems = array.map((d, index) =>
+        <Show jsonData={d} query={query} index={index}/>
     );
+    const [list, setList] = useState([]);
+    const [page, setPage] = useState(1);
+    const resultsPerPage = 10;
+    const totalPages = Math.ceil(listItems.length / resultsPerPage);
+
+    useEffect(() => {
+        const startIndex = (page - 1) * resultsPerPage;
+        const endIndex = startIndex + resultsPerPage;
+        setList(listItems.slice(startIndex, endIndex));
+    }, [page]);
+
+    const handlePageChange = (event, page) => {
+        // extract new page number from event object
+        setPage(page);  // correct
+    }
+
+
     return (
         <div className={styles.containerSearch}>
-                {listItems}
+            {list.length > 0 ? list : <p>Loading...</p>}
+            {totalPages > 1 && (
+                <Pagination sx={
+                    {display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '1rem', marginBottom: '1rem'}
+                }
+                    page={page}
+                    count={totalPages}
+                    onChange={handlePageChange}
+                />
+            )}
         </div>
-
     );
-}
-export async function getServerSideProps({query}) {
-    const Blob = require('node-blob');
+}export async function getServerSideProps({query}) {
     // Send a POST request to the API endpoint
-    const { from, to, departure, returnDate, oneWay } = query;
+    await query
+    if (query === undefined) {
+        return {
+            props: {
+                data: null,
+            },
+        };
+    }
+    let from = query.from;
+    let to = query.to;
+    let departure = query.departure;
+    let returnDate = query.returnDate;
+    let oneWay = query.oneWay;
+    let stops = 1;
+    let times = "Anytime";
+    let price = "All Tickets";
+    let children = 0;
+    let adults = 1;
+    let airlines = "All Airlines";
+    console.log(from)
+    if(query.from === undefined) {
+         from = query.props.from;
+         to = query.props.to;
+         departure = query.props.departure;
+         returnDate = query.props.returnDate;
+         oneWay = query.props.oneWay;
+         stops = query.stops;
+         times = query.times;
+         airlines = query.airlines;
+         price = query.priceRange;
+         children = query.childrenCount;
+         adults = query.adultsCount;
+         console.log("from undefined")
 
-    console.log(query)
-    // format from and to so that they only include the airport code inside the ()
-    const fromFormatted = from.substring(from.indexOf("(") + 1, from.indexOf(")"));
-    const toFormatted = to.substring(to.indexOf("(") + 1, to.indexOf(")"));
-    // Create a new Duffel object
+
+    }
+    from = from.split("(")[1];
+    let fromFormatted = from.split(")")[0];
+    to = to.split("(")[1];
+    let toFormatted = to.split(")")[0];
+
+
+    function getPassengers(children, adults) {
+        const passengers = [];
+        for (let i = 0; i < adults; i++) {
+            passengers.push({ type: 'adult' });
+        }
+        for (let i = 0; i < children; i++) {
+            passengers.push({ type: 'child' });
+        }
+        return passengers;
+    }
+
+    const passengers = getPassengers(children, adults);
+
+    console.log(passengers)
+
     const duffel = new Duffel({
 
         token: "duffel_test_ThLUYHmU6F3MbIzMNFc8-ahZA-w_Nn5T5sSkPJ0-SLY"
 
     })
-    const response = await duffel.offerRequests.create({
+    const response = await duffel.partialOfferRequests.create({
 
-            passengers: [
-
-                {
-                    "fare_type": "frequent_flyer"
-                }
-
-            ],
+            passengers,
             slices: [
                 {
                     origin: fromFormatted,
@@ -294,10 +294,11 @@ export async function getServerSideProps({query}) {
                     },
                     departure_date: departure,
 
+
                 }
             ],
             currency: 'USD',
-            max_connections: 2,
+            max_connections: stops.toString(),
 
     }).then((response) => {
         // Write the response data to the file named `response.json`

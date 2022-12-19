@@ -1,10 +1,10 @@
-import { Autocomplete, TextField } from "@mui/material";
+import {Autocomplete, Checkbox, FormControl, FormControlLabel, TextField} from "@mui/material";
 import * as React from "react";
 import styles from "../styles/Home.module.css";
 import background from "../asset/BackGround.png";
 import { useRouter } from "next/router";
 // import ref from "react";
-import { useRef } from "react";
+import {useEffect, useRef} from "react";
 import {items} from "../public/airports.js";
 export default function quickSearch() {
     function todayDate() {
@@ -69,7 +69,6 @@ export default function quickSearch() {
 
 
 
-
         // Pass the `from` and `to` variables to the MyPage component as props
         router.push({
             pathname: '/search',
@@ -82,6 +81,13 @@ export default function quickSearch() {
             }
         }).then(r => console.log(r));
     };
+    let height = 0;
+    const element2Ref = useRef(null);
+    const element1Ref = useRef(null);
+    useEffect(() => {
+        const element1Height = element1Ref.current.offsetHeight;
+        element2Ref.current.style.height = `${element1Height}px`;
+    }, [element1Ref, element2Ref]);
 
 
     return (
@@ -95,6 +101,7 @@ export default function quickSearch() {
                         className={styles.quicksearch__form}
                         onSubmit={handleSubmit}
                     >
+                        <div className={styles.quicksearch__aiport_box}>
 
                         <div className={styles.quicksearch__box}>
                             <Autocomplete
@@ -151,7 +158,7 @@ export default function quickSearch() {
                             <button className={styles.quicksearch__button} type="submit">
                                 Search
                             </button>
-
+                        </div>
                         </div>
 
                     </form>
@@ -164,7 +171,11 @@ export default function quickSearch() {
                                 <input className={styles.date__select} type="date" name="trip-start"
                                        placeholder="2021-08-01"
                                        required
-                                       min={todayDate()} max="2025-12-31"></input>
+                                       min={todayDate()} max="2025-12-31"
+                                       ref={element1Ref}
+                                       >
+                                </input>
+
 
                                 <input className={styles.date__select} ref={date} type="date" name="trip-end"
                                        placeholder="2021-08-01"
@@ -177,16 +188,20 @@ export default function quickSearch() {
 
                                 ></input>
                             </div>
-                            <div className={styles.is__one__way} id={"banner"}>
-                                <div className={styles.is__one__way__box}>
-                                    <div className={styles.is__one__way__title}>
-                                        One way
-                                    </div>
-                                    <div className={styles.is__one__way__input}>
-                                        <input className={styles.is__one__way__input__select} ref={oneWay} type="checkbox" name="trip-one-way" onClick={isChecked}></input>
-                                    </div>
-                                </div>
-                            </div>
+
+                            <FormControl >
+                                <FormControlLabel className={styles.quicksearch__date__checkbox} ref={element2Ref}
+                                    control={
+                                        <Checkbox
+                                            className={styles.is__one__way__input__select}
+                                            inputRef={oneWay}
+                                            name="trip-one-way"
+                                            onClick={isChecked}
+                                        />
+                                    }
+                                    label="One way?"
+                                />
+                            </FormControl>
 
 
                         </div>

@@ -1,11 +1,12 @@
 import '../styles/globals.css'
 import "tailwindcss/tailwind.css"
-import { ParallaxProvider } from 'react-scroll-parallax';
+import store from './search/store';
+import { Provider } from 'react-redux';
 function MyApp({ Component, pageProps }) {
   return (
-      <ParallaxProvider>
+    <Provider store={store}>
         <Component {...pageProps} />
-      </ParallaxProvider>
+    </Provider>
   );
 }
 export default MyApp

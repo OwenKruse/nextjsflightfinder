@@ -16,7 +16,7 @@ export default function Home() {
         <Navbar />
         <div className={styles.mainPage}>
           <h1 className={styles.title}>
-            Whats next?
+            Where next?
           </h1>
           {importedElement}
         </div>
