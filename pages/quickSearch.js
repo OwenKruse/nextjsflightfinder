@@ -4,8 +4,15 @@ import styles from "../styles/Home.module.css";
 import background from "../asset/BackGround.png";
 import { useRouter } from "next/router";
 // import ref from "react";
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {items} from "../public/airports.js";
+import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
+import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
+import {DatePicker} from "@mui/x-date-pickers";
+import {useTheme} from "@mui/material";
+import { alpha } from '@mui/material/styles';
+import {add, toDate} from "date-fns";
+
 export default function quickSearch() {
     function todayDate() {
         const today = new Date();
@@ -19,36 +26,6 @@ export default function quickSearch() {
     const oneWay = useRef(null);
     const date = useRef(null);
 
-    function maxDate(){
-        const formData2 = new FormData(form2.current);
-
-        let tripStart = formData2.get("trip-start");
-        console.log(tripStart);
-        if (tripStart !== ""){
-            let date1 = new Date(tripStart);
-            date1.setDate(date1.getDate() + 1);
-            console.log(date);
-            date1 = date1.toISOString()
-            date1 = date1.split("T")[0];
-            console.log(date1);
-            date.current.style.backgroundColor = "white";
-            date.current.min = date1;
-        }
-
-    }
-    function isChecked() {
-        let checked = oneWay.current.checked;
-        if (checked) {
-            date.current.disabled = true;
-            // add a style to the date input
-            date.current.style.backgroundColor = "grey";
-
-        }
-        else {
-            date.current.disabled = false;
-            date.current.style.backgroundColor = "white";
-        }
-    }
 
     const form2 = useRef(null);
     const handleSubmit = event => {
@@ -58,8 +35,8 @@ export default function quickSearch() {
         const formData2 = new FormData(form2.current);
         const from = formData.get('from');
         const to = formData.get('to');
-        const departure = formData2.get('trip-start');
-        let returnDate = formData2.get('trip-end');
+        const date = formData2.get('tripStart');
+        let returnDate = formData2.get('tripEnd');
         const checkbox = formData2.get('trip-one-way');
         let oneWay = false;
         if (checkbox) {
@@ -75,7 +52,7 @@ export default function quickSearch() {
             query: {
                 from,
                 to,
-                departure,
+                date,
                 returnDate,
                 oneWay
             }
@@ -84,11 +61,14 @@ export default function quickSearch() {
     let height = 0;
     const element2Ref = useRef(null);
     const element1Ref = useRef(null);
-    useEffect(() => {
-        const element1Height = element1Ref.current.offsetHeight;
-        element2Ref.current.style.height = `${element1Height}px`;
-    }, [element1Ref, element2Ref]);
 
+
+    const [dateDepart, setDateDepart] = useState(null);
+    const [dateReturn, setDateReturn] = useState(null);
+    let minDate = new Date(dateDepart);
+    //Convert to date-fns
+    minDate = toDate(minDate);
+    minDate = add(minDate, {days: 1});
 
     return (
         <div className={styles.quicksearchwrapper}>
@@ -163,49 +143,120 @@ export default function quickSearch() {
 
                     </form>
             <form ref={form2}>
-                    <div className={styles.quicksearch__date__dropdown__show} id={"banner"}>
-                        <div className={styles.quicksearch__date__box}>
-                            <div className={styles.quicksearch__date__title}>
-                            </div>
-                            <div className={styles.quicksearch__date__input}>
-                                <input className={styles.date__select} type="date" name="trip-start"
-                                       placeholder="2021-08-01"
-                                       required
-                                       min={todayDate()} max="2025-12-31"
-                                       ref={element1Ref}
-                                       >
-                                </input>
+                <div className={styles.quicksearch__date__dropdown__show} id={"banner"}>
+                    <div >
+
+                        <LocalizationProvider dateAdapter={AdapterMoment}>
+                            <div className={styles.quicksearch__date__box}>
+                                <DatePicker
+                                    label="Departing on"
+                                    inputFormat="YYYY-MM-DD"
+                                    minDate={new Date()}
+                                    value={dateDepart}
+                                    onChange={(newValue) => {
+                                        setDateDepart(newValue);
+                                    }}
+                                    renderInput={(params) => <TextField
+                                        {...params}
+                                        name={"tripStart"}
+                                        id={"tripStart"}
+                                        label={"Leaving"}
+                                        className={styles.datePicker}
+                                        sx={{ input: { color: "white" },
+                                            whiteSpace: "nowrap",
+                                            borderRadius: "5px",
+                                            textAlign: "center",
 
 
-                                <input className={styles.date__select} ref={date} type="date" name="trip-end"
-                                       placeholder="2021-08-01"
-                                       min={todayDate()} max="2025-12-31"
-                                       disabled={false}
-                                       onClick={maxDate}
-                                       required
+                                            "& .MuiInputBase-root": {
+                                                '& fieldset': {
+
+                                                }
+
+                                            },
+                                            "& .MuiInputBase-root:hover": {
+                                                '& fieldset': {
+                                                }
+                                            },
+                                            "& .MuiInputBase-root.Mui-focused": {
+                                                '& fieldset': {
+                                                    borderWidth: 1,
+                                                }
+                                            }
 
 
 
-                                ></input>
-                            </div>
 
-                            <FormControl >
-                                <FormControlLabel className={styles.quicksearch__date__checkbox} ref={element2Ref}
-                                    control={
-                                        <Checkbox
-                                            className={styles.is__one__way__input__select}
-                                            inputRef={oneWay}
-                                            name="trip-one-way"
-                                            onClick={isChecked}
-                                        />
-                                    }
-                                    label="One way?"
+                                        }}
+                                        InputLabelProps={{
+                                            style: {
+                                                textOverflow: "ellipsis",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textAlign: "center",
+
+
+                                            },
+                                        }}
+                                    />}
+                                    sx={{ textAlign: "center", }}
+                                    className={styles.date__select}
                                 />
-                            </FormControl>
+
+                                <DatePicker
+                                    label="Returning on"
+                                    inputFormat="YYYY-MM-DD"
+                                    value={dateReturn}
+                                    minDate={minDate}
+                                    onChange={(newValue) => {
+                                        setDateReturn(newValue);
+                                    }}
+                                    renderInput={(params) => <TextField
+                                        {...params}
+                                        name={"tripEnd"}
+                                        id={"tripEnd"}
+                                        label={"Returning"}
 
 
-                        </div>
+
+                                        sx={{ input: { color: "white" },
+                                            whiteSpace: "nowrap",
+                                            borderRadius: "5px",
+
+                                            "& .MuiInputBase-root": {
+                                                '& fieldset': {
+                                                }
+
+                                            },
+                                            "& .MuiInputBase-root:hover": {
+                                                '& fieldset': {
+                                                }
+                                            },
+                                            "& .MuiInputBase-root.Mui-focused": {
+                                                '& fieldset': {
+                                                    borderWidth: 1,
+                                                }
+                                            }
+
+
+
+
+                                        }}
+                                        InputLabelProps={{
+                                            style: {
+                                                textOverflow: "ellipsis",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                            },
+                                        }}
+                                    />}
+                                    className={styles.date__select}
+                                />
+                            </div>
+                        </LocalizationProvider>
+
                     </div>
+                </div>
                 </form>
                 </div>
             </div>

@@ -2,6 +2,8 @@ import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import Navbar from "../../nextjsflightfinder/pages/navbar";
 import * as React from "react";
+import {useTheme} from "@mui/material";
+import { alpha } from '@mui/material/styles';
 
 import quickSearch from "./quickSearch";
 export default function Home() {

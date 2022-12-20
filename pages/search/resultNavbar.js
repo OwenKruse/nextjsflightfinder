@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import logo from '../../asset/logo.png'
-import quickSearch from "../quickSearchHeader";
+import quickSearch from "../search/searchExtended";
 import * as React from "react";
 
 

@@ -6,16 +6,24 @@ import {Duffel} from '@duffel/api'
 import * as fs from "fs";
 import Ticket from "./airlineTicket";
 import {Pagination} from "@mui/material";
+import {useTheme} from "@mui/material";
+import { alpha } from '@mui/material/styles';
 
 
 export default function List({ query, data}) {
     let to = query.to;
     let from = query.from;
     let departure = query.departure;
+    let returnDate = query.returnDate;
 
     useRef(null);
+    const theme = useTheme();
     return (
-        <main className={styles.main}>
+        <main style={
+            {
+                background: alpha(theme.palette.background.paper, 1),
+            }
+        } className={styles.main}>
                 <Head className={
                     styles.head
                 }>
@@ -24,10 +32,8 @@ export default function List({ query, data}) {
                 </Head>
                 <div className={styles.parallax}>
                     {/* The Parallax component takes a prop called "className" that you can use to specify the class of the element to apply the parallax effect to */}
-                        <div className={styles.containerSearch}>
-                            <Navbar from={from} to={to} departure={departure} />
+                            <Navbar from={from} to={to} departure={departure} returnDate={returnDate} />
                             <Search data={data} query={query} />
-                        </div>
                 </div>
             </main>
         );
@@ -199,13 +205,13 @@ function Search(data, query) {
         setPage(page);  // correct
     }
 
-
+    const theme = useTheme();
     return (
         <div className={styles.containerSearch}>
             {list.length > 0 ? list : <p>Loading...</p>}
             {totalPages > 1 && (
                 <Pagination sx={
-                    {display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '1rem', marginBottom: '1rem'}
+                    {display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: '1rem', marginBottom: '1rem', background: alpha(theme.palette.background.default, 0.75), borderRadius: '0.5rem', padding: '0.5rem'}
                 }
                     page={page}
                     count={totalPages}
@@ -226,7 +232,7 @@ function Search(data, query) {
     }
     let from = query.from;
     let to = query.to;
-    let departure = query.departure;
+    let departure = query.date;
     let returnDate = query.returnDate;
     let oneWay = query.oneWay;
     let stops = 1;
@@ -236,22 +242,23 @@ function Search(data, query) {
     let adults = 1;
     let airlines = "All Airlines";
     console.log(from)
-    if(query.from === undefined) {
-         from = query.props.from;
-         to = query.props.to;
-         departure = query.props.departure;
-         returnDate = query.props.returnDate;
-         oneWay = query.props.oneWay;
+    if(query.stops !== undefined) {
+         from = query.from;
+         to = query.to;
+         departure = query.date;
+         returnDate = query.returnDate;
+         oneWay = query.oneWay;
          stops = query.stops;
          times = query.times;
          airlines = query.airlines;
          price = query.priceRange;
          children = query.childrenCount;
          adults = query.adultsCount;
-         console.log("from undefined")
+
 
 
     }
+
     from = from.split("(")[1];
     let fromFormatted = from.split(")")[0];
     to = to.split("(")[1];
@@ -260,6 +267,7 @@ function Search(data, query) {
 
     function getPassengers(children, adults) {
         const passengers = [];
+        console.log(adults, children)
         for (let i = 0; i < adults; i++) {
             passengers.push({ type: 'adult' });
         }
@@ -271,7 +279,9 @@ function Search(data, query) {
 
     const passengers = getPassengers(children, adults);
 
-    console.log(passengers)
+    if (passengers.length === 0) {
+        passengers.push({type: 'adult'});
+    }
 
     const duffel = new Duffel({
 
