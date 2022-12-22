@@ -10,7 +10,6 @@ function formReducer(state = initialState, action) {
                 formData: action.payload,
             };
         default:
-            console.log(state);
             return state;
     }
 }

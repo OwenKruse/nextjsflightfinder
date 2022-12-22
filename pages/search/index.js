@@ -5,9 +5,9 @@ import Head from "next/head";
 import {Duffel} from '@duffel/api'
 import * as fs from "fs";
 import Ticket from "./airlineTicket";
-import {Pagination} from "@mui/material";
-import {useTheme} from "@mui/material";
-import { alpha } from '@mui/material/styles';
+import {Pagination, useTheme} from "@mui/material";
+import {alpha} from '@mui/material/styles';
+import moment from "moment/moment";
 
 
 export default function List({ query, data}) {
@@ -49,127 +49,139 @@ export function Show(jsonData, query, index) {
         let arrivalTime = new Date(arrival)
         let origin = flight.origin.city_name
         let destination = flight.destination.city_name
-        let originAirport = origin.iata_code
-        let destinationAirport = destination.iata_code
+        let originAirport = flight.origin.name
+        let destinationAirport = flight.destination.name
         let airline = flight.operating_carrier.name
         let airlineCode = flight.operating_carrier.iata_code
         let airlineLogo = flight.operating_carrier.logo_symbol_url
         let flightNumber = flight.operating_carrier_flight_number
         let price = jsonData.jsonData.total_amount
-
-        // Order the list to fit the order of the ticket
-        // interface Props {
-        //     price: number;
-        //     arrival: Date;
-        //     departure: Date;
-        //     airline: string;
-        //     flightNumber: string;
-        //     origin: string;
-        //     destination: string;
-        //     cabinClass: string;
-        //     logoUrl: string;
-        //     connection: Connection[];
-        // }
-        info.push(price, arrivalTime, departureTime, airline, origin, destination, airlineLogo)
-
+        let originLongitude = flight.origin.longitude
+        let originLatitude = flight.origin.latitude
+        let destinationLongitude = flight.destination.longitude
+        let destinationLatitude = flight.destination.latitude
+        let originCode = flight.origin.iata_code
+        let destinationCode = flight.destination.iata_code
+        info.push({"price": price, "departureTime": departureTime, "arrivalTime": arrivalTime, "origin": origin, "destination": destination, "originAirport": originAirport, "destinationAirport": destinationAirport, "airline": airline, "airlineCode": airlineCode, "airlineLogo": airlineLogo, "flightNumber": flightNumber, "duration": duration, "distance": distance, "originLongitude": originLongitude, "originLatitude": originLatitude, "destinationLongitude": destinationLongitude, "destinationLatitude": destinationLatitude, "originCode": originCode, "destinationCode": destinationCode})
         return (
-            info
+            info[0]
         )
     }
-    let airport = jsonData.jsonData.slices[0].segments[0].origin.iata_code
-    let airport2 = jsonData.jsonData.slices[0].segments[0].destination.iata_code
-
-
-    let specialList = []
-    if (index === 0) {
-        specialList.push("cheapest")
+    function flightList(flights) {
+        let list = [];
+        for (let i = 0; i < flights.length; i++) {
+            list.push(flightInfo(flights[i]))
+        }
+        return list
     }
-    if (jsonData.jsonData.slices[0].segments.length > 1) {
-        specialList.push("indirect")
-        let connection = jsonData.jsonData.slices[0].segments[0]
-        connection = flightInfo(connection)
-        let flight = jsonData.jsonData.slices[0].segments[1]
-        flight = flightInfo(flight)
-        connection = {
-            origin : connection[4],
-            destination : connection[5],
-            departureTime : connection[2],
-            arrivalTime : connection[1],
-        }
-        let airport2 = jsonData.jsonData.slices[0].segments[1].destination.iata_code
-        let airport3 = jsonData.jsonData.slices[0].segments[0].destination.iata_code
-        let fullOrigin = jsonData.jsonData.slices[0].segments[0].origin.name + " (" + airport + ")"
-        let fullDestination = jsonData.jsonData.slices[0].segments[1].destination.name + " (" + airport2 + ")"
-        let fullConnection =  jsonData.jsonData.slices[0].segments[0].destination.name + " (" + airport3 + ")"
-        let totalDistance = parseFloat(jsonData.jsonData.slices[0].segments[0].distance) + parseFloat(jsonData.jsonData.slices[0].segments[1].distance)
-        let price = jsonData.jsonData.total_amount
-        let milesValue = (totalDistance * 1.3 / 100);
-        let truePrice =  (price - (milesValue / 2) / (1- .029))
-        let truePriceRounded = Math.round(truePrice * 100) / 100
-        // Convert the strings to dates and then subtract them to get the duration
-        let departureTime = new Date(jsonData.jsonData.slices[0].segments[0].departing_at)
-        let arrivalTime = new Date(jsonData.jsonData.slices[0].segments[1].arriving_at)
-        let duration = arrivalTime - departureTime
-        let durationHours = Math.floor(duration / 3600000)
-        let durationMinutes = Math.floor((duration % 3600000) / 60000)
-        let layoverDuration = durationHours + "h " + durationMinutes + "m"
-        if (durationHours > 24) {
-            specialList.push("long")
-        }
-        let fullTime = jsonData.jsonData.slices[0].duration
+    const moment = require('moment'); // require
+    let specialList = [];
+    const geolib = require('geolib');
+    let distance = 0;
+    let connectionList = [];
+    let flights = flightList(jsonData.jsonData.slices[0].segments)
+    let firstFlight = flights[0]
+    let fullDuration = 0;
+    let connectionDuration = 0;
+    let destination = firstFlight.destination
+    let arrivalTime = firstFlight.arrivalTime
+    let departureTime = firstFlight.departureTime
+    let secondDuration = 0;
 
+
+    moment().format();
+    function buildTicket() {
+        for (let i = 0; i < flights.length; i++) {
+
+
+            // Calculate the distance between the two points
+            distance += geolib.getDistance(
+                {latitude: parseFloat(flights[i].originLatitude), longitude: parseFloat(flights[i].originLongitude)},
+                {latitude: parseFloat(flights[i].destinationLatitude), longitude: parseFloat(flights[i].destinationLongitude)}
+            );
+
+
+
+        }
+        firstFlight = flights[0]
+
+        origin = firstFlight.origin
+        destination = flights[flights.length - 1].destination
+        // Find the difference between the first flight arrival and the next flight departure
+        let fullDuration = moment.duration(moment(flights[flights.length -1 ].arrivalTime).diff(moment(firstFlight.departureTime))).asMinutes()
+
+        let departure = firstFlight.arrivalTime
+        let arrival = flights[flights.length - 1].departureTime
+        let duration = moment.duration(moment(arrival).diff(moment(departure))).asMinutes()
+        connectionDuration += duration
+
+        secondDuration = moment.duration(flights[flights.length - 1].duration).asMinutes()
+
+
+
+        arrivalTime = moment(flights[flights.length - 1].arrivalTime).format('LT')
+        departureTime = moment(firstFlight.departureTime).format('LT')
+        if (flights.length > 1) {
+            connectionList.push(flights[flights.length - 1])
+        }
+        // Convert fullDuration to hours and minutes
+        if (fullDuration > 360) {
+            specialList.push("longFlight")
+        }
+        let hours = Math.floor(fullDuration / 60);
+        let minutes = fullDuration % 60;
+        fullDuration = hours + "h " + minutes + "m"
+
+        // Convert connectionDuration to hours and minutes
+        let connectionHours = Math.floor(connectionDuration / 60);
+        let connectionMinutes = connectionDuration % 60;
+        connectionDuration = connectionHours + "h " + connectionMinutes + "m"
+
+        if (flights.length > 1) {
+            specialList.push("indirect")
+        }
+        else {
+            specialList.push("direct")
+        }
+        // Convert the arrival time to a readable format
+
+
+        // Convert secondDuration to hours and minutes
+        let secondHours = Math.floor(secondDuration / 60);
+        let secondMinutes = secondDuration % 60;
+        secondDuration = secondHours + "h " + secondMinutes + "m"
 
 
         return (
-            Ticket( {
-                price: flight[0],
-                arrival: flight[1],
-                departure: connection.departureTime,
-                airline: flight[3],
-                origin: connection.origin,
-                destination: flight[5],
-                cabinClass: jsonData.jsonData.cabin_class,
-                logoUrl: flight[6],
-                connection: [connection],
-                totalDistance: totalDistance,
-                fullOrigin : fullOrigin,
-                fullDestination : fullDestination,
-                fullConnection : fullConnection,
-                layoverDuration : layoverDuration,
+            Ticket({
+                price : jsonData.jsonData.total_amount,
+                arrival : arrivalTime,
+                departure : departureTime,
+                departureDate : firstFlight.departureTime,
+                arrivalDate : firstFlight.arrivalTime,
+                airline : firstFlight.airline,
+                flightNumber : firstFlight.flightNumber,
+                origin : firstFlight.origin,
+                destination : destination,
+                airlineLogo : firstFlight.airlineLogo,
+                connectionList : connectionList,
+                totalDistance : distance,
+                originAirport : firstFlight.originAirport,
+                destinationAirport : firstFlight.destinationAirport,
+                airlineCode : firstFlight.airlineCode,
+                fullDuration : fullDuration,
+                duration : firstFlight.duration,
+                secondDuration : secondDuration,
                 specialList : specialList,
-                fullTime : fullTime,
-            })
+                connectionDuration : connectionDuration,
+                originCode : firstFlight.originCode,
+                destinationCode : firstFlight.destinationCode
+                })
+
         )
-
     }
-    specialList.push("direct")
-    let price = jsonData.jsonData.total_amount
-    let airline = jsonData.jsonData
-    let flight = jsonData.jsonData.slices[0].segments[0]
-    let departure = flight.departing_at
-    let departureTime = new Date(departure)
-    let arrival = flight.arriving_at
-    let arrivalTime = new Date(arrival)
-    let origin = jsonData.jsonData.slices[0].segments[0].origin.city_name
-
-    let destination = jsonData.jsonData.slices[0].segments[0].destination.city_name
-    let airlineName = jsonData.jsonData.slices[0].segments[0].operating_carrier.name
-    let airlineLogo = jsonData.jsonData.slices[0].segments[0].operating_carrier.logo_symbol_url
-    let flightNumber = jsonData.jsonData.slices[0].segments[0].operating_carrier_flight_number
-    let distance = jsonData.jsonData.slices[0].distance
-    let duration = jsonData.jsonData.slices[0].duration
-    let cabin = jsonData.jsonData.slices[0].segments[0].cabin_class
-    let fullOrigin = jsonData.jsonData.slices[0].segments[0].origin.name + " (" + airport + ")"
-    let fullDestination = jsonData.jsonData.slices[0].segments[0].destination.name + " (" + airport2 + ")"
-    let fullTime = jsonData.jsonData.slices[0].duration
-
-
-
-    //Split the string so that it doesn't include the date
-    arrival = arrival.split(",")[1];
-    let connectionList = []
     return (
-        Ticket({price: price, arrival: arrivalTime, departure: departureTime, connections: connectionList,airline: airlineName, flightNumber: flightNumber, origin: origin, destination: destination, cabinClass: cabin, logoUrl: airlineLogo, totalDistance: distance, fullOrigin: fullOrigin, fullDestination: fullDestination, specialList: specialList, fullTime: fullTime})
+        buildTicket()
     )
 }
 
@@ -220,7 +232,8 @@ function Search(data, query) {
             )}
         </div>
     );
-}export async function getServerSideProps({query}) {
+}
+export async function getServerSideProps({query}) {
     // Send a POST request to the API endpoint
     await query
     if (query === undefined) {
@@ -241,7 +254,7 @@ function Search(data, query) {
     let children = 0;
     let adults = 1;
     let airlines = "All Airlines";
-    console.log(from)
+
     if(query.stops !== undefined) {
          from = query.from;
          to = query.to;
@@ -267,7 +280,6 @@ function Search(data, query) {
 
     function getPassengers(children, adults) {
         const passengers = [];
-        console.log(adults, children)
         for (let i = 0; i < adults; i++) {
             passengers.push({ type: 'adult' });
         }

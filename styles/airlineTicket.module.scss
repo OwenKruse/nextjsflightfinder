@@ -21,7 +21,17 @@
     position: relative;
     padding-right: 10%;
 
+}
+.tableRow {
 
+
+
+}
+.tableCell{
+  display: flex;
+    align-items: center;
+    justify-content: space-around;
+  flex-direction: row;
 }
 
 @media only screen and (max-width: 900px) {

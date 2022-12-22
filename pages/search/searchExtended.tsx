@@ -19,6 +19,8 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';import {DatePicker, DesktopDatePicker} from "@mui/x-date-pickers";
 import {useTheme} from "@mui/material";
 import { alpha } from '@mui/material/styles';
+import {add, toDate} from "date-fns";
+
 
 const items = [
     "ATLANTA GA, US (ATL) Airport",
@@ -138,22 +140,7 @@ export default function MyForm(props) {
     const date = useRef(todayDate());
 
 
-    function maxDate(){
-        const formData = new FormData(formRef.current);
 
-        let tripStart = formData.get("tripStart");
-        if (tripStart !== ""){
-            let date1 = new Date(tripStart);
-            date1.setDate(date1.getDate() + 1);
-            console.log(date);
-            date1 = date1.toISOString()
-            date1 = date1.split("T")[0];
-            console.log(date1);
-            date.current.style.backgroundColor = "white";
-            date.current.min = date1;
-        }
-
-    }
     const [formState, setFormState] = useState({});
 
 
@@ -201,7 +188,6 @@ export default function MyForm(props) {
         // Get the selected values from the event
         const selectedValues = event.target.value as string[];
         // If the user selected "All airlines", then we want to clear all other selections
-        console.log(selectedValues);
 
         // Check all values are selected
         if (selectedValues.length >= 3) {
@@ -317,7 +303,7 @@ export default function MyForm(props) {
 
         }
         router.push({
-            pathname: '/search',
+            pathname: '/search/loading',
             query: {
                 ...combinedData,
             }
@@ -326,6 +312,11 @@ export default function MyForm(props) {
     const theme = useTheme();
     const [dateDepart, setDateDepart] = React.useState<Date | null>(null);
     const [dateReturn, setDateReturn] = React.useState<Date | null>(null);
+
+    let minDate = new Date(dateDepart);
+    //Convert to date-fns
+    minDate = toDate(minDate);
+    minDate = add(minDate, {days: 1});
     return (
         <div className={styles.buttonContainer} >
             <div className={styles.quicksearchwrapper}>
@@ -407,7 +398,7 @@ export default function MyForm(props) {
                                     sx={{ width: 300 }}
                                     renderInput={(params) => <TextField
                                         {...params}
-                                        name={"tripStart"}
+                                        name={"to"}
                                         defaultValue={props.to}
                                         id={"to"}
                                         label={"Arriving at..."}
@@ -516,8 +507,7 @@ export default function MyForm(props) {
                                         label="Returning on"
                                         inputFormat="YYYY-MM-DD"
                                         value={dateReturn}
-                                        maxDate={maxDate}
-                                        minDate={new Date()}
+                                        minDate={minDate}
                                         onChange={(newValue) => {
                                             setDateReturn(newValue);
                                         }}

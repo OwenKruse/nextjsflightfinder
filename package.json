@@ -21,6 +21,7 @@
     "date-fns": "^2.29.3",
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.6",
+    "geolib": "^3.3.3",
     "http-proxy-middleware": "^2.0.6",
     "moment": "^2.29.4",
     "net": "^1.0.2",
@@ -36,7 +37,8 @@
     "sass": "^1.56.2",
     "sharp": "^0.31.2",
     "simple-parallax-js": "^5.6.2",
-    "swr": "^2.0.0"
+    "swr": "^2.0.0",
+    "tinyduration": "^3.2.3"
   },
   "devDependencies": {
     "@types/node": "^18.11.17",
