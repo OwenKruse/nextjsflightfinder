@@ -1,12 +1,12 @@
 import {
     Button,
     Checkbox, Collapse,
-    FormControl,
+    FormControl, FormControlLabel,
     InputLabel,
     ListItemText,
     MenuItem,
     Select,
-    SelectChangeEvent, Slider, TextField
+    SelectChangeEvent, Slider, TextField, ThemeProvider, Toolbar, Tooltip, useMediaQuery
 } from '@mui/material';
 import {ChangeEvent, useEffect, useState} from "react";
 import styles from "./searchExtended.module.scss";
@@ -16,114 +16,12 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Autocomplete } from "@mui/material";
 import {useRef} from "react";
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';import {DatePicker, DesktopDatePicker} from "@mui/x-date-pickers";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import {DatePicker, DesktopDatePicker} from "@mui/x-date-pickers";
 import {useTheme} from "@mui/material";
-import { alpha } from '@mui/material/styles';
+import {alpha, createTheme} from '@mui/material/styles';
 import {add, toDate} from "date-fns";
-
-
-const items = [
-    "ATLANTA GA, US (ATL) Airport",
-    "BEIJING, CN (PEK) Airport",
-    "LONDON, GB (LHR) Airport",
-    "CHICAGO IL, US (ORD) Airport",
-    "TOKYO, JP (HND) Airport",
-    "LOS ANGELES CA, US (LAX) Airport",
-    "PARIS, FR (CDG) Airport",
-    "DALLAS/FORT WORTH TX, US (DFW) Airport",
-    "FRANKFURT, DE (FRA) Airport",
-    "HONG KONG, HK (HKG) Airport",
-    "DENVER CO, US (DEN) Airport",
-    "DUBAI, AE (DXB) Airport",
-    "JAKARTA, ID (CGK) Airport",
-    "AMSTERDAM, NL (AMS) Airport",
-    "MADRID, ES (MAD) Airport",
-    "BANGKOK, TH (BKK) Airport",
-    "NEW YORK NY, US (JFK) Airport",
-    "SINGAPORE, SG (SIN) Airport",
-    "GUANGZHOU, CN (CAN) Airport",
-    "LAS VEGAS NV, US (LAS) Airport",
-    "SHANGHAI, CN (PVG) Airport",
-    "SAN FRANCISCO CA, US (SFO) Airport",
-    "PHOENIX AZ, US (PHX) Airport",
-    "HOUSTON TX, US (IAH) Airport",
-    "CHARLOTTE NC, US (CLT) Airport",
-    "MIAMI FL, US (MIA) Airport",
-    "MUNICH, DE (MUC) Airport",
-    "KUALA LUMPUR, MY (KUL) Airport",
-    "ROME, IT (FCO) Airport",
-    "ISTANBUL, TR (IST) Airport",
-    "SYDNEY, AU (SYD) Airport",
-    "ORLANDO FL, US (MCO) Airport",
-    "INCHEON, KR (ICN) Airport",
-    "NEW DELHI, IN (DEL) Airport",
-    "BARCELONA, ES (BCN) Airport",
-    "LONDON, GB (LGW) Airport",
-    "NEWARK NJ, US (EWR) Airport",
-    "TORONTO ON, CA (YYZ) Airport",
-    "SHANGHAI, CN (SHA) Airport",
-    "MINNEAPOLIS MN, US (MSP) Airport",
-    "SEATTLE WA, US (SEA) Airport",
-    "DETROIT MI, US (DTW) Airport",
-    "PHILADELPHIA PA, US (PHL) Airport",
-    "MUMBAI, IN (BOM) Airport",
-    "SÃO PAULO, BR (GRU) Airport",
-    "MANILA, PH (MNL) Airport",
-    "CHENGDU, CN (CTU) Airport",
-    "BOSTON MA, US (BOS) Airport",
-    "SHENZHEN, CN (SZX) Airport",
-    "MELBOURNE, AU (MEL) Airport",
-    "TOKYO, JP (NRT) Airport",
-    "PARIS, FR (ORY) Airport",
-    "MEXICO CITY, MX (MEX) Airport",
-    "MOSCOW, RU (DME) Airport",
-    "ANTALYA, TR (AYT) Airport",
-    "TAIPEI, TW (TPE) Airport",
-    "ZURICH, CH (ZRH) Airport",
-    "NEW YORK NY, US (LGA) Airport",
-    "FORT LAUDERDALE, FL, US (FLL) Airport",
-    "WASHINGTON, DC, US (IAD) Airport",
-    "PALMA DE MALLORCA, ES (PMI) Airport",
-    "COPENHAGEN, DK (CPH) Airport",
-    "MOSCOW, RU (SVO) Airport",
-    "BALTIMORE MD, US (BWI) Airport",
-    "KUNMING, CN (KMG) Airport",
-    "VIENNA, AT (VIE) Airport",
-    "OSLO, NO (OSL) Airport",
-    "JEDDAH, SA (JED) Airport",
-    "BRISBANE, AU (BNE) Airport",
-    "SALT LAKE CITY UT, US (SLC) Airport",
-    "DÜSSELDORF, DE (DUS) Airport",
-    "BOGOTA, CO (BOG) Airport",
-    "MILAN, IT (MXP) Airport",
-    "JOHANNESBURG, ZA (JNB) Airport",
-    "STOCKHOLM, SE (ARN) Airport",
-    "MANCHESTER, GB (MAN) Airport",
-    "CHICAGO IL, US (MDW) Airport",
-    "WASHINGTON DC, US (DCA) Airport",
-    "BRUSSELS, BE (BRU) Airport",
-    "DUBLIN, IE (DUB) Airport",
-    "SEOUL, KR (GMP) Airport",
-    "DOHA, QA (DOH) Airport",
-    "LONDON, GB (STN) Airport",
-    "HANGZHOU, CN (HGH) Airport",
-    "JEJU, KR (CJU) Airport",
-    "VANCOUVER BC, CA (YVR) Airport",
-    "BERLIN, DE (TXL) Airport",
-    "SAN DIEGO CA, US (SAN) Airport",
-    "TAMPA FL, US (TPA) Airport",
-    "SÃO PAULO, BR (CGH) Airport",
-    "BRASILIA, BR (BSB) Airport",
-    "SAPPORO, JP (CTS) Airport",
-    "XIAMEN, CN (XMN) Airport",
-    "RIYADH, SA (RUH) Airport",
-    "FUKUOKA, JP (FUK) Airport",
-    "RIO DE JANEIRO, BR (GIG) Airport",
-    "HELSINKI, FI (HEL) Airport",
-    "LISBON, PT (LIS) Airport",
-    "ATHENS, GR (ATH) Airport",
-    "AUCKLAND, NZ (AKL) Airport",
-];
+import {items} from "./airports";
 
 
 
@@ -144,9 +42,6 @@ export default function MyForm(props) {
     const [formState, setFormState] = useState({});
 
 
-
-
-    const formRef = useRef(null);
 
     const filters = {
         stops: [
@@ -288,18 +183,18 @@ export default function MyForm(props) {
     let handleSubmit = () => {
 
         let formData= new FormData(formRef.current);
-        let formData1= new FormData(formRef1.current);
         let combinedData = {
             from: formData.get('from'),
             to: formData.get('to'),
             date: formData.get('tripStart'),
-            returnDate: formData1.get('tripEnd'),
+            returnDate: formData.get('tripEnd'),
             stops: selectedStops,
             times: selectedTimes,
             airlines: selectedAirlines,
             priceRange: selectedPriceRange,
             childrenCount: childrenCount,
             adultsCount: adultsCount,
+
 
         }
         router.push({
@@ -309,16 +204,37 @@ export default function MyForm(props) {
             }
         });
     }
+
     const theme = useTheme();
+    const formRef = useRef(null);
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [dateDepart, setDateDepart] = React.useState<Date | null>(null);
     const [dateReturn, setDateReturn] = React.useState<Date | null>(null);
-
+    const dateSelectRef = useRef(null);
+    const [height, setHeight] = useState(0);
+    if (dateSelectRef.current !== null && dateSelectRef.current.clientHeight !== height ) {
+        setHeight(dateSelectRef.current.clientHeight);
+    }
     let minDate = new Date(dateDepart);
+    const [isOneWay, setIsOneWay] = useState(true);
     //Convert to date-fns
     minDate = toDate(minDate);
     minDate = add(minDate, {days: 1});
+    const darkTheme = createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    });
     return (
-        <div className={styles.buttonContainer} >
+
+        <ThemeProvider theme={darkTheme}>
+        <div className={styles.buttonContainer} style={
+            {
+
+                paddingBottom: '1%',
+            }
+        }>
+
             <div className={styles.quicksearchwrapper}>
                 <div className={styles.quicksearch} style={{
                     // Make the image more transparent
@@ -335,7 +251,7 @@ export default function MyForm(props) {
                         autoComplete="off"
                         className={styles.quicksearch__form}
                         style={{
-                            background: alpha(theme.palette.background.default, 0.75),
+                            background: 'rgba(0, 0, 0, 0.75)',
                     }
                         }
                     >
@@ -443,7 +359,10 @@ export default function MyForm(props) {
                         </div>
 
                         <div className={styles.quicksearch__date__dropdown__show} id={"banner"}>
-                            <div >
+                            <div style={
+                                {
+                                }
+                            } >
 
                                 <LocalizationProvider dateAdapter={AdapterMoment}>
                                 <div className={styles.quicksearch__date__box}>
@@ -499,13 +418,13 @@ export default function MyForm(props) {
                                                 },
                                             }}
                                         />}
-                                        sx={{ textAlign: "center", }}
                                         className={styles.date__select}
                                     />
 
                                     <DatePicker
                                         label="Returning on"
                                         inputFormat="YYYY-MM-DD"
+                                        inputRef={dateSelectRef}
                                         value={dateReturn}
                                         minDate={minDate}
                                         onChange={(newValue) => {
@@ -553,28 +472,54 @@ export default function MyForm(props) {
                                         />}
                                         className={styles.date__select}
                                     />
+                                    <FormControlLabel
+                                        className={styles.quicksearch__checkbox}
+
+                                        control={
+                                            <Checkbox
+                                                value={isOneWay}
+                                                onChange={(event) => { setIsOneWay(event.target.checked) }}
+                                                style={{ color: 'white', fontSize: '14px',  height: "100%"}}
+                                            />
+                                        }
+                                        label="One way"
+                                        labelPlacement="start"
+                                        style={{     color: "rgba(255, 255, 255, 0.75)"
+                                            , fontSize: '14px',
+                                            height: height,
+
+                                        }}
+                                    />
                                 </div>
+
                                 </LocalizationProvider>
 
                             </div>
                         </div>
                     </form>
                     <div className={styles.quicksearch__button__box}>
-                        <button className={styles.quicksearch__button} type="submit" onClick={handleSubmit}>
+                        <Button className={styles.quicksearch__button}  onClick={handleSubmit}>
                             Search
-                        </button>
+                        </Button>
+                        <Button endIcon={<ArrowDropDownIcon />}
+                                className={styles.button}
+                                variant={"outlined"}
+                                style={
+                                    {
+                                        background: "rgba(0, 0, 0, 0.5)",
+                                        color : "white",
+                                    }
+                                }
+                                onClick={() =>
+                                    setIsOpen(!isOpen)}>More</Button>
                     </div>
 
 
-            <Button endIcon={<ArrowDropDownIcon />}
-                    className={styles.button}
-                    variant={"outlined"}
-                    onClick={() =>
-                    setIsOpen(!isOpen)}>More Options</Button>
+
             <Collapse in={isOpen} sx={
                 {
                     mt: 2,
-                    background: alpha(theme.palette.background.default, 0.75),
+                    backgroundColor: "rgba(0,0,0,0.75)",
                     borderRadius: "10px",
                 }
             }>
@@ -604,6 +549,7 @@ export default function MyForm(props) {
                         </MenuItem>
                     ))}
                 </Select>
+
             </FormControl>
             <FormControl sx={
                     {
@@ -715,15 +661,19 @@ export default function MyForm(props) {
                         <Button onClick={decrementAdultsCount}>-</Button>
                         <Button onClick={incrementAdultsCount}>+</Button>
                     </MenuItem>
+
                 </Select>
 
+
             </FormControl>
+
 
         </form>
             </Collapse>
         </div>
         </div>
         </div>
+        </ThemeProvider>
     );
 }
 

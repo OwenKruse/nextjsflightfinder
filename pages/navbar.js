@@ -1,37 +1,33 @@
 import Image from 'next/image'
-import logo from '../asset/logo.png'
+import logo from '../public/Layer 1.png'
 import styles from '../styles/navbar.module.scss'
-// Navbar.js
 import Link from 'next/link';
-import {useTheme} from "@mui/material";
-import { alpha } from '@mui/material/styles';
+import {Typography} from "@mui/material";
 export default function Navbar() {
+
     return (
-        <div className={styles.navbar} style={
-            {
-                backgroundColor: useTheme().palette.background.paper,
-            }
-        }>
+        <div className={styles.navbar} style={{
+        }}>
             <div className={styles.logo}>
                 <Image src={logo} alt="logo" width={100} height={100} />
+                <Typography className={styles.title}>  MileWise </Typography>
+
             </div>
+
             <div className={styles.navbarLinks} style={
                 {
 
-                    color: useTheme().palette.text.primary,
                 }
             }>
-                <Link legacyBehavior href={"/home"} >
+                <Link legacyBehavior href={"/"} >
                     <a style={
                                 {
-                                    backgroundColor: alpha(useTheme().palette.text.primary, 0.25),
                                 }
                             }>Home</a>
                 </Link>
                 <Link href="/search" legacyBehavior>
                     <a style={
                         {
-                            backgroundColor: alpha(useTheme().palette.text.primary, 0.25),
                         }
                     }
                         >Search</a>
@@ -39,7 +35,6 @@ export default function Navbar() {
                 <Link href="/about" legacyBehavior>
                     <a style={
                     {
-                        backgroundColor: alpha(useTheme().palette.text.primary, 0.25),
                     }
                     }
                         >About</a>

@@ -1,16 +1,16 @@
-import {Autocomplete, Checkbox, FormControl, FormControlLabel, TextField} from "@mui/material";
+import {Autocomplete, Checkbox, FormControl, FormControlLabel, TextField, ThemeProvider} from "@mui/material";
 import * as React from "react";
 import styles from "../styles/Home.module.css";
 import background from "../asset/BackGround.png";
 import { useRouter } from "next/router";
 // import ref from "react";
 import {useEffect, useRef, useState} from "react";
-import {items} from "../public/airports.js";
+import {items} from "./search/airports.js";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import {DatePicker} from "@mui/x-date-pickers";
 import {useTheme} from "@mui/material";
-import { alpha } from '@mui/material/styles';
+import {alpha, createTheme} from '@mui/material/styles';
 import {add, toDate} from "date-fns";
 
 export default function quickSearch() {
@@ -38,17 +38,13 @@ export default function quickSearch() {
         const date = formData2.get('tripStart');
         let returnDate = formData2.get('tripEnd');
         const checkbox = formData2.get('trip-one-way');
-        let oneWay = false;
-        if (checkbox) {
-            oneWay = true;
-            returnDate = null;
-        }
+
 
 
 
         // Pass the `from` and `to` variables to the MyPage component as props
         router.push({
-            pathname: '/search',
+            pathname: '/search/loading',
             query: {
                 from,
                 to,
@@ -62,15 +58,20 @@ export default function quickSearch() {
     const element2Ref = useRef(null);
     const element1Ref = useRef(null);
 
-
+    const [isOneWay, setIsOneWay] = useState(false);
     const [dateDepart, setDateDepart] = useState(null);
     const [dateReturn, setDateReturn] = useState(null);
     let minDate = new Date(dateDepart);
     //Convert to date-fns
     minDate = toDate(minDate);
     minDate = add(minDate, {days: 1});
-
+    const darkTheme = createTheme({
+        palette: {
+            mode: 'dark',
+        },
+    });
     return (
+        <ThemeProvider theme={darkTheme}>
         <div className={styles.quicksearchwrapper}>
             <div className={styles.quicksearch}>
                 <div className={styles.quicksearch__title}>
@@ -153,6 +154,7 @@ export default function quickSearch() {
                                     inputFormat="YYYY-MM-DD"
                                     minDate={new Date()}
                                     value={dateDepart}
+
                                     onChange={(newValue) => {
                                         setDateDepart(newValue);
                                     }}
@@ -207,6 +209,7 @@ export default function quickSearch() {
                                     label="Returning on"
                                     inputFormat="YYYY-MM-DD"
                                     value={dateReturn}
+                                    disabled={isOneWay}
                                     minDate={minDate}
                                     onChange={(newValue) => {
                                         setDateReturn(newValue);
@@ -252,6 +255,24 @@ export default function quickSearch() {
                                     />}
                                     className={styles.date__select}
                                 />
+                                <FormControlLabel
+                                    className={styles.quicksearch__checkbox}
+
+                                    control={
+                                        <Checkbox
+                                            value={isOneWay}
+                                            onChange={(event) => { setIsOneWay(event.target.checked) }}
+                                            style={{ color: 'white', fontSize: '14px' }}
+                                        />
+                                    }
+                                    label="One way"
+                                    labelPlacement="start"
+                                    style={{     color: "rgba(255, 255, 255, 0.75)"
+                                        , fontSize: '14px' }}
+                                />
+
+
+
                             </div>
                         </LocalizationProvider>
 
@@ -261,6 +282,7 @@ export default function quickSearch() {
                 </div>
             </div>
         </div>
+            </ThemeProvider>
 
 
     );

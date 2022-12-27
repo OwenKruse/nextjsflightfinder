@@ -13,9 +13,8 @@
 
 .quicksearch__button {
   font-family: inherit;
-  font-size: 1.3rem;
     font-weight: 600;
-  width: 35%;
+  width: 33%;
   color: white;
   background-color: #0070f3;
   border: 0;
@@ -23,6 +22,7 @@
   -webkit-appearance: none;
   border-radius: 10px;
   padding: 10px;
+    margin: 10px;
 
 }
 
@@ -41,13 +41,24 @@
 .button {
   font-weight: 600;
   color: white;
+  width: 6vw;
   cursor: pointer;
   border: rgba(0, 0, 0, 0.72) 1px solid;-webkit-appearance: none;
   border-radius: 10px;
   padding: 10px;
-  width: 35%;
   justify-self: center;
     align-self: center;
+}
+
+// if is mobile make font size smaller
+@media (max-width: 768px) {
+  .quicksearch__button {
+    font-size: 0.8rem;
+  }
+  .button {
+    font-size: 0.8rem;
+    width: 25%;
+  }
 }
 .buttonContainer {
      display: flex;
@@ -198,7 +209,7 @@
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   -webkit-appearance: none;
-  background-image: url("../../asset/darkBG.png");
+  background-image: url("../../asset/lightBG.png");
 }
 .quicksearch__box {
   justify-content: center;
@@ -252,20 +263,6 @@
 
 }
 
-.quicksearch__button {
-  font-family: inherit;
-  font-size: 1.3rem;
-  font-weight: 600;
-  width: 27%;
-  color: white;
-  background-color: #0070f3;
-  border: 0;
-  cursor: pointer;
-  -webkit-appearance: none;
-  border-radius: 10px;
-  padding: 10px;
-
-}
 .quicksearch__button:hover {
   background-color: #0060e3;
 }
@@ -425,3 +422,49 @@ color: white;
 
 }
 
+.chip{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+.quicksearch__checkbox {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 5px;
+  color: white;
+  font-weight: 600;
+    margin: 0;
+    cursor: pointer;
+  // keep the text from wrapping
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  margin-right: 1%;
+  height: 100%;
+  padding: 2%;
+  display: flex;
+  //scale the content to fit
+    flex: 1 1 auto;
+    flex-direction: row;
+    justify-content: center;
+
+    //center the content
+    padding-right: 1%;
+// if it is mobile make the text size smaller
+    @media only screen and (max-width: 900px) {
+      font-size: 0.8rem;
+    }
+}
+.quicksearch__checkbox:hover {
+  border: 1px solid rgba(255, 255, 255, 1);
+
+}
+
+@media (max-width: 500px) {
+  .quicksearch__checkbox .MuiCheckbox-root {
+    transform: scale(0.5);
+  }
+}

@@ -22,68 +22,38 @@ import {useTheme} from "@mui/material";
 import { alpha } from '@mui/material/styles';
 import moment from "moment/moment";
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
+import FlightLandIcon from '@mui/icons-material/FlightLand';
+import {useRouter} from "next/router";
+import {fi} from "date-fns/locale";
+import parser from "postcss-selector-parser";
+import { Modal } from '@mantine/core';
 interface Props {
     price: number;
-    arrival: string;
-    departure: string;
+    departureDate: string;
+    departurePlace: string;
+    arrivalDate: string;
+    arrivalPlace: string;
+    slices: any;
     airline: string;
-    flightNumber: string;
-    origin: string;
-    destination: string;
     airlineLogo: string;
-    connectionList: Connection[];
-    totalDistance: number;
-    originAirport: string;
-    destinationAirport: string;
-    airlineCode: string;
-    layoverDuration: string;
-    specialList: string[];
-    duration: string;
-    connectionDuration: string;
-    originCode: string;
-    destinationCode: string;
-    fullDuration: string;
-    secondDuration: string;
-    departureDate: Date;
-    arrivalDate: Date;
-}
-interface Connection {
-    originCode: string;
-    destinationCode: string;
-    originAirport: React.ReactNode;
-    destinationAirport: string;
-    duration: any;
-    origin: string;
-    destination: string;
-    departureTime: Date;
-    arrivalTime: Date;
+    specialList: any;
+    id: string;
 
 }
+
 const Ticket: React.FC<Props> = ({
     price,
-    arrival,
-    departure,
-    airline,
-    flightNumber,
-    origin,
-    destination,
-    airlineLogo,
-    connectionList,
-    totalDistance,
-    originAirport,
-    destinationAirport,
-    airlineCode,
-    layoverDuration,
-    specialList,
-    duration,
-    connectionDuration,
-    originCode,
-    destinationCode,
-    fullDuration,
-    secondDuration,
-    arrivalDate,
     departureDate,
+    arrivalDate,
+    departurePlace,
+    arrivalPlace,
+    slices,
+    airline,
+    airlineLogo,
+    specialList,
+    id
                                  }) => {
     const [showConnections, setShowConnections] = useState(false);
 
@@ -91,15 +61,42 @@ const Ticket: React.FC<Props> = ({
     const departureDateFormatted = moment(departureDate).format("DD MMM YYYY");
     const arrivalDateFormatted = moment(arrivalDate).format("DD MMM YYYY");
 
-    const fullOrigin = originAirport + " (" + originCode + ")";
-    const fullDestination = destinationAirport + " (" + destinationCode + ")";
-
-    let departureDateString = "";
-    let arrivalDateString = "";
-    departureDateString = departureDateString.replace(/:\d\d /, " ");
-    arrivalDateString = arrivalDateString.replace(/:\d\d /, " ");
     // Do the same for the connection times
 
+
+    let lastSlice = slices[slices.length - 1];
+    let isOneWay = true;
+    const firstSlice = slices[0];
+    if (slices.length > 1 ) {
+        isOneWay = false;
+    }
+    console.log(firstSlice[0]);
+    let stops = slices[0].length - 1;
+    let stops2 = slices[slices.length - 1].length - 1;
+    let duration = moment.duration(firstSlice[0].duration).asMinutes() + moment.duration(firstSlice[firstSlice.length - 1].duration).asMinutes()
+    let duration2 = moment.duration(lastSlice[0].duration).asMinutes() + moment.duration(lastSlice[lastSlice.length - 1].duration).asMinutes()
+    // convert to hours and minutes
+    let hours = Math.floor(duration / 60);
+    let minutes = duration % 60;
+    let hours2 = Math.floor(duration2 / 60);
+    let minutes2 = duration2 % 60;
+
+
+// Get the difference of the arrival and departure times
+    function getTotalMinutes(datePairs) {
+        let totalMinutes = 0;
+
+        datePairs.forEach(([date1, date2]) => {
+            const time1 = date1.getTime();
+            const time2 = date2.getTime();
+            const timeDifference = Math.abs(time1 - time2);
+            totalMinutes += timeDifference / (1000 * 60);
+        });
+
+        return totalMinutes;
+    }
+
+    const deviceType = useMediaQuery('(max-width:600px)');
 
     
     const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
@@ -109,12 +106,6 @@ const Ticket: React.FC<Props> = ({
 
         },
     }));
-
-
-    let fullTimeString1 = fullDuration;
-
-
-
 
     const BuildStack = () => {
         let stack = [];
@@ -214,10 +205,22 @@ const Ticket: React.FC<Props> = ({
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+    const router = useRouter();
+    const combined = {
+        id: id
+    }
+    function ticketClick() {
+        console.log("Ticket Clicked");
+        router.push({
+            pathname: './order',
+            query: combined
+        }).then(r => console.log(r));
+
+    }
 
     return(
 
-        <Grid container spacing={2} sx={
+        <Grid container onClick={ticketClick} className={styles.mainContainer} spacing={2} sx={
             {
                 color: alpha(theme.palette.text.primary, 1),
                 height: "100%",
@@ -233,7 +236,7 @@ const Ticket: React.FC<Props> = ({
                 background: alpha(theme.palette.action.selected, 0.04),
             }
         } wrap={"wrap"}>
-            <Grid container spacing={2} alignItems="center" className={styles.heading}>
+            <Grid container spacing={2} alignItems="center" className={styles.priceContainer}>
                 <Grid item className={styles.titleLogoContainer}>
                         <Grid item>
                             <Avatar src={airlineLogo} className={classes.avatar} sx={
@@ -246,11 +249,11 @@ const Ticket: React.FC<Props> = ({
                             <Typography variant="h6">{airline}</Typography>
                         </Grid>
                 </Grid>
-                <Grid item>
-                    <Chip label={price +"$"} variant="filled" color={"success"} style={
+                <Grid item className={styles.price}>
+                    <Chip label={price +"$"} variant="outlined" color={"success"} style={
                         {
                             color: alpha(theme.palette.text.primary, 1),
-                            backgroundColor: alpha(theme.palette.success.main, .75),
+                            fontSize: "1rem",
                         }
                     }/>
                 </Grid>
@@ -263,36 +266,38 @@ const Ticket: React.FC<Props> = ({
             } />
             <Grid container spacing={2} alignItems="center" sx={
                 {
-                    display: "flex",
                     width: "100%",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    flexWrap: "nowrap",
                     padding: "1rem",
-                    flexDirection: "row",
+                    // render full text
+                    '& .MuiTypography-root': {
+                        whiteSpace: 'nowrap',
 
+                    }
                 }
             }>
             <Grid item xs={2} sx={
                 {
                     display: "flex",
-                    position: "relative",
                     flexDirection: "column",
                 }
             }>
-                <Tooltip title={fullOrigin} placement="top" enterTouchDelay={0}>
-                    <Typography style={{ fontWeight: 'bold' }}>{origin}</Typography>
+
+                <Tooltip title={firstSlice[0].originAirport + " (" + firstSlice[0].originCode + ")"} placement="top" enterTouchDelay={0}>
+                    <Typography  style={{ fontWeight: 'bold' }}>{firstSlice[0].origin}</Typography>
                 </Tooltip>
-                <Tooltip title={departureDateFormatted} placement="bottom" enterTouchDelay={0}>
-                <Grid item >
-                    <Typography style={{ opacity: 0.5 }}>{departure}</Typography>
-                </Grid>
-                </Tooltip>
+                    <Tooltip  enterTouchDelay={0} title={moment(firstSlice[0].departureTime).format('MM/DD/YYYY')} placement={"bottom"}>
+                        <Typography style={{ opacity: 0.5 }}> {moment(firstSlice[0].departureTime).format('hh:mm A')}</Typography>
+                    </Tooltip>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <Typography>{firstSlice[0].length}</Typography>
+                </Box>
             </Grid>
+
             <Grid item xs={4} sx={
                 {
                     display: "flex",
-                    position: "relative",
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
@@ -301,46 +306,79 @@ const Ticket: React.FC<Props> = ({
                 <SvgIcon >
                     <ArrowForwardIcon />
                 </SvgIcon>
-                {connectionList.length === 0 && (
-                        <Typography>{fullTimeString1}</Typography>
-                )}
 
-                {connectionList.length > 0 && (
-                    <Tooltip enterTouchDelay={0} title={"This flight has a layover at the " + connectionList[0].originAirport + "(" + connectionList[0].originCode + ")"} placement="top" arrow sx={
-                        {
-                            fontWeight: "600"
+                <Divider sx={
+                    {
+                        width: deviceType ? '30%' : '100%',
+                        height: "1px",
+                        color: alpha(theme.palette.text.primary, 1),
+                        display: "flex",
+                        alignItems: "center",
 
-                        }
-                    }>
-                    <StyledBadge variant={"dot"} color="primary">
-                        <Typography className={styles.duration}>{fullTimeString1}</Typography>
-                    </StyledBadge>
-                    </Tooltip>
 
-                )}
+                    }
+                }>
 
-                    <SvgIcon >
+
+
+                    {firstSlice.length > 1 && (
+                        <Tooltip enterTouchDelay={0} title={"This flight has a layover at the " + firstSlice[firstSlice.length -1].originAirport + "(" + firstSlice[firstSlice.length -1].originCode + ")"} placement="top" arrow sx={
+                            {
+                                fontWeight: "600"
+
+                            }
+                        }>
+                            <StyledBadge sx={
+                                {
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    flexDirection: "column",
+                                }
+                            } variant={"dot"} color="primary">
+                                <Typography sx={
+                                    {
+                                        fontWeight: "600",
+                                        fontSize: ".75rem",
+                                    }
+                                } className={styles.duration}>{firstSlice[firstSlice.length -1].origin}</Typography>
+                                <Typography sx={
+                                    {
+                                        fontWeight: "600",
+                                        fontSize: ".75rem",
+                                        color: alpha(theme.palette.text.primary, .75),
+                                    }
+                                } className={styles.duration}>{moment.duration(firstSlice[firstSlice.length -1].duration).hours() + "h" + moment.duration(firstSlice[firstSlice.length - 1].duration).minutes() + "m"}</Typography>
+                            </StyledBadge>
+                        </Tooltip>
+                    )}
+
+                </Divider>
+
+                <SvgIcon >
                     <ArrowForwardIcon />
                 </SvgIcon>
             </Grid>
 
 
 
-                <Grid item xs={2} sx={
+
+
+                <Grid item xs={3} sx={
                 {
                     display: "flex",
                     position: "relative",
                     flexDirection: "column",
                 }
             }>
-                    {connectionList.length === 0 && (
-                <Tooltip enterTouchDelay={0} title={fullDestination} placement={"top"}>
-                    <Typography style={{ fontWeight: 'bold' }}>{destination}</Typography>
+                    {firstSlice.length === 1 && (
+                <Tooltip title={firstSlice[firstSlice.length - 1].destinationAirport + " (" + firstSlice[firstSlice.length - 1 ].destinationCode + ")"} enterTouchDelay={0} placement={"top"}>
+                    <Typography style={{ fontWeight: 'bold' }}>{firstSlice[firstSlice.length - 1].destination}</Typography>
                 </Tooltip>
                     )}
-                    {connectionList.length > 0 && (
-                        <Tooltip enterTouchDelay={0} title={connectionList[0].destinationAirport + " (" + connectionList[0].destinationCode + ")"} placement={"top"}>
-                            <Typography style={{ fontWeight: 'bold' }}>{destination}</Typography>
+                    {firstSlice.length > 1 && (
+                        <Tooltip enterTouchDelay={0} title={firstSlice[firstSlice.length - 1].destinationAirport + " (" + firstSlice[firstSlice.length - 1].destinationAirport + ")"} placement={"top"}>
+                            <Typography style={{ fontWeight: 'bold' }}>{firstSlice[firstSlice.length - 1].destination}</Typography>
                         </Tooltip>
                     )}
                 <Grid item sx={
@@ -348,8 +386,8 @@ const Ticket: React.FC<Props> = ({
                         display: "flex",
                     }
                 }>
-                    <Tooltip enterTouchDelay={0} title={arrivalDateFormatted} placement={"bottom"}>
-                    <Typography style={{ opacity: 0.5 }}>{arrival}</Typography>
+                    <Tooltip enterTouchDelay={0} title={moment(firstSlice[firstSlice.length - 1].arrivalTime).format('MM/DD/YYYY')} placement={"bottom"}>
+                        <Typography style={{ opacity: 0.5 }}> {moment(firstSlice[firstSlice.length - 1].arrivalTime).format('hh:mm A')}</Typography>
                     </Tooltip>
                 </Grid>
 
@@ -388,103 +426,163 @@ const Ticket: React.FC<Props> = ({
                 )}
                 </Grid>
             </Grid>
+            {isOneWay === false && ( <Grid container spacing={2} alignItems="center" sx={
+                {
+                    display: "flex",
+                    width: "100%",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "nowrap",
+                    padding: "1rem",
+                    flexDirection: "row",
 
+                }
+            }>
+                <Grid item xs={2} sx={
+                    {
+                        display: "flex",
+                        position: "relative",
+                        flexDirection: "column",
+                    }
+                }>
 
-
-
-            {connectionList.length > 0 && (
-                <Grid className={classes.connectionContainer} item xs={12}>
-                    <Button onClick={() => setShowConnections(!showConnections)}>
-                        {showConnections ? "Hide Connections" : "Show Connections"}
-
-                    </Button>
-                    <Collapse in={showConnections}>
-                    {showConnections && (
-                        <Table className={styles.connections}>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell>Origin</TableCell>
-                                    <TableCell sx={
-                                        {
-                                            display: "flex",
-                                            justifyContent: "center",
-                                        }
-                                    }>Connection</TableCell>
-                                    <TableCell align="right">Destination</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-
-                                <TableRow >
-                                    <TableCell className={styles.tableRow} size={"small"}>
-                                        <Box className={styles.tableCell}>
-                                        <Typography sx={
-                                            {
-                                                paddingRight: "1rem",
-                                            }
-                                        }>
-                                        {connectionList[0].origin}
-                                        </Typography>
-                                        <SvgIcon>
-                                            <ArrowForwardIcon />
-                                        </SvgIcon>
-                                        <Typography>
-                                            {moment.duration(duration).hours() + "h " + moment.duration(duration).minutes() + "m"}
-                                        </Typography>
-                                        <SvgIcon >
-                                            <ArrowForwardIcon />
-                                        </SvgIcon>
-                                        </Box>
-                                    </TableCell>
-                                    <TableCell className={styles.tableRow} size={"medium"}>
-                                        <Tooltip title={"On the ground in " + connectionList[0].origin + " for " + connectionDuration} placement="top" arrow sx={
-                                            {
-                                                fontWeight: "600"
-                                            }
-                                        }>
-                                        <Box className={styles.tableCell}>
-                                        <Typography>
-                                        {connectionList[0].origin}
-                                        </Typography>
-                                        <SvgIcon >
-                                            <AccessTimeIcon />
-                                        </SvgIcon>
-
-                                        </Box>
-                                        </Tooltip>
-                                    </TableCell>
-                                    <TableCell className={styles.tableRow} size={"small"}>
-                                        <Box className={styles.tableCell}>
-                                            <SvgIcon >
-                                                <ArrowForwardIcon />
-                                            </SvgIcon>
-
-                                            <Typography>
-                                                {secondDuration}
-                                            </Typography>
-                                            <SvgIcon >
-                                                <ArrowForwardIcon />
-                                            </SvgIcon>
-                                        <Typography sx={
-                                            {
-                                                paddingLeft: "1rem",
-                                            }
-                                        }>
-                                        {destination}
-                                        </Typography>
-                                        </Box>
-                                    </TableCell>
-                                </TableRow>
-
-                            </TableBody>
-                        </Table>
-                    )}
-                    </Collapse>
+                    <Tooltip title={lastSlice[0].originAirport + " (" + lastSlice[0].originCode + ")"} placement="top" enterTouchDelay={0}>
+                        <Typography  style={{ fontWeight: 'bold' }}>{lastSlice[0].origin}</Typography>
+                    </Tooltip>
+                    <Tooltip  enterTouchDelay={0} title={moment(lastSlice[0].arrivalTime).format('MM/DD/YYYY')} placement={"bottom"}>
+                        <Typography style={{ opacity: 0.5 }}> {moment(lastSlice[0].arrivalTime).format('hh:mm A')}</Typography>
+                    </Tooltip>
                 </Grid>
-            )}
+                <Grid item xs={4} sx={
+                    {
+                        display: "flex",
+                        position: "relative",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }
+                }>
+                    <SvgIcon >
+                        <ArrowBackIcon />
+                    </SvgIcon>
+                    <Divider sx={
+                        {
+                            width: deviceType ? '30%' : '100%',
+                            height: "1px",
+                            color: alpha(theme.palette.text.primary, 1),
+                            display: "flex",
+                            alignItems: "center",
+                        }
+                    }>
 
+
+
+                        {lastSlice.length > 1 && (
+                            <Tooltip enterTouchDelay={0} title={"This flight has a layover at the " + lastSlice[lastSlice.length -1].originAirport + "(" + lastSlice[lastSlice.length -1].originCode + ")"} placement="top" arrow sx={
+                                {
+                                    fontWeight: "600"
+
+                                }
+                            }>
+                                <StyledBadge sx={
+                                    {
+                                        display: "flex",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        flexDirection: "column",
+                                    }
+                                } variant={"dot"} color="primary">
+                                    <Typography sx={
+                                        {
+                                            fontWeight: "600",
+                                            fontSize: ".75rem",
+                                        }
+                                    } className={styles.duration}>{lastSlice[lastSlice.length -1].origin}</Typography>
+                                    <Typography sx={
+                                        {
+                                            fontWeight: "600",
+                                            fontSize: ".75rem",
+                                            color: alpha(theme.palette.text.primary, .75),
+                                        }
+                                    } className={styles.duration}>{lastSlice[0].length}</Typography>
+                                </StyledBadge>
+                            </Tooltip>
+                        )}
+
+                    </Divider>
+
+                    <SvgIcon >
+                        <ArrowBackIcon />
+                    </SvgIcon>
+                </Grid>
+
+
+
+
+
+                <Grid item xs={3} sx={
+                    {
+                        display: "flex",
+                        position: "relative",
+                        flexDirection: "column",
+                    }
+                }>
+                    {lastSlice.length === 1 && (
+                        <Tooltip title={lastSlice[lastSlice.length - 1].destinationAirport + " (" + lastSlice[lastSlice.length -1 ].destinationCode + ")"} enterTouchDelay={0} placement={"top"}>
+                            <Typography style={{ fontWeight: 'bold' }}>{lastSlice[lastSlice.length -1 ].destination}</Typography>
+                        </Tooltip>
+                    )}
+                    {lastSlice.length > 1 && (
+                        <Tooltip enterTouchDelay={0} title={lastSlice[lastSlice.length -1 ].destinationAirport + " (" + lastSlice[lastSlice.length -1 ].destinationCode + ")"} placement={"top"}>
+                            <Typography style={{ fontWeight: 'bold' }}>{lastSlice[lastSlice.length -1 ].destination}</Typography>
+                        </Tooltip>
+                    )}
+                    <Grid item sx={
+                        {
+                            display: "flex",
+                        }
+                    }>
+                        <Tooltip enterTouchDelay={0} title={moment(lastSlice[lastSlice.length - 1 ].departureTime).format('MM/DD/YYYY')} placement={"bottom"}>
+                            <Typography style={{ opacity: 0.5 }}> {moment(lastSlice[lastSlice.length - 1].departureTime).format('hh:mm A')}</Typography>
+                        </Tooltip>
+                    </Grid>
+
+                </Grid>
+                <Grid item sx={
+                    {
+                        display: "flex",
+                        position: "relative",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        justifySelf: "flex-end",
+                    }
+                }>
+                    <Divider orientation={"vertical"} sx={
+                        {
+                            height: "80%",
+                        }
+                    } />
+                    {isMobile === true && (
+                        <Grid item sx={
+                            {
+                                display: "flex",
+                                justifyContent: "flex-end",
+                            }
+                        }>
+                            <BuildStackMobile />
+
+                        </Grid>
+                    )}
+                    {isMobile === false && (
+                        <Grid item xs={12}>
+                            <BuildStack />
+
+                        </Grid>
+                    )}
+                </Grid>
+            </Grid>)}
         </Grid>
-
             );
 };
 

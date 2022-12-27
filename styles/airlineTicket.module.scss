@@ -6,6 +6,11 @@
   border: 1px solid;
   max-width: 90%;
   max-height: 90%;
+  background: white;
+  //Scale to fit the circle container
+    object-fit: fill ;
+
+
 }
 
 .connectionContainer {
@@ -44,15 +49,35 @@
 
 .heading {
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 500;
   display: flex;
-    justify-content: space-between;
     align-items: center;
     flex-direction: row;
+    justify-content: space-around;
 }
 .titleLogoContainer {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+
+}
+
+.chip {
+  padding-left: 90%
+
+}
+
+.priceContainer{
+display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+//Add hover effect that adds a shadow
+.mainContainer:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    transition: 0.3s;
+    cursor: pointer;
 }

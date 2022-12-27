@@ -15,8 +15,9 @@ export default function Home() {
           <title>Flight Cheaply</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-        <Navbar />
+
         <div className={styles.mainPage}>
+            <Navbar />
           <h1 className={styles.title}>
             Where next?
           </h1>

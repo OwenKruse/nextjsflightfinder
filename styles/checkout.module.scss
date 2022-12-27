@@ -1,0 +1,104 @@
+.checkout {
+  display: flex;
+  flex-wrap: nowrap;
+  background: rgba(0, 0, 0, 0);
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    background: #fff;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+
+
+
+  .checkoutSection {
+    width: 100%;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 5px;
+
+
+    &.checkout-billing {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+
+    &.checkout-summary {
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+  }
+
+  .checkoutForm {
+    display: flex;
+    flex-wrap: nowrap;
+
+
+    .formGroup {
+      width: 100%;
+      margin-bottom: 10px;
+
+      label {
+        display: block;
+        font-weight: bold;
+      }
+
+      input {
+        width: 100%;
+        border: 1px solid #000000;
+        padding: 5px;
+      }
+    }
+  }
+
+  .checkout-items {
+    display: flex;
+    flex-wrap: wrap;
+
+    .item {
+      width: 50%;
+      margin: 10px;
+      border: 1px solid #ccc;
+      padding: 10px;
+
+      .item-name {
+        font-weight: bold;
+      }
+
+      .item-price {
+        float: right;
+      }
+    }
+  }
+
+  .checkout-total {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+}
+
+.checkout-payment-details {
+  form {
+    display: flex;
+    flex-wrap: wrap;
+
+    .form-group {
+      width: 100%;
+      margin-bottom: 10px;
+
+      label {
+        display: block;
+        font-weight: bold;
+      }
+
+      input {
+        width: 100%;
+        border: 1px solid #ccc;
+        padding: 5px;
+      }
+    }
+  }
+}
