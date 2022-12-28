@@ -1,5 +1,5 @@
-import Navbar from "../../componenets/Navbar";
+import Deals from "../../components/Deals";
 
 export default function Test() {
-    return Navbar
+    return (<Deals />);
 }

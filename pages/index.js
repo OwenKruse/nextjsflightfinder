@@ -1,10 +1,9 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import Navbar from "../../nextjsflightfinder/pages/navbar";
+import Navbar from "../components/Navbar";
 import * as React from "react";
-import {useTheme} from "@mui/material";
-import { alpha } from '@mui/material/styles';
-
+import {Typography, Grid} from "@mui/material";
+import Deals from '../components/Deals';
 import quickSearch from "./quickSearch";
 export default function Home() {
 
@@ -23,11 +22,26 @@ export default function Home() {
           </h1>
           {importedElement}
         </div>
-          <div className={styles.dealsWrapper}>
-              <div className={styles.deals}>
-                  <h1>Deals</h1>
-              </div>
-          </div>
+
+          <Grid container sx={
+                {
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+
+                }
+          }>
+            <Grid item xs={12}>
+                <Typography variant="h4" align="center" sx={{mt: 5, mb: 5,
+                fontWeight: 700}}>
+
+                    Featured Deals
+                </Typography>
+                <Deals />
+
+          </Grid>
+        </Grid>
+
         <footer>
           <a
               href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"

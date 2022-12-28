@@ -1,0 +1,22 @@
+.ticket {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 1rem 0;
+  padding: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 5px;
+
+  .flight-info {
+    display: flex;
+    flex-direction: column;
+    margin-right: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .button {
+    width: 100%;
+  }
+}

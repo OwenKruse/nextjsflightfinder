@@ -1,0 +1,29 @@
+.dealContainer {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+  background-image: url("../public/photos/BEIJING.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+}
+.button {
+    background-color: rgba(0, 0, 0, 0.18);
+    border: 1px solid #eaeaea;
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    transition: all .2s ease-in-out;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 10px rgb(0, 0, 0);
+    }
+}
+

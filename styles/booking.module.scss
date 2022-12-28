@@ -1,0 +1,119 @@
+//const getFlightInfo = (slice) => {
+//        return (
+//            <Grid container alignItems="center" className={classes.flightInfo}>
+//                <Grid item xs={2}>
+//                    <Typography className={classes.flightInfoHeader}>Departure</Typography>
+//                    <Typography className={classes.flightInfoText}>{slice.segments[0].origin.airport_name}</Typography>
+//                    <Typography className={classes.flightInfoText}>{slice.segments[0].origin.city_name}</Typography>
+//                    <Typography className={classes.flightInfoText}>{slice.segments[0].origin.country_name}</Typography>
+//                </Grid>
+//                <Grid item xs={2}>
+//                    <Typography className={classes.flightInfoHeader}>Arrival</Typography>
+//                    <Typography className={classes.flightInfoText}>{slice.segments[slice.segments.length - 1].destination.airport_name}</Typography>
+//                    <Typography className={classes.flightInfoText}>{slice.segments[slice.segments.length - 1].destination.city_name}</Typography>
+//                    <Typography className={classes.flightInfoText}>{slice.segments[slice.segments.length - 1].destination.country_name}</Typography>
+//                </Grid>
+//                <Grid item xs={2}>
+//                    <Typography className={classes.flightInfoHeader}>Distance</Typography>
+//                    <Typography className={classes.flightInfoText}>{getDistance(slice).toFixed(0)} mi</Typography>
+//                </Grid>
+//                <Grid item xs={2}>
+//                    <Typography className={classes.flightInfoHeader}>Duration</Typography>
+//                    <Typography className={classes.flightInfoText}>{getDuration(slice).toFixed(0)} hr</Typography>
+//                </Grid>
+//                <Grid item xs={2}>
+//                    <Typography className={classes.flightInfoHeader}>Stops</Typography>
+//                    <Typography className={classes.flightInfoText}>{getStops(slice)}</Typography>
+//                </Grid>
+//                <Grid item xs={2}>
+//                    <Typography className={classes.flightInfoHeader}>Price</Typography>
+//                    <Typography className={classes.flightInfoText}>{offer.offer.base_currency} {offer.offer.base_amount}</Typography>
+//                </Grid>
+//            </Grid>
+//        );
+//    }
+
+//Write scss styling for the component
+// Make the scss modern and responsive
+//Code:
+ .flightInfo {
+     background-color: #fff;
+     padding: 10px;
+     margin: 10px;
+     border-radius: 10px;
+     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+     display: flex;
+     flex-direction: row;
+     align-items: center;
+     justify-content: space-between;
+     @media (max-width: 768px) {
+         flex-direction: column;
+         align-items: flex-start;
+         justify-content: flex-start;
+     }
+ }
+
+ .flightInfoHeader {
+     font-weight: 600;
+     font-size: 1.1em;
+     @media (max-width: 768px) {
+         margin-top: 10px;
+     }
+ }
+
+ .flightInfoText {
+     color: #777;
+     font-size: 0.9em;
+ }
+
+ .flightInfoButton {
+     font-size: 0.8em;
+     margin-left: 10px;
+ }
+
+ .flightInfoButtonIcon {
+     font-size: 1.2em;
+     margin-left: 5px;
+ }
+
+ .flightInfoButtonIconArrow {
+     font-size: 1.2em;
+     margin-left: 5px;
+     transform: rotate(180deg);
+ }
+
+ .flightInfoButtonIconArrowLeft {
+     transform: rotate(0deg);
+ }
+
+ .flightInfoButtonIconArrowRight {
+     transform: rotate(180deg);
+ }
+
+ .flightInfoButtonIconArrowUp {
+     transform: rotate(90deg);
+ }
+
+ .flightInfoButtonIconArrowDown {
+     transform: rotate(270deg);
+ }
+
+ .flightInfoButtonIconArrowForward {
+     transform: rotate(45deg);
+ }
+
+ .flightInfoButtonIconArrowBack {
+     transform: rotate(225deg);
+ }
+
+ .flightInfoButtonIconArrowBackward {
+     transform: rotate(315deg);
+ }
+
+ .flightInfoButtonIconArrowForward {
+     transform: rotate(135deg);
+ }
+
+
+
+

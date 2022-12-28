@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import styles from "../../styles/Home.module.css";
-import Navbar from "./resultNavbar";
-import MainNavBar from "../navbar"
+import Navbar from "../../pages/search/resultNavbar";
+import MainNavBar from "../../components/Navbar"
 import Head from "next/head";
 import {Duffel} from '@duffel/api'
 import * as fs from "fs";
@@ -234,7 +234,15 @@ export async function getServerSideProps({query}) {
 
 
     }
-
+    console.log(departure)
+    if(departure === undefined || departure === null || departure === "") {
+        let today = new Date();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = today.getFullYear();
+        today = yyyy + '-' + mm + '-' + dd;
+        departure = today
+    }
     from = from.split("(")[1];
     let fromFormatted = from.split(")")[0];
     to = to.split("(")[1];

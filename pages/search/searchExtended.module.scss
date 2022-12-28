@@ -288,6 +288,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  height: 100%;
 
 }
 .quicksearch__date__title {
@@ -411,13 +412,6 @@ color: white;
     margin: 0;
 
   }
-  .quicksearch__date__box {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-
-  }
 
 
 }
@@ -436,23 +430,11 @@ color: white;
   border-radius: 5px;
   color: white;
   font-weight: 600;
-    margin: 0;
-    cursor: pointer;
-  // keep the text from wrapping
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  margin-right: 1%;
-  height: 100%;
-  padding: 2%;
-  display: flex;
-  //scale the content to fit
-    flex: 1 1 auto;
-    flex-direction: row;
-    justify-content: center;
+  cursor: pointer;
+
+
 
     //center the content
-    padding-right: 1%;
 // if it is mobile make the text size smaller
     @media only screen and (max-width: 900px) {
       font-size: 0.8rem;

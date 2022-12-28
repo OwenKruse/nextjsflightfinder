@@ -20,7 +20,7 @@
   }
 
   .navbarLinks {
-
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -28,6 +28,7 @@
       text-decoration: none;
       margin: 0 10px;
       width: 5rem;
+      min-height: 50px;
       border-radius: 10px;
       color: rgba(0,0,0,.65);
 

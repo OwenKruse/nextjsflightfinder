@@ -1,7 +1,8 @@
 import {
+    Box,
     Button,
-    Checkbox, Collapse,
-    FormControl, FormControlLabel,
+    Checkbox, Collapse, Container,
+    FormControl, FormControlLabel, Grid,
     InputLabel,
     ListItemText,
     MenuItem,
@@ -84,7 +85,7 @@ export default function MyForm(props) {
         const selectedValues = event.target.value as string[];
         // If the user selected "All airlines", then we want to clear all other selections
 
-        // Check all values are selected
+ 1       // Check all values are selected
         if (selectedValues.length >= 3) {
             // If all values are selected, then clear the array
             setSelectedAirlines(["All Airlines"]);
@@ -211,15 +212,17 @@ export default function MyForm(props) {
     const [dateDepart, setDateDepart] = React.useState<Date | null>(null);
     const [dateReturn, setDateReturn] = React.useState<Date | null>(null);
     const dateSelectRef = useRef(null);
-    const [height, setHeight] = useState(0);
-    if (dateSelectRef.current !== null && dateSelectRef.current.clientHeight !== height ) {
-        setHeight(dateSelectRef.current.clientHeight);
-    }
+
     let minDate = new Date(dateDepart);
     const [isOneWay, setIsOneWay] = useState(true);
     //Convert to date-fns
     minDate = toDate(minDate);
     minDate = add(minDate, {days: 1});
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const handleClick = (event) => {
+        setIsOpen((isOpen) => !isOpen);
+        setAnchorEl(event.currentTarget);
+    };
     const darkTheme = createTheme({
         palette: {
             mode: 'dark',
@@ -358,11 +361,7 @@ export default function MyForm(props) {
                             </div>
                         </div>
 
-                        <div className={styles.quicksearch__date__dropdown__show} id={"banner"}>
-                            <div style={
-                                {
-                                }
-                            } >
+                        <div className={styles.quicksearch__aiport_box} id={"banner"}>
 
                                 <LocalizationProvider dateAdapter={AdapterMoment}>
                                 <div className={styles.quicksearch__date__box}>
@@ -420,19 +419,21 @@ export default function MyForm(props) {
                                         />}
                                         className={styles.date__select}
                                     />
-
+                                </div>
+                                <div className={styles.quicksearch__date__box}>
                                     <DatePicker
                                         label="Returning on"
                                         inputFormat="YYYY-MM-DD"
-                                        inputRef={dateSelectRef}
                                         value={dateReturn}
                                         minDate={minDate}
+
                                         onChange={(newValue) => {
                                             setDateReturn(newValue);
                                         }}
                                         renderInput={(params) => <TextField
                                             {...params}
                                             name={"tripEnd"}
+                                            className={styles.datePicker}
                                             defaultValue={props.returnDate}
                                             id={"tripEnd"}
                                             label={"Returning"}
@@ -467,35 +468,55 @@ export default function MyForm(props) {
                                                     textOverflow: "ellipsis",
                                                     whiteSpace: "nowrap",
                                                     overflow: "hidden",
+                                                    textAlign: "center",
                                                 },
                                             }}
                                         />}
                                         className={styles.date__select}
                                     />
-                                    <FormControlLabel
-                                        className={styles.quicksearch__checkbox}
 
-                                        control={
-                                            <Checkbox
-                                                value={isOneWay}
-                                                onChange={(event) => { setIsOneWay(event.target.checked) }}
-                                                style={{ color: 'white', fontSize: '14px',  height: "100%"}}
-                                            />
-                                        }
-                                        label="One way"
-                                        labelPlacement="start"
-                                        style={{     color: "rgba(255, 255, 255, 0.75)"
-                                            , fontSize: '14px',
-                                            height: height,
 
-                                        }}
-                                    />
                                 </div>
-
                                 </LocalizationProvider>
 
-                            </div>
-                        </div>
+                            <Grid sx={
+                                        {
+                                            display: "flex",
+                                            height: "3.5rem",
+                                            marginRight: "1rem",
+                                        }
+                                    }>
+
+
+                                        <FormControlLabel
+                                            className={styles.quicksearch__checkbox}
+                                            control={
+                                                <Checkbox
+                                                    value={isOneWay}
+                                                    onChange={(event) => { setIsOneWay(event.target.checked) }}
+                                                    style={{ color: 'white', fontSize: '14px',  height: "100%"}}
+                                                />
+                                            }
+                                            label="One way"
+                                            labelPlacement="start"
+                                            style={{     color: "rgba(255, 255, 255, 0.75)"
+                                                , fontSize: '14px',
+                                                height: "100%",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                whiteSpace: "nowrap",
+                                                borderRadius: "5px",
+                                                textAlign: "center",
+                                                padding: "0 0.5rem",
+
+                                            }}
+
+                                        />
+                                    </Grid>
+
+
+                        </div >
                     </form>
                     <div className={styles.quicksearch__button__box}>
                         <Button className={styles.quicksearch__button}  onClick={handleSubmit}>

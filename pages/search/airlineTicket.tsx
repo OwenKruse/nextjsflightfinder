@@ -29,6 +29,7 @@ import {useRouter} from "next/router";
 import {fi} from "date-fns/locale";
 import parser from "postcss-selector-parser";
 import { Modal } from '@mantine/core';
+import geolib from "geolib";
 interface Props {
     price: number;
     departureDate: string;
@@ -155,7 +156,30 @@ const Ticket: React.FC<Props> = ({
             </Stack>
         )
     }
+    const getDistance = (slice) => {
+        return slice.segments.reduce((distance, segment) => {
+            const origin = segment.origin;
+            const destination = segment.destination;
+            //Convert to miles
+            const meters = geolib.getDistance(
+                {latitude: origin.latitude, longitude: origin.longitude},
+                {latitude: destination.latitude, longitude: destination.longitude}
+            );
+            return meters * 0.000621371;
+        }, 0);
+    }
+    const getDuration = (slice) => {
+        const timezone1 = moment.tz(slice.segments[0].origin.time_zone)
+        const timezone2 = moment.tz(slice.segments[0].destination.time_zone)
+        const difference = timezone1.diff(timezone2, 'hours');
 
+        return slice.segments.reduce((duration, segment) => {
+                const departure = moment(segment.departure_time);
+                const arrival = moment(segment.arrival_time);
+                return duration + arrival.diff(departure, 'hours') + difference;
+            }
+            , 0);
+    }
     const BuildStackMobile = () => {
         let stack = [];
         if (specialList.includes("cheapest")) {

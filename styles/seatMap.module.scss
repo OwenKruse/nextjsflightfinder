@@ -42,3 +42,233 @@
 .seatAvailable {
   font-size: 0.8em;
 }
+
+//return (
+//        <div className={styles.seatMap}>
+//            <div className={styles.seatMapHeader}>
+//                <div className={styles.seatMapHeaderLeft}>
+//                    <FlightClassIcon className={styles.seatMapHeaderIcon} />
+//                    <span className={styles.seatMapHeaderTitle}>
+//                        Economy Class
+//                    </span>
+//                </div>
+//                <div className={styles.seatMapHeaderRight}>
+//                    <LavatoryIcon className={styles.seatMapHeaderIcon} />
+//                    <ExitIcon className={styles.seatMapHeaderIcon} />
+//                </div>
+//            </div>
+//            <Grid container spacing={1}>
+//                {rows.map((row) => {
+//                    return (
+//                        <Grid item xs={12} key={row.id}>
+//                            <div className={styles.seatMapRow}>
+//                                {row.sections.map((section) => {
+//                                    return (
+//                                        <div
+//                                            className={styles.seatMapSection}
+//                                            key={section.id}
+//                                        >
+//                                            {section.elements.map(
+//                                                (element) => {
+//                                                    return (
+//                                                        <div
+//                                                            className={
+//                                                                styles.seatMapElement
+//                                                            }
+//                                                            key={
+//                                                                element.id
+//                                                            }
+//                                                        >
+//                                                            {element.type ===
+//                                                            'seat' ? (
+//                                                                <div
+//                                                                    className={
+//                                                                        styles.seatMapSeat
+//                                                                    }
+//                                                                    onClick={() =>
+//                                                                        handleSeatSelection(
+//                                                                            element
+//                                                                        )
+//                                                                    }
+//                                                                >
+//                                                                    <div
+//                                                                        className={
+//                                                                            styles.seatMapSeatDesignator
+//                                                                        }
+//                                                                    >
+//                                                                        {
+//                                                                            element.designator
+//                                                                        }
+//                                                                    </div>
+//                                                                    <div
+//                                                                        className={
+//                                                                            styles.seatMapSeatServices
+//                                                                        }
+//                                                                    >
+//                                                                        {
+//                                                                            element.available_services
+//                                                                        }
+//                                                                    </div>
+//                                                                </div>
+//                                                            ) : element.type ===
+//                                                              'empty' ? (
+//                                                                <div
+//                                                                    className={
+//                                                                        styles.seatMapEmpty
+//                                                                    }
+//                                                                ></div>
+//                                                            ) : element.type ===
+//                                                              'bassinet' ? (
+//                                                                <div
+//                                                                    className={
+//                                                                        styles.seatMapBassinet
+//                                                                    }
+//                                                                ></div>
+//                                                            ) : (
+//                                                                <div
+//                                                                    className={
+//                                                                        styles.seatMapEmpty
+//                                                                    }
+//                                                                ></div>
+//                                                            )}
+//                                                        </div>
+//                                                    );
+//                                                }
+//                                            )}
+//                                        </div>
+//                                    );
+//                                })}
+//                            </div>
+//                        </Grid>
+//                    );
+//                })}
+//            </Grid>
+//        </div>
+//    );
+//}
+
+//Create scss styles for the code:
+
+// Path: styles\seatMap.module.scss
+.seatMap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.seatMapHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 5px;
+  color: #000000;
+  font-weight: 600;
+  font-size: 0.8rem;
+  &:hover {
+    border: 1px solid rgba(255, 255, 255, 1);
+  }
+}
+
+.seatMapHeaderLeft {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.seatMapHeaderRight {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.seatMapHeaderIcon {
+  margin-right: 10px;
+}
+
+.seatMapHeaderTitle {
+  margin-right: 10px;
+}
+
+.seatMapRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.seatMapSection {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 10px;
+}
+
+.seatMapElement {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.seatMapSeat {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ccc;
+  text-align: center;
+  line-height: 30px;
+  margin: 5px;
+}
+
+.seatMapSeatDesignator {
+  font-size: 0.8em;
+}
+
+.seatMapSeatServices {
+  font-size: 0.6em;
+}
+
+.seatMapEmpty {
+  width: 30px;
+  height: 30px;
+  margin: 5px;
+}
+
+.seatMapBassinet {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ccc;
+  text-align: center;
+  line-height: 30px;
+  margin: 5px;
+}
+
+.seatMapSeatSelected {
+
+  background-color: rgb(15, 84, 23);
+}
+.available {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ccc;
+  text-align: center;
+  line-height: 30px;
+  margin: 5px;
+  background-color: #0e598e;
+    color: #fff;
+  cursor: pointer;
+}
+.selected {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ccc;
+  text-align: center;
+  line-height: 30px;
+  margin: 5px;
+  color: #ffffff;
+  background-color: rgb(37, 160, 50);
+    cursor: pointer;
+}

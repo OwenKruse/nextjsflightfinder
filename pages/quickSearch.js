@@ -154,7 +154,7 @@ export default function quickSearch() {
                                     inputFormat="YYYY-MM-DD"
                                     minDate={new Date()}
                                     value={dateDepart}
-
+                                    required
                                     onChange={(newValue) => {
                                         setDateDepart(newValue);
                                     }}
@@ -163,6 +163,7 @@ export default function quickSearch() {
                                         name={"tripStart"}
                                         id={"tripStart"}
                                         label={"Leaving"}
+                                        required
                                         className={styles.datePicker}
                                         sx={{ input: { color: "white" },
                                             whiteSpace: "nowrap",
@@ -211,6 +212,7 @@ export default function quickSearch() {
                                     value={dateReturn}
                                     disabled={isOneWay}
                                     minDate={minDate}
+
                                     onChange={(newValue) => {
                                         setDateReturn(newValue);
                                     }}
