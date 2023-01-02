@@ -1,7 +1,7 @@
 import {
     Box,
     Button,
-    Checkbox, Collapse, Container,
+    Checkbox, Collapse, Container, createFilterOptions,
     FormControl, FormControlLabel, Grid,
     InputLabel,
     ListItemText,
@@ -214,7 +214,7 @@ export default function MyForm(props) {
     const dateSelectRef = useRef(null);
 
     let minDate = new Date(dateDepart);
-    const [isOneWay, setIsOneWay] = useState(true);
+    const [isOneWay, setIsOneWay] = useState(false);
     //Convert to date-fns
     minDate = toDate(minDate);
     minDate = add(minDate, {days: 1});
@@ -228,6 +228,45 @@ export default function MyForm(props) {
             mode: 'dark',
         },
     });
+
+    const getOptionLabel = (option) => {
+        // Return just the name of the option
+        return `${option.name}`;
+    };
+
+    const filterOptions = createFilterOptions({
+        stringify: ({ name, keyword}) => `${name} ${keyword}`
+    });
+
+
+    const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
+
+
+    const handleInputChange = (event) => {
+        // Make sure the value is not undefined
+        if (event !== null) {
+            if (event.target.value !== undefined) {
+                if (event.target.value.length > 2) {
+                    setOpen(true);
+                } else {
+                    setOpen(false);
+                }
+            }
+        }
+    };
+    const handleInputChange2 = (event) => {
+        // Make sure the value is not undefined
+        if (event !== null) {
+            if (event.target.value !== undefined) {
+                if (event.target.value.length > 2) {
+                    setOpen2(true);
+                } else {
+                    setOpen2(false);
+                }
+            }
+        }
+    }
     return (
 
         <ThemeProvider theme={darkTheme}>
@@ -263,14 +302,17 @@ export default function MyForm(props) {
                                 <Autocomplete
                                     className={styles.quicksearch__input}
                                     disablePortal
+                                    open={open}
+                                    getOptionLabel={getOptionLabel}
+                                    onInputChange={handleInputChange}
+                                    filterOptions={filterOptions}
                                     options={items}
-                                    defaultValue={props.from}
                                     sx={{ width: 300 }}
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
                                             name={"from"}
-                                            defaultValue={props.from}
+                                            required
                                             label="Departing from..."
                                             id={"from"}
                                             sx={{
@@ -310,15 +352,17 @@ export default function MyForm(props) {
                             </div>
                             <div className={styles.quicksearch__box}>
                                 <Autocomplete
-                                    className={styles.quicksearch__input}
                                     disablePortal
+                                    open={open2}
+                                    onInputChange={handleInputChange2}
+                                    getOptionLabel={getOptionLabel}
+                                    filterOptions={filterOptions}
                                     options={items}
-                                    defaultValue={props.to}
                                     sx={{ width: 300 }}
                                     renderInput={(params) => <TextField
                                         {...params}
                                         name={"to"}
-                                        defaultValue={props.to}
+                                        required
                                         id={"to"}
                                         label={"Arriving at..."}
 
@@ -368,6 +412,7 @@ export default function MyForm(props) {
                                     <DatePicker
                                         label="Departing on"
                                         inputFormat="YYYY-MM-DD"
+
                                         minDate={new Date()}
                                         value={dateDepart}
                                         onChange={(newValue) => {
@@ -378,6 +423,7 @@ export default function MyForm(props) {
                                             name={"tripStart"}
                                             defaultValue={props.departure}
                                             id={"tripStart"}
+                                            required
                                             label={"Leaving"}
                                             className={styles.datePicker}
                                             sx={{ input: { color: "white" },
@@ -425,6 +471,7 @@ export default function MyForm(props) {
                                         label="Returning on"
                                         inputFormat="YYYY-MM-DD"
                                         value={dateReturn}
+                                        disabled={isOneWay}
                                         minDate={minDate}
 
                                         onChange={(newValue) => {

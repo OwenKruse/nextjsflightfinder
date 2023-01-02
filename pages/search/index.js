@@ -11,6 +11,9 @@ import {alpha} from '@mui/material/styles';
 import moment from "moment/moment";
 import { formatInTimeZone } from 'date-fns-tz'
 import { getTimezoneOffset } from 'date-fns-tz'
+import geolib from "geolib";
+import momenttz from "moment-timezone";
+import Time from "../../backend/time";
 
 
 export default function List({ query, data}) {
@@ -91,8 +94,39 @@ export function Show(jsonData, query, index) {
             slices
         )
 }
-
+    const geolib = require('geolib');
     moment().format();
+    const getDistance = (slice) => {
+        return slice.segments.reduce((distance, segment) => {
+            const origin = segment.origin;
+            const destination = segment.destination;
+            //Convert to miles
+            const meters = geolib.getDistance(
+                {latitude: origin.latitude, longitude: origin.longitude},
+                {latitude: destination.latitude, longitude: destination.longitude}
+            );
+            return meters * 0.000621371;
+        }, 0);
+    }
+
+    const getTotalDistance = (slices) => {
+        return slices.reduce((distance, slice) => {
+            return distance + getDistance(slice);
+        }, 0);
+    }
+
+    let distance = getTotalDistance(jsonData.jsonData.slices)
+
+    let milesValue = distance * 0.01
+        milesValue = Math.round(milesValue * 100) / 100
+        milesValue = milesValue / 2
+    // Subtract the miles value from the price
+    let price = jsonData.jsonData.total_amount
+
+    const time = Time(jsonData.jsonData.slices)
+
+
+
 
     function buildTicket() {
         let price = jsonData.jsonData.total_amount
@@ -104,6 +138,8 @@ export function Show(jsonData, query, index) {
         let airline = jsonData.jsonData.owner.name
         let airlineLogo = jsonData.jsonData.owner.logo_symbol_url
         let id = jsonData.jsonData.id
+        let priceValue = parseFloat(price) - milesValue
+
 
 
         let specialList = []
@@ -111,6 +147,7 @@ export function Show(jsonData, query, index) {
         if (index === 0) {
             specialList.push("cheapest")
         }
+        console.log(slices)
 
 
 
@@ -127,7 +164,9 @@ export function Show(jsonData, query, index) {
                 "airline": airline,
                 "airlineLogo": airlineLogo,
                 "specialList": specialList,
-                "id": id
+                "id": id,
+                "priceValue": priceValue,
+                "time": time,
 
             })
         )
@@ -138,10 +177,9 @@ export function Show(jsonData, query, index) {
 }
 
 function Search(data, query) {
-    console.log(data)
     // Check if jsonData is undefined or null
     if (data.data === undefined || data.data === null) {
-        return <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh'}}>
+        return <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100vh'}}>
             <Typography className={styles.tagline}>Your dream vacation is just a few clicks away.</Typography>
             </Box>
     }
@@ -198,7 +236,6 @@ export async function getServerSideProps({query}) {
     // Send a POST request to the API endpoint
 
     await query
-    console.log(query)
     if (query === undefined || query === null || query.from === undefined || query.to === undefined || query.date === undefined || query === {}) {
         return {
             props: {
@@ -234,7 +271,6 @@ export async function getServerSideProps({query}) {
 
 
     }
-    console.log(departure)
     if(departure === undefined || departure === null || departure === "") {
         let today = new Date();
         let dd = String(today.getDate()).padStart(2, '0');
@@ -288,8 +324,7 @@ export async function getServerSideProps({query}) {
 
         },
     ];
-    if (oneWay === "false" || returnDate === undefined) {
-        console.log("return date")
+    if (oneWay === "True" || returnDate !== "") {
         slices.push({
             origin: toFormatted,
             destination: fromFormatted,

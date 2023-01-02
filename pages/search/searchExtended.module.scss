@@ -254,6 +254,11 @@
   -webkit-appearance: none;
   text-align: center;
 
+  //On mobile remove the margin
+    @media (max-width: 768px) {
+        margin-left: 0;
+    }
+
 
 }
 

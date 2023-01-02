@@ -1,4 +1,12 @@
-import {Autocomplete, Checkbox, FormControl, FormControlLabel, TextField, ThemeProvider} from "@mui/material";
+import {
+    Autocomplete,
+    Checkbox,
+    createFilterOptions,
+    FormControl,
+    FormControlLabel,
+    TextField,
+    ThemeProvider
+} from "@mui/material";
 import * as React from "react";
 import styles from "../styles/Home.module.css";
 import background from "../asset/BackGround.png";
@@ -58,9 +66,47 @@ export default function quickSearch() {
     const element2Ref = useRef(null);
     const element1Ref = useRef(null);
 
+    const getOptionLabel = (option) => {
+        // Return just the name of the option
+        return `${option.name}`;
+    };
+
+    const filterOptions = createFilterOptions({
+        stringify: ({ name, keyword}) => `${name} ${keyword}`
+    });
+
+
+
     const [isOneWay, setIsOneWay] = useState(false);
     const [dateDepart, setDateDepart] = useState(null);
     const [dateReturn, setDateReturn] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false);
+
+
+    const handleInputChange = (event) => {
+        // Make sure the value is not undefined
+        if (event !== null) {
+            if (event.target.value !== undefined) {
+                if (event.target.value.length > 2) {
+                    setOpen(true);
+                } else {
+                    setOpen(false);
+                }
+            }
+        }
+    };
+    const handleInputChange2 = (event) => {
+        if (event !== null) {
+            if (event.target.value !== undefined) {
+                if (event.target.value.length > 2) {
+                    setOpen2(true);
+                } else {
+                    setOpen2(false);
+                }
+            }
+        }
+    }
     let minDate = new Date(dateDepart);
     //Convert to date-fns
     minDate = toDate(minDate);
@@ -88,6 +134,10 @@ export default function quickSearch() {
                             <Autocomplete
                                 className={styles.quicksearch__input}
                                 disablePortal
+                                open={open2}
+                                onInputChange={handleInputChange2}
+                                getOptionLabel={getOptionLabel}
+                                filterOptions={filterOptions}
                                 options={items}
                                 sx={{ width: 300 }}
                                 renderInput={(params) => (
@@ -114,6 +164,10 @@ export default function quickSearch() {
                             <Autocomplete
                                 className={styles.quicksearch__input}
                                 disablePortal
+                                open={open}
+                                getOptionLabel={getOptionLabel}
+                                onInputChange={handleInputChange}
+                                filterOptions={filterOptions}
                                 options={items}
                                 sx={{ width: 300 }}
                                 renderInput={(params) => (

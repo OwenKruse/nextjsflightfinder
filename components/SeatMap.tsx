@@ -4,7 +4,7 @@ import styles from '../styles/seatMap.module.scss';
 import FlightClassIcon from '@mui/icons-material/FlightClass';
 import LavatoryIcon from '@mui/icons-material/Wc';
 import ExitIcon from '@mui/icons-material/ExitToApp';
-function SeatMap({ data, offer }) {
+function SeatMap({ data, offer, index }) {
     const handleSeatSelection = (seat) => {
             if (selectedSeats.includes(seat)) {
 
@@ -19,7 +19,9 @@ function SeatMap({ data, offer }) {
 
 
     const [selectedSeats, setSelectedSeats] = useState([]);
-    const cabin = data[0].cabins[0];
+    console.log(data)
+    console.log(index)
+    const cabin = data[index].cabins[0];
     const rows = cabin.rows;
 
     return (

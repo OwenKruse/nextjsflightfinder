@@ -17,7 +17,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import PaidIcon from '@mui/icons-material/Paid';
 import BoltIcon from '@mui/icons-material/Bolt';
-import {useState} from "react";
+import {Fragment, useState} from "react";
 import {useTheme} from "@mui/material";
 import { alpha } from '@mui/material/styles';
 import moment from "moment/moment";
@@ -30,6 +30,7 @@ import {fi} from "date-fns/locale";
 import parser from "postcss-selector-parser";
 import { Modal } from '@mantine/core';
 import geolib from "geolib";
+import momenttz from "moment-timezone";
 interface Props {
     price: number;
     departureDate: string;
@@ -41,6 +42,10 @@ interface Props {
     airlineLogo: string;
     specialList: any;
     id: string;
+    priceValue: number,
+    duration: number,
+    returnDuration: number,
+    time: any,
 
 }
 
@@ -54,33 +59,115 @@ const Ticket: React.FC<Props> = ({
     airline,
     airlineLogo,
     specialList,
-    id
+    id,
+    priceValue,
+    time,
                                  }) => {
-    const [showConnections, setShowConnections] = useState(false);
 
-    // Convert the date to a readable format
-    const departureDateFormatted = moment(departureDate).format("DD MMM YYYY");
-    const arrivalDateFormatted = moment(arrivalDate).format("DD MMM YYYY");
+    let totalDuration1 = 0;
+    totalDuration1 = time[0][0].tripTime.timeZoneDuration
+
+    console.log(totalDuration1);
+    let totalDuration2 = 0;
 
     // Do the same for the connection times
 
 
     let lastSlice = slices[slices.length - 1];
     let isOneWay = true;
-    const firstSlice = slices[0];
-    if (slices.length > 1 ) {
+    if (slices.length > 1) {
         isOneWay = false;
     }
-    console.log(firstSlice[0]);
-    let stops = slices[0].length - 1;
-    let stops2 = slices[slices.length - 1].length - 1;
-    let duration = moment.duration(firstSlice[0].duration).asMinutes() + moment.duration(firstSlice[firstSlice.length - 1].duration).asMinutes()
-    let duration2 = moment.duration(lastSlice[0].duration).asMinutes() + moment.duration(lastSlice[lastSlice.length - 1].duration).asMinutes()
-    // convert to hours and minutes
-    let hours = Math.floor(duration / 60);
-    let minutes = duration % 60;
-    let hours2 = Math.floor(duration2 / 60);
-    let minutes2 = duration2 % 60;
+    const firstSlice = slices[0];
+    let duration1 = 0;
+    let duration2 = 0;
+
+
+
+    let layoverTime = time[0][0].tripTime.totalLayoverTime;
+    let layoverTime2 = time[2][0].tripTime.totalLayoverTime;
+
+
+
+
+    let layoverTimeString = "";
+    let layoverTimeString2 = "";
+    if (layoverTime < 60) {
+        layoverTimeString = layoverTime + " minutes";
+    }
+    else {
+        layoverTimeString = Math.floor(layoverTime / 60) + "h " + layoverTime % 60 + "m";
+    }
+    if (layoverTime2 < 60) {
+        layoverTimeString2 = layoverTime2 + " minutes";
+    }
+    else {
+        layoverTimeString2 = Math.floor(layoverTime2 / 60) + "h " + layoverTime2 % 60 + "m";
+    }
+    // Convert total duration to hours and minutes
+    let totalDuration1String = "";
+    let totalDuration2String = "";
+    if (totalDuration1 < 60) {
+        totalDuration1String = totalDuration1 + " minutes";
+
+    }
+    else {
+        totalDuration1String = Math.floor(totalDuration1 / 60) + "h " + totalDuration1 % 60 + "m";
+    }
+    if (totalDuration2 < 60) {
+        totalDuration2String = totalDuration2 + " minutes";
+    }
+    else {
+        totalDuration2String = Math.floor(totalDuration2 / 60) + "h " + totalDuration2 % 60 + "m";
+    }
+
+
+    const times = () => {
+        let timeList = [];
+        const timeObject = (time) => {
+            let duration = time.tripTime.timeZoneDuration;
+            let durationString = "";
+            if (duration < 60) {
+                durationString = duration + " minutes";
+            }
+            else {
+                durationString = Math.floor(duration / 60) + "h " + duration % 60 + "m";
+            }
+            let layover = 0;
+            let flightTime = 0;
+            if (layoverTime > 0) {
+                layover = time.tripTime.totalLayoverTime;
+                flightTime = time.totalFlightTime;
+            }
+            return (
+                <Fragment>
+                    {layover > 0 ? (
+                        <Badge color={"warning"} variant={"dot"} anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}>
+                        <Tooltip title={"This flight has a layover."} placement="top">
+                            <Typography >{durationString} </Typography>
+                        </Tooltip>
+                        </Badge>
+                    ) : (
+                        <Typography >{durationString} </Typography>
+                    )}
+                </Fragment>
+            );
+
+        };
+        if (isOneWay) {
+            timeList.push(timeObject(time[0][0]));
+        }
+        else {
+            timeList.push(timeObject(time[0][0]));
+            timeList.push(timeObject(time[2][0]));
+        }
+        return (
+            timeList
+        );
+    };
 
 
 // Get the difference of the arrival and departure times
@@ -107,6 +194,14 @@ const Ticket: React.FC<Props> = ({
 
         },
     }));
+    let specialList2 = [];
+
+    if (duration1 > 360) {
+        specialList.push("LongFlight");
+    }
+    if (duration2 > 360) {
+        specialList2.push("LongFlight");
+    }
 
     const BuildStack = () => {
         let stack = [];
@@ -156,30 +251,53 @@ const Ticket: React.FC<Props> = ({
             </Stack>
         )
     }
-    const getDistance = (slice) => {
-        return slice.segments.reduce((distance, segment) => {
-            const origin = segment.origin;
-            const destination = segment.destination;
-            //Convert to miles
-            const meters = geolib.getDistance(
-                {latitude: origin.latitude, longitude: origin.longitude},
-                {latitude: destination.latitude, longitude: destination.longitude}
-            );
-            return meters * 0.000621371;
-        }, 0);
-    }
-    const getDuration = (slice) => {
-        const timezone1 = moment.tz(slice.segments[0].origin.time_zone)
-        const timezone2 = moment.tz(slice.segments[0].destination.time_zone)
-        const difference = timezone1.diff(timezone2, 'hours');
+    const BuildStack2 = () => {
+        let stack = [];
+        if (specialList2.includes("cheapest")) {
+            //Green
+            stack.push({ key: 0, label: 'Cheapest', color: 'rgba(76,175,80,0.5)', icon: <PaidIcon /> });
+        }
+        if (specialList2.includes("direct")) {
+            //Blue
+            stack.push({ key: 1, label: 'Direct', color: 'rgb(90,178,246, 0.5)', icon: <BoltIcon /> });
+        }
+        if (specialList2.includes("indirect")) {
+            //Yellow
+            stack.push({ key: 2, label: 'Indirect', color: 'rgba(246,227,55,0.5)', icon: <WarningAmberIcon /> });
+        }
+        if (specialList2.includes("longFlight")) {
+            //Red
+            stack.push({ key: 3, label: 'Prolonged', color: 'rgba(244,67,54,0.5)', icon: <AccessTimeIcon /> });
 
-        return slice.segments.reduce((duration, segment) => {
-                const departure = moment(segment.departure_time);
-                const arrival = moment(segment.arrival_time);
-                return duration + arrival.diff(departure, 'hours') + difference;
-            }
-            , 0);
+        }
+        return(
+            <Stack direction="column" spacing={1} sx={
+                {
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+
+                }
+            }>
+                {stack.map((item) => (
+                    <Chip
+                        key={item.key}
+                        icon={item.icon}
+                        label={item.label}
+                        sx={{ borderColor: item.color,
+                            color: alpha(theme.palette.text.primary, 1),
+                            backgroundColor: item.color,
+                            padding: '5px',
+                            fontWeight: 'bold',
+                            width: '8rem',
+                        }}
+                    />
+                ))}
+            </Stack>
+        )
     }
+
     const BuildStackMobile = () => {
         let stack = [];
         if (specialList.includes("cheapest")) {
@@ -226,6 +344,56 @@ const Ticket: React.FC<Props> = ({
         )
     }
 
+    const BuildStackMobile2 = () => {
+        let stack = [];
+        if (specialList2.includes("cheapest")) {
+            //Green
+            stack.push({ key: 0, label: 'Cheapest', color: 'rgba(76,175,80,0.5)', icon: <PaidIcon /> });
+        }
+        if (specialList2.includes("direct")) {
+            //Blue
+            stack.push({ key: 1, label: 'Direct', color: 'rgb(90,178,246, 0.5)', icon: <BoltIcon /> });
+        }
+        if (specialList2.includes("indirect")) {
+//Yellow
+            stack.push({ key: 2, label: 'Indirect', color: 'rgba(246,227,55,0.5)', icon: <WarningAmberIcon /> });
+        }
+        if (specialList2.includes("longFlight")) {
+            //Red
+            stack.push({ key: 3, label: 'Prolonged', color: 'rgba(244,67,54,0.5)', icon: <AccessTimeIcon /> });
+        }
+        return(
+            <Stack direction="column" spacing={1} sx={
+                {
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+
+                }
+            }>
+                {stack.map((item) => (
+                    <Tooltip title={item.label} enterTouchDelay={0} placement="top">
+                        <Chip
+                            key={item.key}
+                            icon={item.icon}
+                            sx={{ borderColor: item.color,
+                                color: alpha(theme.palette.text.primary, 1),
+                                backgroundColor: item.color,
+                                fontWeight: 'bold',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                display: 'flex',
+                                padding: '5px',
+                                '& .MuiChip-label': {padding: 0},
+                                '& .MuiChip-icon': {margin: 0},
+                            }}
+                        />
+                    </Tooltip>
+                ))}
+            </Stack>
+        )
+    }
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -234,7 +402,6 @@ const Ticket: React.FC<Props> = ({
         id: id
     }
     function ticketClick() {
-        console.log("Ticket Clicked");
         router.push({
             pathname: './order',
             query: combined
@@ -301,7 +468,7 @@ const Ticket: React.FC<Props> = ({
                     }
                 }
             }>
-            <Grid item xs={2} sx={
+            <Grid item xs={1.5} sx={
                 {
                     display: "flex",
                     flexDirection: "column",
@@ -312,11 +479,9 @@ const Ticket: React.FC<Props> = ({
                     <Typography  style={{ fontWeight: 'bold' }}>{firstSlice[0].origin}</Typography>
                 </Tooltip>
                     <Tooltip  enterTouchDelay={0} title={moment(firstSlice[0].departureTime).format('MM/DD/YYYY')} placement={"bottom"}>
-                        <Typography style={{ opacity: 0.5 }}> {moment(firstSlice[0].departureTime).format('hh:mm A')}</Typography>
+                        <Typography style={{ opacity: 0.5 }}> {moment(firstSlice[0].departureTime).format('h:mm A')}</Typography>
                     </Tooltip>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography>{firstSlice[0].length}</Typography>
-                </Box>
+                <Typography style={{ opacity: 0.5 }}>{times()[0]}</Typography>
             </Grid>
 
             <Grid item xs={4} sx={
@@ -333,7 +498,7 @@ const Ticket: React.FC<Props> = ({
 
                 <Divider sx={
                     {
-                        width: deviceType ? '30%' : '100%',
+                        width: deviceType ? '50%' : '100%',
                         height: "1px",
                         color: alpha(theme.palette.text.primary, 1),
                         display: "flex",
@@ -372,7 +537,7 @@ const Ticket: React.FC<Props> = ({
                                         fontSize: ".75rem",
                                         color: alpha(theme.palette.text.primary, .75),
                                     }
-                                } className={styles.duration}>{moment.duration(firstSlice[firstSlice.length -1].duration).hours() + "h" + moment.duration(firstSlice[firstSlice.length - 1].duration).minutes() + "m"}</Typography>
+                                } className={styles.duration}>{layoverTimeString}</Typography>
                             </StyledBadge>
                         </Tooltip>
                     )}
@@ -401,7 +566,7 @@ const Ticket: React.FC<Props> = ({
                 </Tooltip>
                     )}
                     {firstSlice.length > 1 && (
-                        <Tooltip enterTouchDelay={0} title={firstSlice[firstSlice.length - 1].destinationAirport + " (" + firstSlice[firstSlice.length - 1].destinationAirport + ")"} placement={"top"}>
+                        <Tooltip enterTouchDelay={0} title={firstSlice[firstSlice.length - 1].destinationAirport + " (" + firstSlice[firstSlice.length - 1].destinationCode + ")"} placement={"top"}>
                             <Typography style={{ fontWeight: 'bold' }}>{firstSlice[firstSlice.length - 1].destination}</Typography>
                         </Tooltip>
                     )}
@@ -411,9 +576,10 @@ const Ticket: React.FC<Props> = ({
                     }
                 }>
                     <Tooltip enterTouchDelay={0} title={moment(firstSlice[firstSlice.length - 1].arrivalTime).format('MM/DD/YYYY')} placement={"bottom"}>
-                        <Typography style={{ opacity: 0.5 }}> {moment(firstSlice[firstSlice.length - 1].arrivalTime).format('hh:mm A')}</Typography>
+                        <Typography style={{ opacity: 0.5 }}> {moment(firstSlice[firstSlice.length - 1].arrivalTime).format('h:mm A')}</Typography>
                     </Tooltip>
                 </Grid>
+
 
             </Grid>
             <Grid item sx={
@@ -452,17 +618,18 @@ const Ticket: React.FC<Props> = ({
             </Grid>
             {isOneWay === false && ( <Grid container spacing={2} alignItems="center" sx={
                 {
-                    display: "flex",
                     width: "100%",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    flexWrap: "nowrap",
                     padding: "1rem",
-                    flexDirection: "row",
+                    // render full text
+                    '& .MuiTypography-root': {
+                        whiteSpace: 'nowrap',
 
+                    }
                 }
             }>
-                <Grid item xs={2} sx={
+                <Grid item xs={1.5} sx={
                     {
                         display: "flex",
                         position: "relative",
@@ -470,12 +637,13 @@ const Ticket: React.FC<Props> = ({
                     }
                 }>
 
-                    <Tooltip title={lastSlice[0].originAirport + " (" + lastSlice[0].originCode + ")"} placement="top" enterTouchDelay={0}>
-                        <Typography  style={{ fontWeight: 'bold' }}>{lastSlice[0].origin}</Typography>
+                    <Tooltip title={lastSlice[lastSlice.length - 1].destinationAirport + " (" + lastSlice[lastSlice.length - 1].destinationCode + ")"} placement="top" enterTouchDelay={0}>
+                        <Typography  style={{ fontWeight: 'bold' }}>{lastSlice[lastSlice.length - 1].destination}</Typography>
                     </Tooltip>
-                    <Tooltip  enterTouchDelay={0} title={moment(lastSlice[0].arrivalTime).format('MM/DD/YYYY')} placement={"bottom"}>
-                        <Typography style={{ opacity: 0.5 }}> {moment(lastSlice[0].arrivalTime).format('hh:mm A')}</Typography>
+                    <Tooltip  enterTouchDelay={0} title={moment(lastSlice[lastSlice.length - 1].arrivalTime).format('MM/DD/YYYY')} placement={"bottom"}>
+                        <Typography style={{ opacity: 0.5 }}> {moment(lastSlice[lastSlice.length - 1].arrivalTime).format('h:mm A')}</Typography>
                     </Tooltip>
+                    <Typography style={{ opacity: 0.5 }}>{times()[1]}</Typography>
                 </Grid>
                 <Grid item xs={4} sx={
                     {
@@ -528,7 +696,7 @@ const Ticket: React.FC<Props> = ({
                                             fontSize: ".75rem",
                                             color: alpha(theme.palette.text.primary, .75),
                                         }
-                                    } className={styles.duration}>{lastSlice[0].length}</Typography>
+                                    } className={styles.duration}>{layoverTimeString2}</Typography>
                                 </StyledBadge>
                             </Tooltip>
                         )}
@@ -552,13 +720,13 @@ const Ticket: React.FC<Props> = ({
                     }
                 }>
                     {lastSlice.length === 1 && (
-                        <Tooltip title={lastSlice[lastSlice.length - 1].destinationAirport + " (" + lastSlice[lastSlice.length -1 ].destinationCode + ")"} enterTouchDelay={0} placement={"top"}>
-                            <Typography style={{ fontWeight: 'bold' }}>{lastSlice[lastSlice.length -1 ].destination}</Typography>
+                        <Tooltip title={lastSlice[0].originAirport + " (" + lastSlice[0].originCode + ")"} enterTouchDelay={0} placement={"top"}>
+                            <Typography style={{ fontWeight: 'bold' }}>{lastSlice[0].origin}</Typography>
                         </Tooltip>
                     )}
                     {lastSlice.length > 1 && (
-                        <Tooltip enterTouchDelay={0} title={lastSlice[lastSlice.length -1 ].destinationAirport + " (" + lastSlice[lastSlice.length -1 ].destinationCode + ")"} placement={"top"}>
-                            <Typography style={{ fontWeight: 'bold' }}>{lastSlice[lastSlice.length -1 ].destination}</Typography>
+                        <Tooltip enterTouchDelay={0} title={lastSlice[0].originAirport + " (" + lastSlice[0 ].originCode + ")"} placement={"top"}>
+                            <Typography style={{ fontWeight: 'bold' }}>{lastSlice[0].origin}</Typography>
                         </Tooltip>
                     )}
                     <Grid item sx={
@@ -566,8 +734,8 @@ const Ticket: React.FC<Props> = ({
                             display: "flex",
                         }
                     }>
-                        <Tooltip enterTouchDelay={0} title={moment(lastSlice[lastSlice.length - 1 ].departureTime).format('MM/DD/YYYY')} placement={"bottom"}>
-                            <Typography style={{ opacity: 0.5 }}> {moment(lastSlice[lastSlice.length - 1].departureTime).format('hh:mm A')}</Typography>
+                        <Tooltip enterTouchDelay={0} title={moment(lastSlice[0].departureTime).format('MM/DD/YYYY')} placement={"bottom"}>
+                            <Typography style={{ opacity: 0.5 }}> {moment(lastSlice[0].departureTime).format('h:mm A')}</Typography>
                         </Tooltip>
                     </Grid>
 
@@ -594,13 +762,13 @@ const Ticket: React.FC<Props> = ({
                                 justifyContent: "flex-end",
                             }
                         }>
-                            <BuildStackMobile />
+                            <BuildStackMobile2 />
 
                         </Grid>
                     )}
                     {isMobile === false && (
                         <Grid item xs={12}>
-                            <BuildStack />
+                            <BuildStack2 />
 
                         </Grid>
                     )}
