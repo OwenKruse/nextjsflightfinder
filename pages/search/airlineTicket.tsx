@@ -83,26 +83,26 @@ const Ticket: React.FC<Props> = ({
     let duration2 = 0;
 
 
-
+    let layoverTimeString2 = "";
     let layoverTime = time[0][0].tripTime.totalLayoverTime;
-    let layoverTime2 = time[2][0].tripTime.totalLayoverTime;
-
+    if (!isOneWay) {
+        let layoverTime2 = time[2][0].tripTime.totalLayoverTime;
+        if (layoverTime2 < 60) {
+            layoverTimeString2 = layoverTime2 + " minutes";
+        }
+        else {
+            layoverTimeString2 = Math.floor(layoverTime2 / 60) + "h " + layoverTime2 % 60 + "m";
+        }
+    }
 
 
 
     let layoverTimeString = "";
-    let layoverTimeString2 = "";
     if (layoverTime < 60) {
         layoverTimeString = layoverTime + " minutes";
     }
     else {
         layoverTimeString = Math.floor(layoverTime / 60) + "h " + layoverTime % 60 + "m";
-    }
-    if (layoverTime2 < 60) {
-        layoverTimeString2 = layoverTime2 + " minutes";
-    }
-    else {
-        layoverTimeString2 = Math.floor(layoverTime2 / 60) + "h " + layoverTime2 % 60 + "m";
     }
     // Convert total duration to hours and minutes
     let totalDuration1String = "";

@@ -3,7 +3,6 @@
   flex-direction: row;
   align-items: center;
   margin: 1rem 0;
-  padding: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 5px;
 
@@ -43,8 +42,6 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-
-
   }
   .text{
     display: flex;
@@ -76,4 +73,61 @@
         }
     }
 
+  .airline {
+    padding: 1rem;
+  }
+
+  .priceGridItem {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 5px;
+    color: #000000;
+    font-weight: 600;
+    font-size: 0.8rem;
+
+    &:hover {
+      border: 1px solid rgba(255, 255, 255, 1);
+    }
+  }
+  .gridContainerFlightInfo {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    // space the items out
+    margin: 10px;
+
+// make the grid responsive
+    @media (min-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+}
+
+.priceInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  height: 100%;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 5px;
+  color: #000000;
+  font-weight: 600;
+  font-size: 0.8rem;
+
+  &:hover {
+    border: 1px solid rgba(255, 255, 255, 1);
+  }
 }

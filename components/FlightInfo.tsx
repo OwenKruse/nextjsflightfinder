@@ -1,4 +1,4 @@
-import {Button, Card, CardContent, Collapse, Divider, Grid, Typography} from "@mui/material";
+import {Avatar, Button, Card, CardContent, Collapse, Divider, Grid, Typography} from "@mui/material";
 import React, {useState} from "react";
 import classes from "../styles/flightInfo.module.scss";
 import SeatMap from "./SeatMap";
@@ -7,6 +7,8 @@ import FlightLandIcon from '@mui/icons-material/FlightLand';
 import LuggageIcon from '@mui/icons-material/Luggage';
 import CarryOnIcon from '@mui/icons-material/BusinessCenter';
 import geolib from "geolib";
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import Time from "../backend/time";
 export default function FlightInfo( {slice, data} ) {
 
 
@@ -40,6 +42,8 @@ export default function FlightInfo( {slice, data} ) {
         console.log(selectedService);
     }
     const displayFlightInfo = (slice, index) => {
+
+        const time =Time(slice);
         const flightInfo = {
             origin: slice.origin.name,
             destination: slice.destination.name,
@@ -51,7 +55,7 @@ export default function FlightInfo( {slice, data} ) {
             destinationCode: slice.destination.iata_code,
             originCity: slice.segments[0].origin.city_name,
             destinationCity: slice.segments[0].destination.city_name,
-
+            flightLogo: slice.segments[0].marketing_carrier.logo_symbol_url,
         }
         console.log(flightInfo);
 
@@ -68,48 +72,23 @@ export default function FlightInfo( {slice, data} ) {
             }, 0);
         }
         const distance = getDistance(slice);
-        // Convert duration to hours and minutes
-        let duration = slice.duration.split("T")[1].split(":");
-        //Check if segments is greater than 1 (i.e. if there is a layover) if there is, add the duration of the layover to the total duration
-        // Also get the layover information
+
         let layover = null;
         if (slice.segments.length > 1) {
-            const layoverDuration = slice.segments[1].duration.split("T")[1].split(":");
-            duration[0] = parseInt(duration[0]) + parseInt(layoverDuration[0]);
-            duration[1] = parseInt(duration[1]) + parseInt(layoverDuration[1]);
-            layover = {
-                airport: slice.segments[1].origin.name,
-                duration: slice.segments[1].duration,
-                originCity: slice.segments[1].origin.city_name,
-                destinationCity : slice.segments[1].destination.city_name,
-                destinationCode : slice.segments[1].destination.iata_code,
-                originCode: slice.segments[1].origin.iata_code,
-                // Get the time on the ground by finding the difference between the arrival time of the first segment and the departure time of the second segment
-                timeOnGround: slice.segments[1].departing_at.split("T")[1].split(":").reduce((time, timeComponent, index) => {
-                    const firstTimeComponent = slice.segments[0].arriving_at.split("T")[1].split(":")[index];
-                    if (index === 0) {
-                        time += (parseInt(timeComponent) - parseInt(firstTimeComponent)) * 60;
-                    } else {
-                        time += parseInt(timeComponent) - parseInt(firstTimeComponent);
-                    }
-                    return time;
-                }, 0)
-            }
+            layover = true;
         }
-
-        const departureTime = new Date(flightInfo.departure);
-        const arrivalTime = new Date(flightInfo.arrival);
-        const departureHours = departureTime.getHours() % 12;
-        const departureMinutes = departureTime.getMinutes();
-        const arrivalHours = arrivalTime.getHours() % 12;
-        const arrivalMinutes = arrivalTime.getMinutes();
-        const departure = `${departureHours}:${departureMinutes} ${departureTime.getHours() > 12 ? "PM" : "AM"}`;
-        let arrival = `${arrivalHours}:${arrivalMinutes} ${arrivalTime.getHours() > 12 ? "PM" : "AM"}`;
+        let duration = time[0][0].duration.timeZoneDuration;
+        let departure = time[0][0].origin.departing_at
+        let arrival = time[0][0].destination.arriving_at
+        let arrivalDate =  new Date(arrival);
+        let departureDate = new Date(departure);
         // If the flight lands the next day, add "+1" to the arrival time
-        if (arrivalTime.getDate() > departureTime.getDate()) {
+        if (arrivalDate.getDate() > departureDate.getDate()) {
             arrival = `+1 ${arrival}`;
         }
-
+        //Convert the times to hours and minutes with am/pm format with only one digit for the hour if it's less than 10
+        departure = departureDate.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true});
+        arrival = arrivalDate.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true});
 
 
 
@@ -119,44 +98,71 @@ export default function FlightInfo( {slice, data} ) {
                 <CardContent className={classes.card}>
                     <Grid container alignItems="center" spacing={2} className={classes.gridContainer}>
                         <Grid item className={classes.gridItem}>
-                            <Typography variant="h6">{flightInfo.airline}</Typography>
+                            <Grid container alignItems="center" spacing={2}>
+                                <Avatar className={classes.avatar} src={flightInfo.flightLogo}/>
+                                <Typography variant="h6" className={classes.airline}>{flightInfo.airline}</Typography>
+                                <Typography variant="subtitle1">
+                                    {layover ? `1 Stop` : "Nonstop"}
+                                </Typography>
+                            </Grid>
                             <Divider/>
                             <Grid item className={classes.text}>
                                 <Typography>{departure}</Typography>
-                                <FlightTakeoffIcon/>
-                                <Typography className={classes.fullName}>{flightInfo.origin} </Typography>({flightInfo.originCode})
+                                <FlightTakeoffIcon sx={
+                                    {color: "primary.main",
+                                        margin: "0 10px",
+                                        fontSize: "2rem"
+
+
+                                    }
+                                }/>
+                                <Typography className={classes.fullName}>{flightInfo.origin} </Typography> <Typography>({flightInfo.originCode})</Typography>
                                 <Divider className={classes.divider}>
                                     {layover && <Typography variant="subtitle1">
-                                    {layover.timeOnGround} min
+                                    {time[0][0].tripTime.totalLayoverTime} min
                                 </Typography>}
                                 </Divider>
                                 <Typography> {arrival} </Typography>
-                                <FlightLandIcon/>
-                                <Typography className={classes.fullName}>{flightInfo.destination} </Typography> ({flightInfo.destinationCode})
+                                <FlightLandIcon sx={
+                                    {color: "primary.main",
+                                        margin: "0 10px",
+                                        fontSize: "2rem"
+                                    }                                }/>
+                                <Typography className={classes.fullName}>{flightInfo.destination} </Typography> <Typography>({flightInfo.destinationCode})</Typography>
                             </Grid>
                             <Typography variant="subtitle1">{duration}</Typography>
-                            <Typography variant="subtitle1">
-                                {layover ? `1 Stop` : "Nonstop"}
-                            </Typography>
+
                         </Grid>
 
                     </Grid>
+                    {layover && <Grid container alignItems="center" spacing={2} className={classes.gridContainerFlightInfo}>
                     <Button onClick={() => handleCollapse(index)}>Flight Info</Button>
                     <Collapse in={index === 0  ? isCollapsed : isCollapsed1} timeout="auto" unmountOnExit>
-                        <Card>
+                        <Card sx={
+                            {width: "100%",
+                                margin: "10px 0",
+                        }}>
                             <CardContent>
-                                <Typography variant="h6">{flightInfo.originCity} to {flightInfo.destinationCity}</Typography>
+                                <Typography variant="h6">{slice.segments[0].origin.city_name} to {slice.segments[0].destination.city_name}</Typography>
                                 <Divider/>
                                 <Typography variant="subtitle1" className={classes.text}>
-                                    {departure}
-                                    <FlightTakeoffIcon/>
-                                    {flightInfo.origin} - ({flightInfo.originCode})
+                                        {departure}
+                                    <FlightTakeoffIcon sx={
+                                        {color: "primary.main",
+                                            margin: "0 10px",
+                                            fontSize: "2rem"
+                                        }
+                                    }/>
+                                    <Typography className={classes.fullName}>{slice.segments[0].origin.name} </Typography>({slice.segments[0].origin.iata_code})
                                     <Divider className={classes.divider}>
-
                                     </Divider>
                                     {arrival}
-                                    <FlightLandIcon/>
-                                    {flightInfo.destination} - ({flightInfo.destinationCode})
+                                    <FlightLandIcon sx={
+                                        {color: "primary.main",
+                                            margin: "0 10px",
+                                            fontSize: "2rem"
+                                        }                                    }/>
+                                    <Typography className={classes.fullName}>{slice.segments[0].destination.name} </Typography>({slice.segments[0].destination.iata_code})
                                 </Typography>
 
 
@@ -164,28 +170,41 @@ export default function FlightInfo( {slice, data} ) {
                                 <Typography variant="subtitle1">{duration}</Typography>
                             </CardContent>
                         </Card>
-                        {layover && <Card>
+                        <Card sx={
+                            {width: "100%",
+                                margin: "10px 0",
+                            }}>
                             <CardContent>
-                                <Typography variant="h6">{layover.originCity} to {layover.destinationCity}</Typography>
+                                <Typography variant="h6">{slice.segments[1].origin.city_name} to {slice.segments[1].destination.city_name}</Typography>
                                 <Divider/>
                                 <Typography variant="subtitle1" className={classes.text}>
                                     {departure}
-                                    <FlightTakeoffIcon/>
-                                    {layover.origin} - {layover.originCity} - {layover.originIata}
+                                    <FlightTakeoffIcon sx={
+                                        {color: "primary.main",
+                                            margin: "0 10px",
+                                            fontSize: "2rem"
+                                        }
+                                    }/>
+                                    <Typography className={classes.fullName}>{slice.segments[1].origin.name} </Typography>({slice.segments[1].origin.iata_code})
                                     <Divider className={classes.divider}>
                                     </Divider>
                                     {arrival}
-                                    <FlightLandIcon/>
-                                    {layover.destination} - {layover.destinationCity} - {layover.destinationIata}
+                                    <FlightLandIcon sx={
+                                        {color: "primary.main",
+                                            margin: "0 10px",
+                                            fontSize: "2rem"
+                                        }                                    }/>
+                                    <Typography className={classes.fullName}>{slice.segments[1].destination.name} </Typography>({slice.segments[1].destination.iata_code})
                                 </Typography>
-                                <Typography variant="subtitle1">
-                                    {layover ? `1 Stop` : "Nonstop"}
-                                </Typography>
+
+
 
                                 <Typography variant="subtitle1">{duration}</Typography>
                             </CardContent>
-                        </Card>}
+                        </Card>
+
                     </Collapse>
+                    </Grid>}
                 </CardContent>
             </Card>
         );
@@ -205,25 +224,74 @@ export default function FlightInfo( {slice, data} ) {
                         <Grid item className={classes.gridItem}>
                             <Typography variant="h6">Baggage Info</Typography>
                             <Divider/>
-                            <Typography variant="subtitle1" className={classes.text}>
-                                {baggageInfo.baggageQuantity} {baggageInfo.baggageType.charAt(0).toUpperCase() + baggageInfo.baggageType.slice(1)} Bag
-                                    {baggageInfo.baggageType === "carry_on" ?
-                                        <CarryOnIcon/> :
-                                        <LuggageIcon/>
+                            <Grid item className={classes.text}>
+                                <Typography>{baggageInfo.baggageQuantity} {baggageInfo.baggageType.charAt(0).toUpperCase() + baggageInfo.baggageType.slice(1)} </Typography>
+                                {baggageInfo.baggageType === "carry_on" && <LocalMallIcon sx={
+                                    {color: "primary.main",
+                                        margin: "0 10px",
+                                        fontSize: "2rem"
                                     }
-                            </Typography>
+                                }/>}
+                                {baggageInfo.baggageType === "checked" && <LuggageIcon sx={
+                                    {color: "primary.main",
+                                        margin: "0 10px",
+                                        fontSize: "2rem"
+                                    }
+                                }/>}
+                                {baggageInfo.baggageType === "unaccompanied" && <CarryOnIcon sx={
+                                    {color: "primary.main",
+                                        margin: "0 10px",
+                                        fontSize: "2rem"
+                                    }
+                                }/>}
+                            </Grid>
+                            </Grid>
+                    </Grid>
+                </CardContent>
+            </Card>
+        )
+    }
+
+    const displayPriceInfo = (price) => {
+        const priceInfo = {
+            basePrice: price.base_amount,
+            tax: price.tax_amount,
+            total: price.total_amount,
+        }
+        // Create a Card to display the price information. Include the base price, tax and total price
+
+        return (
+            <Card className={classes.priceInfo}>
+                <CardContent className={classes.card}>
+                    <Grid container alignItems="center" spacing={2} className={classes.gridContainer}>
+                        <Grid item className={classes.gridItem}>
+                            <Typography variant="h6">Price Info</Typography>
+                            <Divider/>
+                            <Grid item className={classes.text}>
+                                <Typography>Base Price: ${priceInfo.basePrice}</Typography>
+                                <Typography>Tax: ${priceInfo.tax}</Typography>
+                                <Typography>Total Price: ${priceInfo.total}</Typography>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </CardContent>
             </Card>
         )
     }
+
     // For each slice in the data, display the flight info.
     console.log(slice);
     return (
         <div>
             {slice.slices.map((slice, index) => displayFlightInfo(slice, index))}
-            {slice.slices[0].segments[0].passengers.map((passenger, index) => displayBaggageInfo(passenger))}
+            <Grid container alignItems="center" spacing={2} className={classes.gridContainer}>
+                <Grid item className={classes.gridItem}>
+                    {slice.slices[0].segments[0].passengers.map((passenger, index) => displayBaggageInfo(passenger))}
+                </Grid>
+                <Grid item >
+                    {displayPriceInfo(slice)}
+                </Grid>
+            </Grid>
         </div>
     )
 }
