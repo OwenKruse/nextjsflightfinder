@@ -102,3 +102,42 @@
     }
   }
 }
+
+.passengerInfo {
+
+}
+
+.infoForm {
+    display: flex;
+    align-items: center;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.46);
+    border-radius: 10px;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+
+}
+
+// infoform hover
+.infoForm:hover {
+  //add a shadow
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+
+  .item {
+    width: 48%;
+  }
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+}

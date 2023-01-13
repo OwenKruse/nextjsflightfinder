@@ -1,6 +1,19 @@
-import {Avatar, Button, Card, CardContent, Collapse, Divider, Grid, Typography} from "@mui/material";
+import {
+    Avatar,
+    Button,
+    Card,
+    CardContent,
+    Collapse,
+    Divider,
+    Grid, styled,
+    TableContainer,
+    TableHead,
+    Typography
+} from "@mui/material";
 import React, {useState} from "react";
 import classes from "../styles/flightInfo.module.scss";
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SeatMap from "./SeatMap";
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
@@ -8,17 +21,18 @@ import LuggageIcon from '@mui/icons-material/Luggage';
 import CarryOnIcon from '@mui/icons-material/BusinessCenter';
 import geolib from "geolib";
 import LocalMallIcon from '@mui/icons-material/LocalMall';
+import { Table, TableBody, TableCell, TableRow } from '@mui/material';
+import {useRouter} from "next/router";
+
 import Time from "../backend/time";
-export default function FlightInfo( {slice, data} ) {
+import {inspect} from "util";
+export default function FlightInfo( {slice, data, order_id} ) {
 
 
 
     const [isCollapsed, setIsCollapsed] = useState(false);
     // Map the collapsed state to the index of the slice
     const [isCollapsed1, setIsCollapsed1] = useState(false);
-    const [selectedSeat, setSelectedSeat] = useState(null);
-    const [selectedService, setSelectedService] = useState(null);
-
     const handleCollapse = (index) => {
         if (index === 0) {
             setIsCollapsed(!isCollapsed);
@@ -28,19 +42,6 @@ export default function FlightInfo( {slice, data} ) {
         }
     };
 
-
-    const handleSelectSeat = (seat) => {
-        setSelectedSeat(seat);
-    }
-
-    const handleSelectService = (service) => {
-        setSelectedService(service);
-    }
-
-    const handleBook = () => {
-        console.log(selectedSeat);
-        console.log(selectedService);
-    }
     const displayFlightInfo = (slice, index) => {
 
         const time =Time(slice);
@@ -57,9 +58,9 @@ export default function FlightInfo( {slice, data} ) {
             destinationCity: slice.segments[0].destination.city_name,
             flightLogo: slice.segments[0].marketing_carrier.logo_symbol_url,
         }
-        console.log(flightInfo);
 
         const geolib = require('geolib');
+
         const getDistance = (slice) => {
             return slice.segments.reduce((distance, segment) => {
                 const origin = segment.origin;
@@ -77,14 +78,42 @@ export default function FlightInfo( {slice, data} ) {
         if (slice.segments.length > 1) {
             layover = true;
         }
-        let duration = time[0][0].duration.timeZoneDuration;
+        let duration = time[0][0].tripTime.timeZoneDuration;
+        // Convert the duration to hours and minutes check if the duration is less than 1 hour
+        if (duration < 60) {
+            duration = duration + "m";
+        }
+        else {
+            duration = Math.floor(duration / 60) + "h " + (duration % 60) + "m";
+        }
         let departure = time[0][0].origin.departing_at
         let arrival = time[0][0].destination.arriving_at
         let arrivalDate =  new Date(arrival);
         let departureDate = new Date(departure);
+        let layoverTime = null;
+        if (layover) {
+            layoverTime = time[0][0].tripTime.totalLayoverTime;
+            if (layoverTime < 60) {
+                layoverTime = layoverTime + "m";
+            }
+            else {
+                layoverTime = Math.floor(layoverTime / 60) + "h " + (layoverTime % 60) + "m";
+            }
+
+        }
         // If the flight lands the next day, add "+1" to the arrival time
         if (arrivalDate.getDate() > departureDate.getDate()) {
             arrival = `+1 ${arrival}`;
+        }
+        const convertDuration = (time) => {
+            let duration = time;
+            if (duration < 60) {
+                duration = duration + "m";
+            }
+            else {
+                duration = Math.floor(duration / 60) + "h " + (duration % 60) + "m";
+            }
+            return duration;
         }
         //Convert the times to hours and minutes with am/pm format with only one digit for the hour if it's less than 10
         departure = departureDate.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true});
@@ -104,6 +133,9 @@ export default function FlightInfo( {slice, data} ) {
                                 <Typography variant="subtitle1">
                                     {layover ? `1 Stop` : "Nonstop"}
                                 </Typography>
+                                <Typography className={classes.duration} variant="subtitle1">{duration}</Typography>
+
+
                             </Grid>
                             <Divider/>
                             <Grid item className={classes.text}>
@@ -118,9 +150,7 @@ export default function FlightInfo( {slice, data} ) {
                                 }/>
                                 <Typography className={classes.fullName}>{flightInfo.origin} </Typography> <Typography>({flightInfo.originCode})</Typography>
                                 <Divider className={classes.divider}>
-                                    {layover && <Typography variant="subtitle1">
-                                    {time[0][0].tripTime.totalLayoverTime} min
-                                </Typography>}
+
                                 </Divider>
                                 <Typography> {arrival} </Typography>
                                 <FlightLandIcon sx={
@@ -130,20 +160,30 @@ export default function FlightInfo( {slice, data} ) {
                                     }                                }/>
                                 <Typography className={classes.fullName}>{flightInfo.destination} </Typography> <Typography>({flightInfo.destinationCode})</Typography>
                             </Grid>
-                            <Typography variant="subtitle1">{duration}</Typography>
 
                         </Grid>
 
                     </Grid>
                     {layover && <Grid container alignItems="center" spacing={2} className={classes.gridContainerFlightInfo}>
-                    <Button onClick={() => handleCollapse(index)}>Flight Info</Button>
+                    <Button onClick={() => handleCollapse(index)}>Connection Information</Button>
                     <Collapse in={index === 0  ? isCollapsed : isCollapsed1} timeout="auto" unmountOnExit>
                         <Card sx={
                             {width: "100%",
                                 margin: "10px 0",
                         }}>
                             <CardContent>
-                                <Typography variant="h6">{slice.segments[0].origin.city_name} to {slice.segments[0].destination.city_name}</Typography>
+                                <Grid container spacing={2} >
+                                    <Grid item className={classes.gridContainerRow}>
+                                        <Typography sx={
+                                            {
+                                                marginRight: "10px"
+                                            }
+                                        } variant="h6">{slice.segments[0].origin.city_name} to {slice.segments[0].destination.city_name}</Typography>
+                                        <Typography variant="h6">{convertDuration(time[0][0].duration.duration)}</Typography>
+                                </Grid>
+                                </Grid>
+
+
                                 <Divider/>
                                 <Typography variant="subtitle1" className={classes.text}>
                                         {departure}
@@ -167,16 +207,32 @@ export default function FlightInfo( {slice, data} ) {
 
 
 
-                                <Typography variant="subtitle1">{duration}</Typography>
                             </CardContent>
                         </Card>
                         <Card sx={
                             {width: "100%",
                                 margin: "10px 0",
                             }}>
+                            <CardContent className={classes.layoverTime}>
+                                <Typography variant="h6">On the ground in {slice.segments[0].destination.city_name} for {layoverTime}</Typography>
+                            </CardContent>
+                        </Card>
+
+                        <Card sx={
+                            {width: "100%",
+                                margin: "10px 0",
+                            }}>
                             <CardContent>
-                                <Typography variant="h6">{slice.segments[1].origin.city_name} to {slice.segments[1].destination.city_name}</Typography>
-                                <Divider/>
+                                <Grid container spacing={2} >
+                                    <Grid item className={classes.gridContainerRow}>
+                                        <Typography sx={
+                                            {
+                                                marginRight: "10px"
+                                            }
+                                        } variant="h6">{slice.segments[1].origin.city_name} to {slice.segments[1].destination.city_name}</Typography>
+                                        <Typography variant="h6">{convertDuration(time[0][1].duration.duration)}</Typography>
+                                    </Grid>
+                                </Grid>                                <Divider/>
                                 <Typography variant="subtitle1" className={classes.text}>
                                     {departure}
                                     <FlightTakeoffIcon sx={
@@ -196,10 +252,6 @@ export default function FlightInfo( {slice, data} ) {
                                         }                                    }/>
                                     <Typography className={classes.fullName}>{slice.segments[1].destination.name} </Typography>({slice.segments[1].destination.iata_code})
                                 </Typography>
-
-
-
-                                <Typography variant="subtitle1">{duration}</Typography>
                             </CardContent>
                         </Card>
 
@@ -220,35 +272,85 @@ export default function FlightInfo( {slice, data} ) {
         return (
             <Card className={classes.ticket}>
                 <CardContent className={classes.card}>
-                    <Grid container alignItems="center" spacing={2} className={classes.gridContainer}>
-                        <Grid item className={classes.gridItem}>
-                            <Typography variant="h6">Baggage Info</Typography>
-                            <Divider/>
-                            <Grid item className={classes.text}>
-                                <Typography>{baggageInfo.baggageQuantity} {baggageInfo.baggageType.charAt(0).toUpperCase() + baggageInfo.baggageType.slice(1)} </Typography>
-                                {baggageInfo.baggageType === "carry_on" && <LocalMallIcon sx={
-                                    {color: "primary.main",
-                                        margin: "0 10px",
-                                        fontSize: "2rem"
-                                    }
-                                }/>}
-                                {baggageInfo.baggageType === "checked" && <LuggageIcon sx={
-                                    {color: "primary.main",
-                                        margin: "0 10px",
-                                        fontSize: "2rem"
-                                    }
-                                }/>}
-                                {baggageInfo.baggageType === "unaccompanied" && <CarryOnIcon sx={
-                                    {color: "primary.main",
-                                        margin: "0 10px",
-                                        fontSize: "2rem"
-                                    }
-                                }/>}
-                            </Grid>
-                            </Grid>
-                    </Grid>
+                    <TableContainer>
+                        <Table>
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell>
+                                        <Typography variant="h6">Baggage included with your flight</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            </TableHead>
+                            <TableBody>
+                                <TableRow>
+                                    <TableCell>
+                                        <Typography>
+                                            {baggageInfo.baggageQuantity} {baggageInfo.baggageType}
+                                        </Typography>
+                                    </TableCell>
+                                </TableRow>
+                            </TableBody>
+                        </Table>
+                    </TableContainer>
                 </CardContent>
             </Card>
+        )
+    }
+
+    const passenger_ids = [];
+    slice.passengers.forEach((passenger) => {
+        passenger_ids.push(passenger.id);
+      }
+    )
+    console.log(passenger_ids);
+
+    const router = useRouter();
+
+
+    function handleCheckout() {
+        router.push(
+            {
+                pathname: '/checkout',
+                query: { id: order_id,
+                    passenger_ids: passenger_ids,
+                },
+            }
+        ).then(r => console.log(r));
+    }
+
+    const BootstrapButton = styled(Button)({
+        boxShadow: 'none',
+        textTransform: 'none',
+        padding: '6px 12px',
+        border: '1px solid',
+        backgroundColor: '#0063cc',
+        borderColor: '#0063cc',
+        color: 'black',
+        fontSize: 16,
+        lineHeight: 1.5,
+        fontWeight: 200,
+        '&:hover': {
+            backgroundColor: '#0069d9',
+            borderColor: '#0062cc',
+            color: 'white',
+
+        },
+        '&:active': {
+            boxShadow: 'none',
+            backgroundColor: '#0062cc',
+            borderColor: '#005cbf',
+        },
+        '&:focus': {
+            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+        },
+    });
+
+    const checkoutButton = () => {
+        let totalPrice = slice.total_amount;
+        return (
+            <BootstrapButton onClick={handleCheckout} variant="contained" color="primary" disableRipple>
+                Book for ${totalPrice}
+            </BootstrapButton>
         )
     }
 
@@ -280,18 +382,19 @@ export default function FlightInfo( {slice, data} ) {
     }
 
     // For each slice in the data, display the flight info.
-    console.log(slice);
     return (
-        <div>
+        <div style={
+            {display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                width: "100%",
+                height: "100%",
+                margin: "0 auto",
+                padding: "0 20px",
+            }}>
             {slice.slices.map((slice, index) => displayFlightInfo(slice, index))}
-            <Grid container alignItems="center" spacing={2} className={classes.gridContainer}>
-                <Grid item className={classes.gridItem}>
-                    {slice.slices[0].segments[0].passengers.map((passenger, index) => displayBaggageInfo(passenger))}
-                </Grid>
-                <Grid item >
-                    {displayPriceInfo(slice)}
-                </Grid>
-            </Grid>
+            {checkoutButton()}
         </div>
     )
 }

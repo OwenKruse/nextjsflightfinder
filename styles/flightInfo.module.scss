@@ -130,4 +130,53 @@
   &:hover {
     border: 1px solid rgba(255, 255, 255, 1);
   }
+
+
 }
+
+.priceGridContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  // space the items out
+  margin: 10px;
+}
+.duration {
+  justify-self: center;
+    align-self: center;
+    margin: 0 1rem;
+
+
+}
+
+.layoverTime {
+  justify-content: center;
+    align-items: center;
+
+}
+
+.gridContainerRow {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+
+}
+
+.checkoutButton {
+  .contained {
+    background-color: #000000;
+    color: #000000;
+    font-weight: 600;
+    font-size: 0.8rem;
+    &:hover {
+      background-color: #ffffff;
+      color: #000000;
+    }
+  }
+
+}
+
+
+

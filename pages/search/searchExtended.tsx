@@ -72,7 +72,7 @@ export default function MyForm(props) {
             { value: 'long', label: 'Long flights' },
         ],
     };
-    const [selectedStops, setSelectedStops] = useState(filters.stops[0].value);
+    const [selectedStops, setSelectedStops] = useState(filters.stops[1].value);
     const [selectedSort, setSelectedSort] = useState(filters.sort[0].value);
     const [selectedTimes, setSelectedTimes] = useState(filters.times[0].value);
     const [selectedDuration, setSelectedDuration] = useState(filters.duration[0].value);

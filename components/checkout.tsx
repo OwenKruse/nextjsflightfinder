@@ -1,7 +1,7 @@
 import {Box, Container, FormControl, FormLabel, Grid, TextField, Typography} from "@mui/material";
 import styles from "../styles/checkout.module.scss";
 
-export default function Checkout() {
+export default function Checkout(id) {
     return (
         <>
             <Container maxWidth="sm" className={styles.checkout}>

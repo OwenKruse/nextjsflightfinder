@@ -8,7 +8,7 @@ import FlightInfo from "../../components/FlightInfo";
 
 
 
-const Index = ({data, offer}) => {
+const Index = ({data, offer, id}) => {
 
     return (
         <div>
@@ -21,7 +21,7 @@ const Index = ({data, offer}) => {
                     <Navbar></Navbar>
                 </div>
                 <Box my={4}>
-                    <FlightInfo slice={offer} data={data}/>
+                    <FlightInfo slice={offer} data={data} order_id={id}/>
 
                 </Box>
             </Container>
@@ -45,6 +45,7 @@ export const getServerSideProps = async ({ query }) => {
 
     });
 
+    // Add an error catch
     const offer = await duffel.offers.get(id, {
 
         "return_available_services": true
@@ -57,7 +58,8 @@ export const getServerSideProps = async ({ query }) => {
     return {
         props: {
             data: data,
-            offer: offer.data
+            offer: offer.data,
+            id: id
         },
     };
 }
