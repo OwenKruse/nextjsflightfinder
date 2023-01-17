@@ -141,3 +141,10 @@
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 10px;
 }
+
+.textBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+}

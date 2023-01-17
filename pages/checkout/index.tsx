@@ -27,7 +27,6 @@ import * as React from "react";
 export default function Checkout({id, passenger_ids}) {
     const [dateDepart, setDateDepart] = React.useState<Date | null>(null);
 
-    const todayDate = new Date();
 
     const [value, setValue] = useState('female');
 
@@ -38,47 +37,24 @@ export default function Checkout({id, passenger_ids}) {
     const InfoForm = () => {
         return (
             <Grid container className={styles.infoForm}>
-                <Grid item xs={6} className={styles.container}>
-                    <TextField label="First Name" variant="outlined" />
+                <Grid item xs={9} className={styles.container}>
+                    <TextField className={styles.textBox} label="First Name" variant="outlined" />
                     <TextField label="Last Name" variant="outlined" />
-                    <Grid item>
+                    <Grid item className={styles.textBox}>
                     <TextField label="Email" variant="outlined" />
-
                     </Grid>
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <DatePicker
-                            label="Date of Birth"
-                            inputFormat="YYYY-MM-DD"
+                    <TextField
+                    id="date"
+                    label="Birthday"
+                    type="date"
+                    sx={{ width: 220 }}
+                    InputLabelProps={{
+                    shrink: true,
+                }}
+                    />
 
-                            maxDate={new Date()}
-                            value={dateDepart}
-                            onChange={(newValue) => {
-                                setDateDepart(newValue);
-                            }}
-                            renderInput={(params) => <TextField
-                                {...params}
-                                name={"tripStart"}
-                                defaultValue={todayDate}
-                                id={"tripStart"}
-                                required
-                                label={"Date Of Birth"}
-                                className={styles.datePicker}
-                                InputLabelProps={{
-                                    style: {
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textAlign: "center",
-
-
-                                    },
-                                }}
-                            />}
-                            className={styles.date__select}
-                        />
-                    </LocalizationProvider>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={3}>
 
                         <FormControl component="fieldset" sx={
                             {
