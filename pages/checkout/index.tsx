@@ -21,83 +21,13 @@ import {useState} from "react";
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import * as React from "react";
-
-// Create a function that dsiplays a payment screen for the user to pay for their flight booking using Duffel's API
-
-export default function Checkout({id, passenger_ids}) {
-    const [dateDepart, setDateDepart] = React.useState<Date | null>(null);
-
-    const todayDate = new Date();
-
-    const [value, setValue] = useState('female');
-
-    const handleChange = (event) => {
-        setValue(event.target.value);
-    };
-
-    const InfoForm = () => {
-        return (
-            <Grid container className={styles.infoForm}>
-                <Grid item xs={6} className={styles.container}>
-                    <TextField label="First Name" variant="outlined" />
-                    <TextField label="Last Name" variant="outlined" />
-                    <Grid item>
-                    <TextField label="Email" variant="outlined" />
-
-                    </Grid>
-                    <LocalizationProvider dateAdapter={AdapterMoment}>
-                        <DatePicker
-                            label="Date of Birth"
-                            inputFormat="YYYY-MM-DD"
-
-                            maxDate={new Date()}
-                            value={dateDepart}
-                            onChange={(newValue) => {
-                                setDateDepart(newValue);
-                            }}
-                            renderInput={(params) => <TextField
-                                {...params}
-                                name={"tripStart"}
-                                defaultValue={todayDate}
-                                id={"tripStart"}
-                                required
-                                label={"Date Of Birth"}
-                                className={styles.datePicker}
-                                InputLabelProps={{
-                                    style: {
-                                        textOverflow: "ellipsis",
-                                        whiteSpace: "nowrap",
-                                        overflow: "hidden",
-                                        textAlign: "center",
+import InfoForm from "../../components/InfoForm";
+import '@duffel/components/dist/CardPayment.min.css'
+import {CardPayment} from "@duffel/components";
+import Price from '../../components/Price';
+export default function Checkout({id, passenger_ids, checkout, slice, offer}) {
 
 
-                                    },
-                                }}
-                            />}
-                            className={styles.date__select}
-                        />
-                    </LocalizationProvider>
-                </Grid>
-                <Grid item xs={6}>
-
-                        <FormControl component="fieldset" sx={
-                            {
-                                marginLeft: "1rem",
-
-
-                            }
-                        }>
-                            <RadioGroup aria-label="gender" name="gender" value={value} onChange={handleChange}>
-                                <FormControlLabel value="female" control={<Radio />} label="Female" />
-                                <FormControlLabel value="male" control={<Radio />} label="Male" />
-                                <FormControlLabel value="other" control={<Radio />} label="Other" />
-                            </RadioGroup>
-                        </FormControl>
-
-                </Grid>
-            </Grid>
-        );
-    }
 
     // Check if passenger_ids is a string or an array
     let PassengerInfo = null;
@@ -105,25 +35,22 @@ export default function Checkout({id, passenger_ids}) {
         PassengerInfo = passenger_ids.map((passenger) => {
 
         return (
-        //  born_on
-        // email
-        // family_name
-        // gender
-        // given_name
-        // id
-            <div>
                 <InfoForm />
-            </div>
         )
     })
     } else {
          PassengerInfo = (
-            <div>
                 <InfoForm />
-            </div>
+
         )
     }
+    const successfulPaymentHandler = () => {
 
+    }
+
+    const errorPaymentHandler = () => {
+        console.log('Payment failed')
+    }
     return (
         <>
             <Head>
@@ -141,11 +68,15 @@ export default function Checkout({id, passenger_ids}) {
                 <div>
                     <Navbar></Navbar>
                 </div>
-                <Box my={4}>
-                    <Grid container spacing={3}>
-
-            {PassengerInfo}
-
+                <Box my={4} className={styles.Box}>
+                    <Grid container spacing={3} className={styles.passengerContainer}>
+                        <div>
+                        {PassengerInfo}
+                        </div>
+                    </Grid>
+                    <Price slice={offer} />
+                    <Grid container spacing={3} className={styles.creditContainer}>
+                        <CardPayment duffelPaymentIntentClientToken={checkout.client_token} successfulPaymentHandler={successfulPaymentHandler} errorPaymentHandler={errorPaymentHandler} />
                     </Grid>
                 </Box>
             </Container>
@@ -179,13 +110,21 @@ export const getServerSideProps = async ({ query }) => {
         return response;
 
     });
+    const checkout = await duffel.paymentIntents.create({
+
+        "currency": "USD",
+
+        "amount": offer.data.total_amount,
+
+    })
 
     return {
         props: {
             data: data,
             offer: offer.data,
             id: id,
-            passenger_ids: passenger_ids
+            passenger_ids: passenger_ids,
+            checkout: checkout.data
         },
     };
 };

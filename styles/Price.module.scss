@@ -1,0 +1,89 @@
+.priceGridContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    // space the items out
+    margin: 10px;
+}
+
+.title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #000000;
+    margin: 10px;
+}
+
+.price {
+    font-family: 'Roboto', sans-serif;
+    align-self: center;
+    text-align: center;
+    height: 10rem;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-items: center;
+    align-content: space-between;
+    padding: 1rem;
+    justify-content: space-around;
+    border: 5px solid #B3B3B3;
+    border-radius: 19px;
+}
+
+.price__base {}
+
+.price__base__title {
+    font-weight: 500;
+    font-style: normal;
+    position: static;
+    margin: 0rem;
+}
+
+.price__base__title {}
+
+.price__base__amount {
+    padding: 0rem;
+    margin: 0rem;
+    width: 100%;
+    align-self: center;
+    text-align: center;
+}
+
+.tax__title {
+    margin-bottom: 1rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    margin: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.11);
+    border-radius: 10px;
+    flex-wrap: wrap;
+    color: #807C7C;
+}
+
+.priceItem {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.priceColor {
+    color: #65a01b;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 80%;
+        padding-right: 1rem;
+    }
+}

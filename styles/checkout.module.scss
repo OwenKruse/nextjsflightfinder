@@ -1,7 +1,7 @@
 .checkout {
-  display: flex;
-  flex-wrap: nowrap;
-  background: rgba(0, 0, 0, 0);
+    display: flex;
+    flex-wrap: nowrap;
+    background: rgba(0, 0, 0, 0);
     border-radius: 5px;
     border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -14,130 +14,177 @@
 
 
 
-  .checkoutSection {
-    width: 100%;
-    margin: 10px;
-    padding: 10px;
-    border-radius: 5px;
-
-
-    &.checkout-billing {
-      border: 1px solid #ccc;
-      padding: 10px;
-    }
-
-    &.checkout-summary {
-      border: 1px solid #ccc;
-      padding: 10px;
-    }
-  }
-
-  .checkoutForm {
-    display: flex;
-    flex-wrap: nowrap;
-
-
-    .formGroup {
-      width: 100%;
-      margin-bottom: 10px;
-
-      label {
-        display: block;
-        font-weight: bold;
-      }
-
-      input {
+    .checkoutSection {
         width: 100%;
-        border: 1px solid #000000;
-        padding: 5px;
-      }
+        margin: 10px;
+        padding: 10px;
+        border-radius: 5px;
+
+
+        &.checkout-billing {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        &.checkout-summary {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
     }
-  }
 
-  .checkout-items {
-    display: flex;
-    flex-wrap: wrap;
+    .checkoutForm {
+        display: flex;
+        flex-wrap: nowrap;
 
-    .item {
-      width: 50%;
-      margin: 10px;
-      border: 1px solid #ccc;
-      padding: 10px;
 
-      .item-name {
+        .formGroup {
+            width: 100%;
+            margin-bottom: 10px;
+
+            label {
+                display: block;
+                font-weight: bold;
+            }
+
+            input {
+                width: 100%;
+                border: 1px solid #000000;
+                padding: 5px;
+            }
+        }
+    }
+
+    .checkout-items {
+        display: flex;
+        flex-wrap: wrap;
+
+        .item {
+            width: 50%;
+            margin: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+
+            .item-name {
+                font-weight: bold;
+            }
+
+            .item-price {
+                float: right;
+            }
+        }
+    }
+
+    .checkout-total {
+        margin-top: 10px;
         font-weight: bold;
-      }
-
-      .item-price {
-        float: right;
-      }
     }
-  }
-
-  .checkout-total {
-    margin-top: 10px;
-    font-weight: bold;
-  }
 }
 
 .checkout-payment-details {
-  form {
-    display: flex;
-    flex-wrap: wrap;
+    form {
+        display: flex;
+        flex-wrap: wrap;
 
-    .form-group {
-      width: 100%;
-      margin-bottom: 10px;
+        .form-group {
+            width: 100%;
+            margin-bottom: 10px;
 
-      label {
-        display: block;
-        font-weight: bold;
-      }
+            label {
+                display: block;
+                font-weight: bold;
+            }
 
-      input {
-        width: 100%;
-        border: 1px solid #ccc;
-        padding: 5px;
-      }
+            input {
+                width: 100%;
+                border: 1px solid #ccc;
+                padding: 5px;
+            }
+        }
     }
-  }
 }
 
-.passengerInfo {
-
-}
+.passengerInfo {}
 
 .infoForm {
     display: flex;
     align-items: center;
     margin: 10px;
     padding: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.46);
+    border: 1px solid rgba(0, 0, 0, 0.11);
     border-radius: 10px;
     flex-direction: row;
     flex-wrap: wrap;
+    color: #807C7C;
 
 
 }
 
 // infoform hover
 .infoForm:hover {
-  //add a shadow
+    //add a shadow
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 
 }
 
 .container {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 
-  .item {
-    width: 48%;
-  }
+    .item {
+        width: 48%;
+    }
 }
 
 .container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+}
+
+.genderGrid {
+    text-align: end;
+    display: inline-block;
+    max-width: 20%;
+    align-self: center;
+}
+
+.infoGrid {
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.Box {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.creditContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1rem;
+}
+
+.passengerContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .infoForm {
+        flex-direction: column;
+        width: 90vw;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
 }

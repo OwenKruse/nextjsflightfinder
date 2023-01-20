@@ -26,6 +26,7 @@ import {useRouter} from "next/router";
 
 import Time from "../backend/time";
 import {inspect} from "util";
+import {Duffel} from "@duffel/api";
 export default function FlightInfo( {slice, data, order_id} ) {
 
 
@@ -302,17 +303,22 @@ export default function FlightInfo( {slice, data, order_id} ) {
         passenger_ids.push(passenger.id);
       }
     )
-    console.log(passenger_ids);
 
     const router = useRouter();
 
 
     function handleCheckout() {
+        const duffel = new Duffel({
+
+            token: "duffel_test_ThLUYHmU6F3MbIzMNFc8-ahZA-w_Nn5T5sSkPJ0-SLY",
+
+        })
         router.push(
             {
                 pathname: '/checkout',
                 query: { id: order_id,
                     passenger_ids: passenger_ids,
+                    slice : slice
                 },
             }
         ).then(r => console.log(r));
