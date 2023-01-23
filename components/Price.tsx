@@ -21,19 +21,19 @@ export default function Price({ slice }) {
             </Head>
                 <Grid container spacing={2} className={styles.container}>
                     <Grid item xs={12} sm={10} className={styles.priceItem}>
-                        <Typography  gutterBottom >
+                        <Typography  component={'span'} gutterBottom >
                             Ticket Price
                         </Typography>
-                        <Typography variant="body1" gutterBottom sx={
+                        <Typography variant="body1" component={'span'} gutterBottom sx={
                             {
                                 display: 'flex',
                                 flexDirection: 'row',
                             }
                         }>
-                            <Typography variant="body1" gutterBottom className={styles.priceColor} >
+                            <Typography variant="body1" component={'span'} gutterBottom className={styles.priceColor} >
                                 ${base_per_passenger}
                             </Typography>
-                            <Typography variant="body1" gutterBottom sx={
+                            <Typography variant="body1" component={'span'} gutterBottom sx={
                                 {
                                     paddingLeft: '.5rem'
                                 }
@@ -43,10 +43,10 @@ export default function Price({ slice }) {
                         </Typography>
                     </Grid>
                     <Grid item xs={12} sm={10}  className={styles.priceItem} >
-                        <Typography  gutterBottom>
+                        <Typography component={'span'}  gutterBottom>
                             Tax
                         </Typography>
-                        <Typography variant="body1" gutterBottom className={styles.priceColor}>
+                        <Typography variant="body1" component={'span'} gutterBottom className={styles.priceColor}>
                             ${tax}
                         </Typography>
                     </Grid>
@@ -59,10 +59,10 @@ export default function Price({ slice }) {
                         }
                     }/>
                     <Grid item xs={12} sm={10} className={styles.priceItem}>
-                        <Typography gutterBottom>
+                        <Typography component={'span'} gutterBottom>
                             Total Price
                         </Typography>
-                        <Typography variant="body1" gutterBottom className={styles.priceColor}>
+                        <Typography variant="body1" component={'span'} gutterBottom className={styles.priceColor}>
                             ${total}
                         </Typography>
                     </Grid>

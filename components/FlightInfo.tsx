@@ -12,17 +12,11 @@ import {
 } from "@mui/material";
 import React, {useState} from "react";
 import classes from "../styles/flightInfo.module.scss";
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import SeatMap from "./SeatMap";
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
-import LuggageIcon from '@mui/icons-material/Luggage';
-import CarryOnIcon from '@mui/icons-material/BusinessCenter';
-import geolib from "geolib";
-import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
 import {useRouter} from "next/router";
+
 
 import Time from "../backend/time";
 import {inspect} from "util";
@@ -404,3 +398,4 @@ export default function FlightInfo( {slice, data, order_id} ) {
         </div>
     )
 }
+
