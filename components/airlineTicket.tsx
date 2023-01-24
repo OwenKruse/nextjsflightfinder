@@ -1,5 +1,5 @@
 import * as React from "react";
-import styles from "../../styles/airlineTicket.module.scss";
+import styles from "../styles/airlineTicket.module.scss";
 import {
     Grid,
     Typography,
@@ -12,7 +12,7 @@ import {
     Button,
     Divider, SvgIcon, Tooltip, Badge, styled, BadgeProps, Stack, Chip, Collapse, useMediaQuery, Box
 } from "@mui/material";
-import classes from "../../styles/airlineTicket.module.scss";
+import classes from "../styles/airlineTicket.module.scss";
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
 import PaidIcon from '@mui/icons-material/Paid';
@@ -320,25 +320,26 @@ const Ticket: React.FC<Props> = ({
         return(
             <Stack direction="column" spacing={1}>
                 {stack.map((item) => (
-                    <Tooltip title={item.label} enterTouchDelay={0} placement="top">
-                    <Chip
-                        key={item.key}
-                        icon={item.icon}
-                        sx={{ borderColor: item.color,
-                            color: alpha(theme.palette.text.primary, 1),
-                            backgroundColor: item.color,
-                            fontWeight: 'bold',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            display: 'flex',
-                            padding: '5px',
-                            '& .MuiChip-label': {padding: 0},
-                            '& .MuiChip-icon': {margin: 0},
+                    <div key={item.key}>
+                        <Tooltip  title={item.label} enterTouchDelay={0} placement="top">
+                        <Chip
+                            icon={item.icon}
+                            sx={{ borderColor: item.color,
+                                color: alpha(theme.palette.text.primary, 1),
+                                backgroundColor: item.color,
+                                fontWeight: 'bold',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                display: 'flex',
+                                padding: '5px',
+                                '& .MuiChip-label': {padding: 0},
+                                '& .MuiChip-icon': {margin: 0},
 
 
-                        }}
-                    />
-                    </Tooltip>
+                            }}
+                        />
+                        </Tooltip>
+                    </div>
                 ))}
             </Stack>
         )
@@ -373,7 +374,7 @@ const Ticket: React.FC<Props> = ({
                 }
             }>
                 {stack.map((item) => (
-                    <Tooltip title={item.label} enterTouchDelay={0} placement="top">
+                    <Tooltip key={item.key} title={item.label} enterTouchDelay={0} placement="top">
                         <Chip
                             key={item.key}
                             icon={item.icon}

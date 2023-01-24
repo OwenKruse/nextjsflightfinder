@@ -34,7 +34,6 @@ export default function Home() {
             <Grid item xs={12}>
                 <Typography variant="h4" align="center" sx={{mt: 5, mb: 5,
                 fontWeight: 700}}>
-
                     Featured Deals
                 </Typography>
                 <Deals />

@@ -12,20 +12,15 @@ import {
 } from "@mui/material";
 import React, {useState} from "react";
 import classes from "../styles/flightInfo.module.scss";
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import SeatMap from "./SeatMap";
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import FlightLandIcon from '@mui/icons-material/FlightLand';
-import LuggageIcon from '@mui/icons-material/Luggage';
-import CarryOnIcon from '@mui/icons-material/BusinessCenter';
-import geolib from "geolib";
-import LocalMallIcon from '@mui/icons-material/LocalMall';
 import { Table, TableBody, TableCell, TableRow } from '@mui/material';
 import {useRouter} from "next/router";
 
+
 import Time from "../backend/time";
 import {inspect} from "util";
+import {Duffel} from "@duffel/api";
 export default function FlightInfo( {slice, data, order_id} ) {
 
 
@@ -122,7 +117,6 @@ export default function FlightInfo( {slice, data, order_id} ) {
 
 
         return (
-
             <Card className={classes.ticket}>
                 <CardContent className={classes.card}>
                     <Grid container alignItems="center" spacing={2} className={classes.gridContainer}>
@@ -302,17 +296,22 @@ export default function FlightInfo( {slice, data, order_id} ) {
         passenger_ids.push(passenger.id);
       }
     )
-    console.log(passenger_ids);
 
     const router = useRouter();
 
 
     function handleCheckout() {
+        const duffel = new Duffel({
+
+            token: "duffel_test_ThLUYHmU6F3MbIzMNFc8-ahZA-w_Nn5T5sSkPJ0-SLY",
+
+        })
         router.push(
             {
                 pathname: '/checkout',
                 query: { id: order_id,
                     passenger_ids: passenger_ids,
+                    slice : slice
                 },
             }
         ).then(r => console.log(r));
@@ -398,3 +397,4 @@ export default function FlightInfo( {slice, data, order_id} ) {
         </div>
     )
 }
+

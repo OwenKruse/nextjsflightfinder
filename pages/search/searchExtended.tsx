@@ -22,7 +22,7 @@ import {DatePicker, DesktopDatePicker} from "@mui/x-date-pickers";
 import {useTheme} from "@mui/material";
 import {alpha, createTheme} from '@mui/material/styles';
 import {add, toDate} from "date-fns";
-import {items} from "./airports";
+import {items} from "../api/airports";
 
 
 
@@ -47,8 +47,7 @@ export default function MyForm(props) {
     const filters = {
         stops: [
             { value: 0, label: 'Non-stop' },
-            { value: 1, label: '1 stop' },
-            { value: 2, label: '2+ stops' },
+            { value: 1, label: '1+ stops' },
         ],
         airlines: [
             { value: 'All Airlines', label: 'All airlines' },
@@ -84,8 +83,7 @@ export default function MyForm(props) {
         // Get the selected values from the event
         const selectedValues = event.target.value as string[];
         // If the user selected "All airlines", then we want to clear all other selections
-
- 1       // Check all values are selected
+        // Check all values are selected
         if (selectedValues.length >= 3) {
             // If all values are selected, then clear the array
             setSelectedAirlines(["All Airlines"]);
@@ -128,8 +126,8 @@ export default function MyForm(props) {
     }
 
     const [childrenCount, setChildrenCount] = React.useState(0);
-    const [adultsCount, setAdultsCount] = React.useState(0);
-    const [selectedValue, setSelectedValue] = React.useState('Children: 0, Adults: 0');
+    const [adultsCount, setAdultsCount] = React.useState(1);
+    const [selectedValue, setSelectedValue] = React.useState('adults');
 
     const handleChange = (event) => {
         setSelectedValue(event.target.value);
@@ -200,6 +198,7 @@ export default function MyForm(props) {
         }
         router.push({
             pathname: '/search/loading',
+            // @ts-ignore
             query: {
                 ...combinedData,
             }
@@ -566,11 +565,40 @@ export default function MyForm(props) {
                         </div >
                     </form>
                     <div className={styles.quicksearch__button__box}>
-                        <Button className={styles.quicksearch__button}  onClick={handleSubmit}>
+                        <Button className={styles.quicksearch__button}
+                                variant={"outlined"}
+                                style={
+                                    {
+                                    //     font-family: inherit;
+                                    // font-weight: 600;
+                                    // width: 33%;
+                                    // color: white;
+                                    // background-color: #0070f3;
+                                    // border: 0;
+                                    // cursor: pointer;
+                                    // -webkit-appearance: none;
+                                    // border-radius: 10px;
+                                    // padding: 10px;
+                                    // margin: 10px;
+
+                                        fontFamily: "inherit",
+                                        fontWeight: "600",
+                                        width: "33%",
+                                        color: "white",
+                                        backgroundColor: "#0070f3",
+                                        border: "0",
+                                        cursor: "pointer",
+                                        WebkitAppearance: "none",
+                                        borderRadius: "10px",
+                                        padding: "10px",
+                                        margin: "10px",
+                                    }
+                                }
+                                onClick={handleSubmit}>
                             Search
                         </Button>
                         <Button endIcon={<ArrowDropDownIcon />}
-                                className={styles.button}
+                                className={styles.button1}
                                 variant={"outlined"}
                                 style={
                                     {
@@ -604,7 +632,7 @@ export default function MyForm(props) {
                 <Select
                     labelId="stops-label"
                     id="stops-select"
-                    value={selectedStops}
+                    value={selectedStops.toString()}
                     label="Stops"
                     onChange={(event: SelectChangeEvent) => {
                         setSelectedStops(event.target.value as unknown as number);
@@ -636,6 +664,7 @@ export default function MyForm(props) {
                 label={"Airlines"}
                 value={selectedAirlines}
                 renderValue={(selected) => (selected as string[]).join(', ')}
+                // @ts-ignore
                 onChange={handleChangeAirlines}
             >
 {filters.airlines.map((airline) => (
@@ -673,34 +702,11 @@ export default function MyForm(props) {
                     step={100}
                     value={selectedPriceRange}
                     valueLabelDisplay="auto"
+                    // @ts-ignore
                     onChange={handleSliderChange}
 
                 />
 
-            </FormControl>
-            <FormControl sx={
-                {ml: 2,
-                mb: 2,
-
-
-                }
-
-            }>
-                <InputLabel id="times-label">Times</InputLabel>
-                <Select
-                    labelId="times-label"
-                    id="times-select"
-                    label={"Times"}
-                    value={selectedTimes}
-
-                    onChange={(event) => setSelectedTimes(event.target.value)}
-                >
-                    {filters.times.map((time) => (
-                        <MenuItem key={time.value} value={time.value}>
-                            {time.label}
-                        </MenuItem>
-                    ))}
-                </Select>
             </FormControl>
             <FormControl sx={
                 {

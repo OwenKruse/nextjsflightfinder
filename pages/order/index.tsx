@@ -1,6 +1,5 @@
 import React from 'react';
 import { Container, Box } from '@mui/material';
-import SeatMap from '../../components/SeatMap';
 import {Duffel} from "@duffel/api";
 import Head from "next/head";
 import Navbar from "../../components/Navbar";
@@ -9,7 +8,6 @@ import FlightInfo from "../../components/FlightInfo";
 
 
 const Index = ({data, offer, id}) => {
-
     return (
         <div>
             <Head>
@@ -22,7 +20,6 @@ const Index = ({data, offer, id}) => {
                 </div>
                 <Box my={4}>
                     <FlightInfo slice={offer} data={data} order_id={id}/>
-
                 </Box>
             </Container>
         </div>

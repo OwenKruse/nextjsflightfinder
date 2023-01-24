@@ -13,15 +13,14 @@ import background from "../asset/BackGround.png";
 import { useRouter } from "next/router";
 // import ref from "react";
 import {useEffect, useRef, useState} from "react";
-import {items} from "./search/airports.js";
+import {items} from "./api/airports.js";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import {DatePicker} from "@mui/x-date-pickers";
-import {useTheme} from "@mui/material";
 import {alpha, createTheme} from '@mui/material/styles';
 import {add, toDate} from "date-fns";
 
-export default function quickSearch() {
+export default function QuickSearch() {
     function todayDate() {
         const today = new Date();
         const dd = String(today.getDate()).padStart(2, "0");

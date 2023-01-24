@@ -8,7 +8,7 @@ import {Skeleton, Typography} from "@mui/material";
 import {useTheme} from "@mui/material";
 import { alpha } from '@mui/material/styles';
 
-export default function index({query}) {
+export default function Index({query}) {
     const theme = useTheme();
     console.log(query);
     let to = query.to;
@@ -44,8 +44,6 @@ export default function index({query}) {
             <div className={styles.parallax}>
                 {/* The Parallax component takes a prop called "className" that you can use to specify the class of the element to apply the parallax effect to */}
                 <div className={styles.containerSearch} >
-                    <Navbar from={from} to={to} departure={departure} returnDate={returnDate} passengers={passengers} oneWay={oneWay}></Navbar>
-
                     <div className={styles.loading}>
                         <Typography variant="h3" component="div" gutterBottom style={
                             {
