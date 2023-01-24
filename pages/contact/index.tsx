@@ -23,7 +23,7 @@ function ContactPage() {
                         Contact Us
                     </Typography>
                     <Typography variant="body1" gutterBottom>
-                        If you have any questions or concerns, please don't hesitate to contact us. You can reach us by phone, email, or through the form below.
+                        If you have any questions or concerns, please don not hesitate to contact us. You can reach us by phone, email, or through the form below.
                     </Typography>
                 </Paper>
             </animated.div>

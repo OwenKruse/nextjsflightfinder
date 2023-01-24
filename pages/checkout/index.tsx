@@ -38,10 +38,13 @@ export default function Checkout({id, passenger_ids, checkout, slice, offer}) {
     if (typeof passenger_ids === 'string') {
         passenger_ids = [passenger_ids]
     }
+    // Get the ticket type from the offer
+
     const infoForms = passenger_ids.map((passenger_id, index) => {
         console.log(index)
+       const ticket_type = (offer.passengers[index].type)
         return (
-            <InfoForm index={index} passenger_ids={passenger_ids} passengerNames={passengerNames} setPassengerNames={setPassengerNames} passengerLastNames={passengerLastNames} setPassengerLastNames={setPassengerLastNames} passengerEmails={passengerEmails} setPassengerEmails={setPassengerEmails} passengerPhones={passengerPhones} setPassengerPhones={setPassengerPhones} passengerDobs={passengerDobs} setPassengerDobs={setPassengerDobs} passengerGenders={passengerGenders} setPassengerGenders={setPassengerGenders} />        )
+            <InfoForm key={passenger_id} ticket_type={ticket_type} index={index} passenger_ids={passenger_ids} passengerNames={passengerNames} setPassengerNames={setPassengerNames} passengerLastNames={passengerLastNames} setPassengerLastNames={setPassengerLastNames} passengerEmails={passengerEmails} setPassengerEmails={setPassengerEmails} passengerPhones={passengerPhones} setPassengerPhones={setPassengerPhones} passengerDobs={passengerDobs} setPassengerDobs={setPassengerDobs} passengerGenders={passengerGenders} setPassengerGenders={setPassengerGenders} />        )
     })
 
     const router = useRouter();

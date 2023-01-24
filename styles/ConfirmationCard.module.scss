@@ -1,0 +1,86 @@
+.paper {
+display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    height: 100%;
+    width: 50vw;
+    padding: 10px;
+
+}
+
+
+.gridItem {
+  display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 10px;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+
+    -webkit-appearance: none;
+    border-radius: 5px;
+   border: 2px solid rgba(0, 0, 0, 0.25);
+
+}
+
+.container{
+  display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    height: 100%;
+}
+
+.airline{
+    display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        margin: 10px;
+        height: 100%;
+        width: 100%;
+        padding: 10px;
+}
+
+.title
+{
+  font-style: normal;
+  position: static;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+    color: rgba(0, 0, 0, 0.7);
+  font-family: 'Roboto', sans-serif;
+
+
+}
+
+.airlineTitle{
+    font-style: normal;
+    position: static;
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: 'Roboto', sans-serif;
+  display: flex;
+  justify-content: flex-start;
+    align-items: center;
+}
+
+.airlineContainer {
+  justify-content: space-between;
+  display: flex;
+    flex-direction: column;
+
+}
+
+.dateContainer{
+  display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  // Keep the flex items from wrapping
+    flex-wrap: nowrap;
+}

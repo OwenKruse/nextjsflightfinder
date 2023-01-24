@@ -8,7 +8,7 @@ import {Skeleton, Typography} from "@mui/material";
 import {useTheme} from "@mui/material";
 import { alpha } from '@mui/material/styles';
 
-export default function index({query}) {
+export default function Index({query}) {
     const theme = useTheme();
     console.log(query);
     let to = query.to;

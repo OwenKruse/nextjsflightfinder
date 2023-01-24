@@ -5,7 +5,7 @@ import MainNavBar from "../../components/Navbar"
 import Head from "next/head";
 import {Duffel} from '@duffel/api'
 import * as fs from "fs";
-import Ticket from "./airlineTicket";
+import Ticket from "../../components/airlineTicket";
 import {Box, Pagination, Typography, useTheme} from "@mui/material";
 import {alpha} from '@mui/material/styles';
 import moment from "moment/moment";
@@ -147,8 +147,6 @@ export function Show(jsonData, query, index) {
         if (index === 0) {
             specialList.push("cheapest")
         }
-        console.log(slices)
-
 
 
 
@@ -177,38 +175,53 @@ export function Show(jsonData, query, index) {
 }
 
 function Search(data, query) {
+    const [list, setList] = useState([]);
+    const [page, setPage] = useState(1);
+    const theme = useTheme();
+    let listItems = [];
+    let totalPages = 0;
+    let array = [];
+    const resultsPerPage = 10;
     // Check if jsonData is undefined or null
+
+    useEffect(() => {
+        if (data.data !== null) {
+        array = data.data.offers
+            // Sort through the array for the airlines selected if query.airlines is not undefined and not equal to "All Airlines"
+            //      let airlines = "All Airlines";
+                if(query.airlines !== undefined && query.airlines !== "All Airlines") {
+                    array = array.filter(function (item) {
+                        return query.airlines.includes(item.owner.name);
+                    });
+                }
+                // Sort through the array for the selectedPriceRange if query.selectedPriceRange is not undefined and not equal to "All Tickets"
+                if(query.priceRange !== undefined && query.priceRange !== "All Tickets") {
+                    array = array.filter(function (item) {
+                        return item.total_amount <= query.priceRange;
+                    });
+                }
+
+
+        listItems = array.map((d, index) =>
+            <Show key={d} jsonData={d} query={query} index={index}/>
+        );
+        totalPages = Math.ceil(listItems.length / resultsPerPage);
+        const listItemsPerPage = listItems.slice((page - 1) * resultsPerPage, page * resultsPerPage);
+        setList(listItemsPerPage);
+        }
+
+
+    }, [data, query, page]);
+
     if (data.data === undefined || data.data === null) {
         return <Box sx={{display: 'flex', justifyContent: 'center', alignItems: 'start', height: '100vh'}}>
             <Typography className={styles.tagline}>Your dream vacation is just a few clicks away.</Typography>
-            </Box>
+        </Box>
     }
-    //parse the data
-    const jsonData = JSON.parse(data.data);
-    let toConvert;
-    toConvert = jsonData.data.offers;
-    // Convert toConvert to an array
-    let array = Object.keys(toConvert).map((key) => toConvert[key]);
-    array = array.sort((a, b) => a.total_amount - b.total_amount);
 
-    //Check if the array is empty
-    if (array.length === 0) {
-        return <p>Hmm, we couldn't find any flights matching your search. Try changing your search parameters. If the problem persists please contact our support.</p>;
-    }
-    // Map the data to the Show function
-    const listItems = array.map((d, index) =>
-        <Show jsonData={d} query={query} index={index}/>
-    );
-    const [list, setList] = useState([]);
-    const [page, setPage] = useState(1);
-    const resultsPerPage = 10;
-    const totalPages = Math.ceil(listItems.length / resultsPerPage);
 
-    useEffect(() => {
-        const startIndex = (page - 1) * resultsPerPage;
-        const endIndex = startIndex + resultsPerPage;
-        setList(listItems.slice(startIndex, endIndex));
-    }, [page]);
+
+
 
     const handlePageChange = (event, page) => {
         // extract new page number from event object
@@ -216,7 +229,6 @@ function Search(data, query) {
         scroll(0, 0);
     }
 
-    const theme = useTheme();
     return (
         <div className={styles.containerSearch}>
             {list.length > 0 ? list : <p>Loading...</p>}
@@ -354,8 +366,6 @@ export async function getServerSideProps({query}) {
         console.log(error);
     }
     );
-    let toReturn;
-    toReturn = JSON.stringify(response);
 
 
 
@@ -379,7 +389,7 @@ export async function getServerSideProps({query}) {
 // Return the response data
     return {
         props: {
-            data: toReturn,
+            data: response.data,
             query: query,
 
         }

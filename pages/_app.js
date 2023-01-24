@@ -1,10 +1,7 @@
 import '../styles/globals.css'
 import "tailwindcss/tailwind.css"
-import store from './search/store';
-import { Provider } from 'react-redux';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { MantineProvider } from '@mantine/core';
-import CssBaseline from '@mui/material/CssBaseline';
 
 
 const darkTheme = createTheme({
@@ -26,9 +23,7 @@ function MyApp({ Component, pageProps }) {
 
       >
     <ThemeProvider theme={lightTheme}>
-    <Provider store={store}>
         <Component {...pageProps} />
-    </Provider>
     </ThemeProvider>
         </MantineProvider>
   );

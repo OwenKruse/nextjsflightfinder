@@ -1,16 +1,28 @@
 
 import { Duffel } from '@duffel/api'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import Navbar from "../../components/Navbar";
 
 
 
 
 export default function Confirmation({ payment, query, order }) {
-console.log(payment);
-console.log(query);
-console.log(order);
+    const router = useRouter();
+    // Redirect to confirmed page if payment is successful
+    useEffect(() => {
+        router.push(`/confirmed?order_id=${order.id}`)
+    }
+        , [payment, order])
 return (
         <div>
-        <h1>Confirmation</h1>
+            <Navbar />
+            <h1 style={
+                {
+                    color: "green",
+                    textAlign: "center"
+                }
+            }>Confirming...</h1>
         </div>
         )
 

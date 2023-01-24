@@ -117,7 +117,6 @@ export default function FlightInfo( {slice, data, order_id} ) {
 
 
         return (
-
             <Card className={classes.ticket}>
                 <CardContent className={classes.card}>
                     <Grid container alignItems="center" spacing={2} className={classes.gridContainer}>
