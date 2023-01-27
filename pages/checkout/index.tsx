@@ -131,9 +131,8 @@ export const getServerSideProps = async ({ query }) => {
     const checkout = await duffel.paymentIntents.create({
 
         "currency": "USD",
-
-        "amount": offer.data.total_amount,
-
+        //Round to two decimal places and add 5% to the total amount and convert to string
+        "amount": (Number(offer.data.total_amount) * 1.05).toFixed(2).toString(),
     })
 
     return {

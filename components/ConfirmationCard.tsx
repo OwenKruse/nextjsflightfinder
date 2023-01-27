@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 import classes from '../styles/ConfirmationCard.module.scss';
 import {PassengerCard} from "./PassengerCard";
 import {FlightCard} from "./FlightCard";
+import SliceCard from "./SliceCard";
 
 
 
@@ -244,6 +245,10 @@ const ConfirmationCard = ({order}) => {
     const cancelled_at = order.cancelled_at;
     const passengers = order.passengers;
     const slices = order.slices;
+    //Round to 2 decimal places
+    let total_cost = Number(order.total_amount) * 1.05;
+    // @ts-ignore
+    total_cost = (total_cost.toFixed(2).toString());
 
     // Create a card for each passenger
     const passengerCards = passengers.map((passenger, index) => {
@@ -256,19 +261,11 @@ const ConfirmationCard = ({order}) => {
     })
 
     const flightCards = slices.map((slice, index) => {
-        const slices = slice.segments.map((segment, index) => {
-            console.log(segment)
-            return (
-                <FlightCard
-                    key={index}
-                    segment={segment}
-                />
-            )
-        })
         return (
-            <div key={index}>
-                {slices}
-            </div>
+            <SliceCard
+                key={index}
+                slice={slice}
+            />
         )
     })
 
@@ -277,7 +274,10 @@ const ConfirmationCard = ({order}) => {
         // Use Mui Paper component to create a card
         <div className={classes.container}>
                     <Typography variant="h5" component="h3">
-                        Confirmation
+                        Order Confirmation
+                    </Typography>
+                    <Typography component="p">
+                        (This is NOT a boarding pass)
                     </Typography>
                     <Paper className={classes.paper}>
                         <Grid container className={classes.gridItem} >
@@ -302,6 +302,39 @@ const ConfirmationCard = ({order}) => {
                             {flightCards}
 
                         </Grid>
+                        <Grid container className={classes.gridItem} >
+                            <Typography className={classes.title}>
+                                Passenger Details
+                            </Typography>
+                            <Grid container className={classes.airline} >
+                            {passengerCards}
+                            </Grid>
+                        </Grid>
+                        <Grid container className={classes.gridItem} >
+                            <Typography component="p">
+                                {// Loop through the documents and display the unique identifier for each
+                                    order.documents.map((document, index) => {
+                                        return (
+                                            <div key={index}>
+                                                <Typography component="p">
+                                                    Ticket Number {index + 1}: {document.unique_identifier}
+                                                </Typography>
+                                            </div>
+                                        )
+                                    }
+                                    )}
+
+                            </Typography>
+                        </Grid>
+                        <Grid container className={classes.gridItem} >
+                            <Typography component="p">
+                                Total Price: {total_cost} {base_currency}
+                            </Typography>
+                            <Typography component="p">
+                                Created At: {created_at}
+                            </Typography>
+                        </Grid>
+
 
                     </Paper>
         </div>

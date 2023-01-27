@@ -101,7 +101,7 @@ export const getServerSideProps = async ({ query }) => {
             return {
                 "id": passenger_id,
                 "type": passengerTypes[index],
-                "title": passenger_genders.split(",")[index] === "m" ? "mr" : "mrs",
+                "title": passenger_genders.split(",")[index] === "m" ? "mrs" : "mr",
                 "given_name": passenger_names.split(",")[index],
                 "family_name": passenger_last_names.split(",")[index],
                 "email": passenger_emails.split(",")[index],
@@ -115,7 +115,6 @@ export const getServerSideProps = async ({ query }) => {
             }
         }
         )
-    console.log(order_id)
     const order = await duffel.orders.create({
             "type": "instant",
             "payments": [
@@ -135,10 +134,11 @@ export const getServerSideProps = async ({ query }) => {
         }
     )
     console.log(order.data.id);
-
     const response = await duffel.paymentIntents.confirm(payment).then((response) => {
         return response;
     })
+
+
 
     return {
         props: {

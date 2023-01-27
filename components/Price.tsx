@@ -50,6 +50,14 @@ export default function Price({ slice }) {
                             ${tax}
                         </Typography>
                     </Grid>
+                    <Grid item xs={12} sm={10}  className={styles.priceItem} >
+                        <Typography component={'span'} gutterBottom>
+                            Fees
+                        </Typography>
+                        <Typography variant="body1" component={'span'} gutterBottom className={styles.priceColor}>
+                            ${Number((total * .05).toFixed(2))}
+                        </Typography>
+                    </Grid>
                     <Divider sx={
                         {
                             justifySelf: 'center',
@@ -63,7 +71,7 @@ export default function Price({ slice }) {
                             Total Price
                         </Typography>
                         <Typography variant="body1" component={'span'} gutterBottom className={styles.priceColor}>
-                            ${total}
+                            ${Number(total) + Number((total * .05).toFixed(2))}
                         </Typography>
                     </Grid>
                 </Grid>

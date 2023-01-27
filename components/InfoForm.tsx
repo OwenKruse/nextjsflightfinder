@@ -85,7 +85,6 @@ const InfoForm = (props) => {
                             renderInput={(params) => <TextField
                                 {...params}
                                 name={"tripStart"}
-                                defaultValue={new Date()}
                                 id={"tripStart"}
                                 required
                                 label={"Date Of Birth"}

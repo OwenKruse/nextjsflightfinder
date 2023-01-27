@@ -94,21 +94,26 @@ export const FlightCard = (segment) =>  {
 
     segment = segment.segment
     return (
-        <div style={
-            {
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                margin: '10px',
-                width: '100%',
-
-            }
-        }>
+        <div className={styles.paperContainer}>
             <Card sx={{ width: '100%', height: '100%', padding: '10px' }}>
                 <Grid container>
                     <Grid item xs={16} className={styles.airlineContainer}>
-                        <Typography variant="h6">{segment.marketing_carrier.name} {segment.marketing_carrier_flight_number} {segment.origin.city_name} {'>'} {segment.destination.city_name}</Typography>
+                        <Grid container style={
+                            {
+                                whiteSpace: 'nowrap',
+                                fontWeight: 'bold',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                            }
+                        }>
+                        <Typography variant="h6">
+                            {segment.marketing_carrier.name} {segment.marketing_carrier_flight_number}
+                        </Typography>
+                            <Typography variant="h6" >
+                            {segment.origin.city_name} {'to'} {segment.destination.city_name}
+                        </Typography>
+                        </Grid>
                         <Grid container className={styles.dateContainer}>
                         <Typography variant="subtitle2" style={
                             {
@@ -123,7 +128,7 @@ export const FlightCard = (segment) =>  {
                                 whiteSpace: 'nowrap',
                             }
                         }>
-                            {segment.origin.name}
+                          Depart from {segment.origin.name}
                         </Typography>
                         </Grid>
                         <Grid container className={styles.dateContainer}>
@@ -141,13 +146,12 @@ export const FlightCard = (segment) =>  {
                                     whiteSpace: 'nowrap',
                                 }
                             }>
-                                {segment.destination.name}
+                               Arrive at {segment.destination.name}
                             </Typography>
                         </Grid>
                     </Grid>
                     <Grid item xs={8} className={styles.durationContainer}>
-                        <Typography variant="h6">{moment.utc(moment(segment.arriving_at).diff(moment(segment.departing_at))).format('HH:mm')}</Typography>
-
+                        <p>{moment.duration(segment.duration).hours()} hours {moment.duration(segment.duration).minutes()} minutes</p>
                     </Grid>
                 </Grid>
             </Card>
