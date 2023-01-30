@@ -94,6 +94,12 @@ export default function QuickSearch() {
                 }
             }
         }
+        if (event.type !== null) {
+            if (event.type === "blur") {
+                setOpen(false);
+            }
+        }
+
     };
     const handleInputChange2 = (event) => {
         if (event !== null) {
@@ -103,6 +109,11 @@ export default function QuickSearch() {
                 } else {
                     setOpen2(false);
                 }
+            }
+        }
+        if (event.type !== null) {
+            if (event.type === "blur") {
+                setOpen2(false);
             }
         }
     }

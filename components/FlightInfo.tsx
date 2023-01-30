@@ -111,8 +111,8 @@ export default function FlightInfo( {slice, data, order_id} ) {
             return duration;
         }
         //Convert the times to hours and minutes with am/pm format with only one digit for the hour if it's less than 10
-        departure = departureDate.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true});
-        arrival = arrivalDate.toLocaleTimeString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true});
+        departure = departureDate.toLocaleString('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true});
+        arrival = arrivalDate.toLocaleString('en-US', {month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', hour12: true});
 
 
 

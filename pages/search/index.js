@@ -189,6 +189,7 @@ function Search(data, query) {
         array = data.data.offers
             // Sort through the array for the airlines selected if query.airlines is not undefined and not equal to "All Airlines"
             //      let airlines = "All Airlines";
+            console.log(query.airlines)
                 if(query.airlines !== undefined && query.airlines !== "All Airlines") {
                     array = array.filter(function (item) {
                         return query.airlines.includes(item.owner.name);
@@ -311,7 +312,7 @@ export async function getServerSideProps({query}) {
     const passengers = getPassengers(children, adults);
 
     if (passengers.length === 0) {
-        passengers.push({type: 'adult'});
+        passengers.push({type: 'adult', loyalty_programme_accounts: [{airline_iata_code: 'UN', account_number: 'KEZ25322'}]});
     }
 
     const duffel = new Duffel({

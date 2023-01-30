@@ -71,7 +71,7 @@ export default function Price({ slice }) {
                             Total Price
                         </Typography>
                         <Typography variant="body1" component={'span'} gutterBottom className={styles.priceColor}>
-                            ${Number(total) + Number((total * .05).toFixed(2))}
+                            ${(Number(total) + Number((total * .05).toFixed(2))).toFixed(2)}
                         </Typography>
                     </Grid>
                 </Grid>
