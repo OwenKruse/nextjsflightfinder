@@ -13,7 +13,7 @@ import background from "../asset/BackGround.png";
 import { useRouter } from "next/router";
 // import ref from "react";
 import {useEffect, useRef, useState} from "react";
-import {items} from "./api/airports.js";
+import {items} from "../pages/api/airports.js";
 import {LocalizationProvider} from "@mui/x-date-pickers/LocalizationProvider";
 import {AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import {DatePicker} from "@mui/x-date-pickers";
@@ -49,9 +49,10 @@ export default function QuickSearch() {
 
 
 
-        // Pass the `from` and `to` variables to the MyPage component as props
+        // @ts-ignore
         router.push({
             pathname: '/search/loading',
+            // @ts-ignore
             query: {
                 from,
                 to,
@@ -218,7 +219,7 @@ export default function QuickSearch() {
                                     inputFormat="YYYY-MM-DD"
                                     minDate={new Date()}
                                     value={dateDepart}
-                                    required
+
                                     onChange={(newValue) => {
                                         setDateDepart(newValue);
                                     }}
@@ -266,7 +267,6 @@ export default function QuickSearch() {
                                             },
                                         }}
                                     />}
-                                    sx={{ textAlign: "center", }}
                                     className={styles.date__select}
                                 />
 

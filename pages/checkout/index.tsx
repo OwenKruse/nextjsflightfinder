@@ -25,6 +25,7 @@ import '@duffel/components/dist/CardPayment.min.css'
 import {CardPayment} from "@duffel/components";
 import Price from '../../components/Price';
 import {useRouter} from "next/router";
+import * as fs from "fs";
 export default function Checkout({id, passenger_ids, checkout, slice, offer}) {
     const [passengerNames, setPassengerNames] = useState([]);
     const [passengerEmails, setPassengerEmails] = useState([]);
@@ -119,6 +120,8 @@ export const getServerSideProps = async ({ query }) => {
         "return_available_services": true
 
     }).then((response) => {
+        // Write to file named slice.json
+        fs.writeFileSync('slice.json', JSON.stringify(response.data));
         return response;
 
     });

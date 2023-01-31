@@ -647,33 +647,33 @@ export default function MyForm(props) {
                 </Select>
 
             </FormControl>
-            <FormControl sx={
-                    {
-                    minWidth: 120,
-                        ml: 2,
-                        mb: 2,
-                    }
+{/*            <FormControl sx={*/}
+{/*                    {*/}
+{/*                    minWidth: 120,*/}
+{/*                        ml: 2,*/}
+{/*                        mb: 2,*/}
+{/*                    }*/}
 
-            }>
-                <InputLabel id="sort-label">Airlines</InputLabel>
-                <Select
+{/*            }>*/}
+{/*                <InputLabel id="sort-label">Airlines</InputLabel>*/}
+{/*                <Select*/}
 
-                labelId="airlines-label"
-                id="airlines-select"
-                multiple={true}
-                label={"Airlines"}
-                value={selectedAirlines}
-                renderValue={(selected) => (selected as string[]).join(', ')}
-                // @ts-ignore
-                onChange={handleChangeAirlines}
-            >
-{filters.airlines.map((airline) => (
-    <MenuItem key={airline.value} value={airline.value}>
-        <Checkbox checked={selectedAirlines.includes(airline.value)} />
-        <ListItemText primary={airline.label} />
-    </MenuItem>
-))}
-</Select></FormControl>
+{/*                labelId="airlines-label"*/}
+{/*                id="airlines-select"*/}
+{/*                multiple={true}*/}
+{/*                label={"Airlines"}*/}
+{/*                value={selectedAirlines}*/}
+{/*                renderValue={(selected) => (selected as string[]).join(', ')}*/}
+{/*                // @ts-ignore*/}
+{/*                onChange={handleChangeAirlines}*/}
+{/*            >*/}
+{/*{filters.airlines.map((airline) => (*/}
+{/*    <MenuItem key={airline.value} value={airline.value}>*/}
+{/*        <Checkbox checked={selectedAirlines.includes(airline.value)} />*/}
+{/*        <ListItemText primary={airline.label} />*/}
+{/*    </MenuItem>*/}
+{/*))}*/}
+{/*</Select></FormControl>*/}
             <FormControl>
 
             </FormControl>

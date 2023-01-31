@@ -3,6 +3,7 @@ import { Duffel } from '@duffel/api'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Navbar from "../../components/Navbar";
+import fs from "fs";
 
 
 
@@ -133,11 +134,9 @@ export const getServerSideProps = async ({ query }) => {
             "passengers": passengers,
         }
     )
-    console.log(order.data.id);
     const response = await duffel.paymentIntents.confirm(payment).then((response) => {
         return response;
     })
-
 
 
     return {
