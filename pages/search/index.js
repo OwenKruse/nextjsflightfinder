@@ -9,10 +9,6 @@ import Ticket from "../../components/airlineTicket";
 import {Box, Pagination, Typography, useTheme} from "@mui/material";
 import {alpha} from '@mui/material/styles';
 import moment from "moment/moment";
-import { formatInTimeZone } from 'date-fns-tz'
-import { getTimezoneOffset } from 'date-fns-tz'
-import geolib from "geolib";
-import momenttz from "moment-timezone";
 import Time from "../../backend/time";
 
 
@@ -187,13 +183,10 @@ function Search(data, query) {
     useEffect(() => {
         if (data.data !== null) {
         array = data.data.offers
-            // Sort through the array for the airlines selected if query.airlines is not undefined and not equal to "All Airlines"
-            //      let airlines = "All Airlines";
-                if(query.airlines !== undefined && query.airlines !== "All Airlines") {
-                    array = array.filter(function (item) {
-                        return query.airlines.includes(item.owner.name);
-                    });
-                }
+            // Only show the user offers from United
+            //         array = array.filter(function (item) {
+            //             return item.owner.name === "United Airlines";
+            //         });
                 // Sort through the array for the selectedPriceRange if query.selectedPriceRange is not undefined and not equal to "All Tickets"
                 if(query.priceRange !== undefined && query.priceRange !== "All Tickets") {
                     array = array.filter(function (item) {
@@ -206,11 +199,11 @@ function Search(data, query) {
             <Show key={d} jsonData={d} query={query} index={index}/>
         );
         totalPages = Math.ceil(listItems.length / resultsPerPage);
-        const listItemsPerPage = listItems.slice((page - 1) * resultsPerPage, page * resultsPerPage);
-        setList(listItemsPerPage);
+        const indexOfLastResult = page * resultsPerPage;
+        const indexOfFirstResult = indexOfLastResult - resultsPerPage;
+        const currentResults = listItems.slice(indexOfFirstResult, indexOfLastResult);
+        setList(currentResults);
         }
-
-
     }, [data, query, page]);
 
     if (data.data === undefined || data.data === null) {
@@ -311,7 +304,7 @@ export async function getServerSideProps({query}) {
     const passengers = getPassengers(children, adults);
 
     if (passengers.length === 0) {
-        passengers.push({type: 'adult'});
+        passengers.push({type: 'adult', loyalty_programme_accounts: [{airline_iata_code: 'UN', account_number: 'KEZ25322'}]});
     }
 
     const duffel = new Duffel({

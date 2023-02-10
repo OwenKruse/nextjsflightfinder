@@ -29,10 +29,24 @@ const InfoForm = (props) => {
         newPassengerEmails[index] = e.target.value;
         setPassengerEmails(newPassengerEmails);
     }
+    const [error, setError] = React.useState(false);
+    const phoneRef = React.useRef(null);
+    const phoneRegex = new RegExp(/^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/);
     const handlePhoneChange = (e) => {
+
+        const value = e.target.value;
+        console.log(value);
+
+        if (!phoneRegex.test(value)) {
+            // handle invalid phone number
+            setError(true);
+            return;
+        }
+        phoneRef.current.style.color = "black";
         const newPassengerPhones = [...passengerPhones];
         newPassengerPhones[index] = e.target.value;
         setPassengerPhones(newPassengerPhones);
+        setError(false)
     }
     const handleDobChange = (newValue) => {
         const newPassengerDobs = [...passengerDobs];
@@ -40,11 +54,11 @@ const InfoForm = (props) => {
         setPassengerDobs(newPassengerDobs);
     }
     const handleGenderChange = (e) => {
-        console.log(e.target.value)
         const newPassengerGenders = [...passengerGenders];
         newPassengerGenders[index] = e.target.value;
         setPassengerGenders(newPassengerGenders);
     }
+
     if (ticket_type == "adult"){
         // @ts-ignore
         return (
@@ -70,14 +84,18 @@ const InfoForm = (props) => {
                     <TextField required={true} label="Phone Number"
                                placeholder={"+1 123-456-7890"}
                                onChange={(e) => handlePhoneChange(e)}
-                               variant="outlined"/>
+                               variant="outlined"
+                                 error={error}
+                               //red
+                               ref={phoneRef}
+                    />
                     <LocalizationProvider dateAdapter={AdapterMoment}>
                         <DatePicker
                             label="Date of Birth"
                             inputFormat="MM-DD-YYYY"
                             // @ts-ignore
                             maxDate={new Date() - 18 * 365 * 24 * 60 * 60 * 1000}
-
+                            views={["year", "month", "day"]}
                             value={passengerDobs[index]}
                             onChange={(newValue) => {
                                 handleDobChange(newValue);
@@ -85,7 +103,6 @@ const InfoForm = (props) => {
                             renderInput={(params) => <TextField
                                 {...params}
                                 name={"tripStart"}
-                                defaultValue={new Date()}
                                 id={"tripStart"}
                                 required
                                 label={"Date Of Birth"}

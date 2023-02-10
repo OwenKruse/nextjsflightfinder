@@ -4,14 +4,14 @@ import Navbar from "../components/Navbar";
 import * as React from "react";
 import {Typography, Grid} from "@mui/material";
 import Deals from '../components/Deals';
-import quickSearch from "./quickSearch";
+import quickSearch from "../components/quickSearch";
 export default function Home() {
 
   const importedElement = React.createElement(quickSearch, {}, null);
   return (
       <div className={styles.container}>
         <Head>
-          <title>Flight Cheaply</title>
+          <title>MileWise</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
